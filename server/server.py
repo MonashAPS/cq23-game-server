@@ -1,3 +1,6 @@
+import logging
+
+
 class GameState:
     def __init__(self):
         pass
@@ -48,6 +51,7 @@ class Game:
 
     def run(self):
         # initialise state
+        logging.info("Starting game between players: ... and ...")
         # while true (or number of turns is less than max turns), play_move
         pass
 
