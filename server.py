@@ -60,3 +60,8 @@ class Game:
         # initialise state
         # while true (or number of turns is less than max turns), play_move
         pass
+
+
+class Result:
+    def __init__(self):
+        self.winning_player_id = None  # if =None, the game was a draw
