@@ -7,7 +7,7 @@ config.EXAMPLE_CONSTANT
 import dotenv
 from addict import Dict
 
-defaults = {"EXAMPLE_CONSTANT": 1.41}
+defaults = {"TANK_HEALTH_POINTS": 100, "MAP_SIZE": (50, 50)}
 
 
 def get_config():
