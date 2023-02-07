@@ -1,6 +1,6 @@
 import numpy as np
 
-from config import get_config
+from config import config
 from gameObjects.game_object import GameObject
 
 
@@ -18,7 +18,7 @@ class Map:
         if map_size:
             self.width, self.height = map_size
         else:
-            self.width, self.height = get_config().MAP_SIZE
+            self.width, self.height = config.MAP.DIMS
 
         self.map = np.zeros((self.height, self.width), dtype=GameObject)
 

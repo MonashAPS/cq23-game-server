@@ -7,8 +7,6 @@ config.EXAMPLE_CONSTANT
 import dotenv
 from addict import Dict
 
-defaults = {"TANK_HEALTH_POINTS": 100, "MAP_SIZE": (50, 50)}
-
 
 def get_config():
     dotenv.load_dotenv()  # load environment variables from any local .env files
@@ -20,3 +18,7 @@ def get_config():
     return Dict(
         values
     )  # using Addict Dict for convenient access of values (see example at top of file)
+
+
+defaults = {"TANK": {"DIMS": (30, 30), "HP": 100}, "MAP": {"DIMS": (500, 500)}}
+config = get_config()
