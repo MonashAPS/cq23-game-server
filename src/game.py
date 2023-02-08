@@ -1,13 +1,33 @@
 import logging
 
-from map import Map
+import pymunk
+
+from config import config
 
 
 class Game:
-    def __init__(self, map: Map):
-        # setup communication with the two(?) players
-        # initialise replay and logs
-        self.map = map
+    def __init__(self, space: pymunk.Space):
+        self.space = space
+        self.add_collision_handlers()
+
+    def add_collision_handlers(self):
+        # add bullet-tank collision handler
+        bullet_tank_handler = self.space.add_collision_handler(
+            config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.BULLET
+        )
+        bullet_tank_handler.post_solve = self.post_solve_collision_handler
+        # add bullet-wall collision handler
+        bullet_wall_handler = self.space.add_collision_handler(
+            config.COLLISION_TYPE.WALL, config.COLLISION_TYPE.BULLET
+        )
+        bullet_wall_handler.post_solve = self.post_solve_collision_handler
+
+    def post_solve_collision_handler(
+        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
+    ):
+        shape1, shape2 = arbiter.shapes
+        self.space.remove(shape1, shape1.body)
+        self.space.remove(shape2, shape2.body)
 
     def _initialise_state(self):
         # initialise the map by either loading from a file or randomly generating one (handled by other methods)

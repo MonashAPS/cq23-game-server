@@ -1,20 +1,30 @@
 import pygame
 import pymunk
+import pymunk.pygame_util
 
 from config import config
+from game import Game
+from gameObjects.bullet import Bullet
 from gameObjects.tank import Tank
 
 
 def run_pygame():
+    # PyGame init
     pygame.init()
-
-    # Set up the drawing window
     display = pygame.display.set_mode(config.MAP.DIMS)
-
-    # example tank
-    tank = Tank(space, (200, 200), (50, 50))
-
+    clock = pygame.time.Clock()
+    FPS = 50
     running = True
+    # Physics stuff
+    space = pymunk.Space()
+    pymunk.pygame_util.positive_y_is_up = True
+    draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
+
+    # example objects
+    Game(space)
+    Tank(space, (200, 200), (0, 0))
+    Bullet(space, (200, 400), (0, -100))
+
     while running:
         # Did the user click the window close button?
         for event in pygame.event.get():
@@ -22,13 +32,21 @@ def run_pygame():
                 running = False
 
         # Fill the background with white
-        display.fill((255, 255, 255))
+        display.fill(pygame.Color("white"))
 
-        # Draw a tank
-        tank.draw(display)
+        # Draw stuff
+        space.debug_draw(draw_options)
 
-        # Flip the display
+        state = []
+        for x in space.shapes:
+            s = f"{x} {x.body.position} {x.body.velocity}"
+            state.append(s)
+
+        # Update physics
+        space.step(1 / FPS)
+
         pygame.display.flip()
+        clock.tick(FPS)
 
     # Done! Time to quit.
     pygame.quit()
