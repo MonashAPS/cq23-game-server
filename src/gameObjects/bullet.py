@@ -11,7 +11,7 @@ class Bullet(GameObject):
         super().__init__(space, coord, velocity)
 
         self.radius = config.BULLET.RADIUS
-        self.HP = config.BULLET.HP  # health points
+        self.hp = config.BULLET.HP  # health points
 
         self.shape = pymunk.Circle(self.body, self.radius)
         self.shape.density = config.BULLET.DENSITY

@@ -5,7 +5,6 @@ import pymunk.pygame_util
 from config import config
 from game import Game
 from gameObjects.bullet import Bullet
-from gameObjects.d_wall import DWall
 from gameObjects.tank import Tank
 from gameObjects.wall import Wall
 
@@ -32,7 +31,7 @@ def run_pygame():
     Bullet(space, (10, 75), (100, -100))
 
     Wall(space, (0, 50), (200, 50))
-    DWall(space, (251, 50), (500, 50))
+    Wall(space, (251, 50), (500, 50), True)
 
     while running:
         # Did the user click the window close button?

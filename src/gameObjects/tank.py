@@ -11,7 +11,7 @@ class Tank(GameObject):
         super().__init__(space, coord, velocity, pymunk.Body.KINEMATIC)
 
         self.dims = config.TANK.DIMS
-        self.HP = config.TANK.HP  # health points
+        self.hp = config.TANK.HP  # health points
 
         self.shape = pymunk.Poly.create_box(self.body, self.dims)
         self.shape.density = config.TANK.DENSITY
