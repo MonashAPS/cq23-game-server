@@ -6,6 +6,7 @@ from config import config
 from game import Game
 from gameObjects.bullet import Bullet
 from gameObjects.tank import Tank
+from gameObjects.wall import Wall
 
 
 def run_pygame():
@@ -24,6 +25,8 @@ def run_pygame():
     Game(space)
     Tank(space, (200, 200), (0, 0))
     Bullet(space, (200, 400), (0, -100))
+    Bullet(space, (300, 400), (0, -100))
+    Wall(space, (0, 50), (300, 50))
 
     while running:
         # Did the user click the window close button?

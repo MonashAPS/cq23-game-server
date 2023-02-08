@@ -11,9 +11,11 @@ class Bullet(GameObject):
         super().__init__(space, coord, velocity)
 
         self.radius = config.BULLET.RADIUS
+        self.HP = config.BULLET.HP  # health points
 
         self.shape = pymunk.Circle(self.body, self.radius)
         self.shape.density = 1
         self.shape.color = config.BULLET.COLOR
         self.shape.collision_type = config.COLLISION_TYPE.BULLET
+
         self.space.add(self.body, self.shape)

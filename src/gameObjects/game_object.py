@@ -6,7 +6,7 @@ class GameObject:
         self,
         space: pymunk.Space,
         coord: tuple[int, int],
-        velocity: tuple[int, int],
+        velocity: tuple[int, int] = (0, 0),
         body_type=pymunk.Body.DYNAMIC,
     ):
         self.space = space

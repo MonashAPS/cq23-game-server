@@ -22,9 +22,10 @@ def get_config():
 
 
 defaults = {
-    "TANK": {"DIMS": (30, 30), "HP": 100, "COLOR": pygame.Color("blue")},
+    "TANK": {"DIMS": (30, 30), "HP": 3, "COLOR": pygame.Color("blue")},
     "MAP": {"DIMS": (500, 500)},
     "COLLISION_TYPE": {"TANK": 1, "BULLET": 2, "WALL": 3},
-    "BULLET": {"RADIUS": 5, "COLOR": pygame.Color("orange")},
+    "BULLET": {"RADIUS": 5, "COLOR": pygame.Color("orange"), "HP": 1},
+    "WALL": {"RADIUS": 5, "HP": 1},
 }
 config = get_config()
