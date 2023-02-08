@@ -16,15 +16,17 @@ class Game:
             config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.BULLET
         )
         bullet_tank_handler.post_solve = self.post_solve_collision_handler
+
         # add bullet-wall collision handler
-        bullet_wall_handler = self.space.add_collision_handler(
-            config.COLLISION_TYPE.WALL, config.COLLISION_TYPE.BULLET
+        bullet_dwall_handler = self.space.add_collision_handler(
+            config.COLLISION_TYPE.D_WALL, config.COLLISION_TYPE.BULLET
         )
-        bullet_wall_handler.post_solve = self.post_solve_collision_handler
+        bullet_dwall_handler.post_solve = self.post_solve_collision_handler
 
     def post_solve_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
+        print(arbiter.is_first_contact)
         shape1, shape2 = arbiter.shapes
         self.space.remove(shape1, shape1.body)
         self.space.remove(shape2, shape2.body)

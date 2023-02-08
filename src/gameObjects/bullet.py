@@ -14,7 +14,8 @@ class Bullet(GameObject):
         self.HP = config.BULLET.HP  # health points
 
         self.shape = pymunk.Circle(self.body, self.radius)
-        self.shape.density = 1
+        self.shape.density = config.BULLET.DENSITY
+        self.shape.elasticity = config.BULLET.ELASTICITY
         self.shape.color = config.BULLET.COLOR
         self.shape.collision_type = config.COLLISION_TYPE.BULLET
 
