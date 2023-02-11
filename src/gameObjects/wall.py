@@ -16,14 +16,15 @@ class Wall(GameObject):
 
         self.is_destructible = is_destructible
         self.radius = config.WALL.RADIUS
-        self.hp = config.WALL.HP if is_destructible else float("inf")  # health points
 
-        color = config.WALL.DESTRUCTIBLE_COLOR if is_destructible else config.WALL.COLOR
-        collision_type = (
-            config.COLLISION_TYPE.DESTRUCTIBLE_WALL
-            if is_destructible
-            else config.COLLISION_TYPE.WALL
-        )
+        if is_destructible:
+            self.hp = config.WALL.HP  # health points
+            color = config.WALL.DESTRUCTIBLE_COLOR
+            collision_type = config.COLLISION_TYPE.DESTRUCTIBLE_WALL
+        else:
+            self.hp = float("inf")  # health points
+            color = config.WALL.COLOR
+            collision_type = config.COLLISION_TYPE.WALL
 
         self.shape = pymunk.Segment(self.body, endpoint1, endpoint2, self.radius)
         self.shape.density = config.WALL.DENSITY
