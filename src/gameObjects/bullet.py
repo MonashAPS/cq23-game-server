@@ -1,3 +1,4 @@
+from __future__ import annotations
 import pymunk
 
 from config import config
