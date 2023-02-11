@@ -16,7 +16,6 @@ class Wall(GameObject):
         super().__init__(space, (0, 0), body_type=pymunk.Body.STATIC)
 
         self.is_destructible = is_destructible
-        self.radius = config.WALL.RADIUS
 
         if is_destructible:
             self.hp = config.WALL.HP  # health points
@@ -27,7 +26,14 @@ class Wall(GameObject):
             color = config.WALL.COLOR
             collision_type = config.COLLISION_TYPE.WALL
 
-        self.shape = pymunk.Segment(self.body, endpoint1, endpoint2, self.radius)
+        verts = [
+            endpoint1,
+            (endpoint1[0], endpoint2[1]),
+            endpoint2,
+            (endpoint2[0], endpoint1[1])
+        ]
+
+        self.shape = pymunk.Poly(self.body, verts)
         self.shape.density = config.WALL.DENSITY
         self.shape.elasticity = config.WALL.ELASTICITY
         self.shape.color = color

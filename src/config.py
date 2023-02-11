@@ -35,7 +35,6 @@ defaults = {
         "DENSITY": 1,
     },
     "WALL": {
-        "RADIUS": 5,
         "HP": math.inf,
         "COLOR": pygame.Color("black"),
         "DESTRUCTIBLE_COLOR": pygame.Color("red"),
