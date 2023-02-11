@@ -1,35 +1,34 @@
 import logging
 
+import pymunk
 
-class GameState:
-    def __init__(self):
-        pass
-
-
-class Move:
-    def __init__(self):
-        # calls self._parse() and returns an exception if there is an error in the message received from the player
-        pass
-
-    def _parse(self):
-        pass
-
-
-class Player:
-    def __init__(self):
-        # setup communication channel with the player's bot
-        pass
-
-    def request_move(self):
-        # supply the relevant gamestate info to the player, then await their move
-        pass
+from config import config
 
 
 class Game:
-    def __init__(self):
-        # setup communication with the two(?) players
-        # initialise replay and logs
-        pass
+    def __init__(self, space: pymunk.Space):
+        self.space = space
+        self.add_collision_handlers()
+
+    def add_collision_handlers(self):
+        # add bullet-tank collision handler
+        bullet_tank_handler = self.space.add_collision_handler(
+            config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.BULLET
+        )
+        bullet_tank_handler.post_solve = self.post_solve_collision_handler
+
+        # add bullet-wall collision handler
+        bullet_dwall_handler = self.space.add_collision_handler(
+            config.COLLISION_TYPE.DESTRUCTIBLE_WALL, config.COLLISION_TYPE.BULLET
+        )
+        bullet_dwall_handler.post_solve = self.post_solve_collision_handler
+
+    def post_solve_collision_handler(
+        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
+    ):
+        shape1, shape2 = arbiter.shapes
+        self.space.remove(shape1, shape1.body)
+        self.space.remove(shape2, shape2.body)
 
     def _initialise_state(self):
         # initialise the map by either loading from a file or randomly generating one (handled by other methods)
@@ -54,8 +53,3 @@ class Game:
         logging.info("Starting game between players: ... and ...")
         # while true (or number of turns is less than max turns), play_move
         pass
-
-
-class Result:
-    def __init__(self):
-        self.winning_player_id = None  # if =None, the game was a draw
