@@ -25,6 +25,7 @@ def run_pygame():
 
     # example objects
     Game(space)
+
     objects = list(m.create_game_objects(space))
 
     while running:
