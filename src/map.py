@@ -12,6 +12,7 @@ class MapLoadError(Exception):
 
 
 class Map:
+    # map(self, y, x, space) -> Physics object.
     CHARACTER_MAP = {
         ".": None,
         "X": lambda self, y, x, space: Wall(
@@ -35,17 +36,20 @@ class Map:
 
         Args:
             map_name (str): name of the json file that holds the map information
-            width (int): width of the tile map
-            height (int): height of the tile map
         """
         self.map_name = map_name
 
         self._load_map()
 
     def to_global_coords(self, y, x):
+        """Translates grid coordinates to pymunk space coordinates in the same visual direction."""
         return ((x+0.5) * config.GRID_SCALING, (self.map_height - y - 0.5) * config.GRID_SCALING)
 
     def _load_map(self):
+        """
+        Loads the map. Any existing information will be lost.
+        Requires self.map_name to be set.
+        """
         # Map format: width/height, ascii grid, yaml
         self.objects: list[tuple[int, int, function]] = []
         self.power_up_spawns: list[tuple[int, int]] = []
@@ -67,6 +71,10 @@ class Map:
                 self._handle_character(y, x, map_ascii[y][x])
 
     def _handle_character(self, y: int, x: int, character: str) -> None:
+        """
+        Handle actions required for a grid square in the map file.
+        Either creations a physics object or has some special functionality.
+        """
         if (
             character not in self.CHARACTER_MAP and
             character not in self.SPECIAL_CHARS
