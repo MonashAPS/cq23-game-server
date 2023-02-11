@@ -38,5 +38,6 @@ class Wall(GameObject):
         self.shape.elasticity = config.WALL.ELASTICITY
         self.shape.color = color
         self.shape.collision_type = collision_type
+        self.shape._wall_coords = endpoint1, endpoint2
 
         self.space.add(self.body, self.shape)

@@ -3,6 +3,7 @@ import logging
 import pymunk
 
 from config import config
+from map import Map
 
 
 class Game:
@@ -27,6 +28,9 @@ class Game:
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
         shape1, shape2 = arbiter.shapes
+        for shape in (shape1, shape2):
+            if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
+                Map.get_map().register_wall_broken(shape._wall_coords)
         self.space.remove(shape1, shape1.body)
         self.space.remove(shape2, shape2.body)
 

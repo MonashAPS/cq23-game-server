@@ -1,6 +1,7 @@
 from __future__ import annotations
-import numpy as np
+import math
 from typing import Generator
+from heapq import heappush, heappop
 from yaml import safe_load
 
 from config import config
@@ -12,6 +13,15 @@ class MapLoadError(Exception):
 
 
 class Map:
+    """
+    Singleton class
+    """
+    instance = None
+
+    @classmethod
+    def get_map(cls):
+        return cls.instance
+
     # map(self, y, x, space) -> Physics object.
     CHARACTER_MAP = {
         ".": None,
@@ -29,6 +39,7 @@ class Map:
         ),
         "S": lambda self, y, x, space: Tank(space, self.to_global_coords(y, x), (0, 0)),
     }
+    TRAVERSABLE = ".SP"
     SPECIAL_CHARS = "P"
 
     def __init__(self, map_name: str):
@@ -40,10 +51,20 @@ class Map:
         self.map_name = map_name
 
         self._load_map()
+        Map.instance = self
 
     def to_global_coords(self, y, x):
         """Translates grid coordinates to pymunk space coordinates in the same visual direction."""
-        return ((x+0.5) * config.GRID_SCALING, (self.map_height - y - 0.5) * config.GRID_SCALING)
+        return (
+            (x+0.5) * config.GRID_SCALING,
+            (self.map_height - y - 0.5) * config.GRID_SCALING
+        )
+
+    def from_global_coords(self, x, y):
+        return (
+            round(-y/config.GRID_SCALING - 0.5 + self.map_height),
+            round(x/config.GRID_SCALING - 0.5)
+        )
 
     def _load_map(self):
         """
@@ -51,15 +72,16 @@ class Map:
         Requires self.map_name to be set.
         """
         # Map format: width/height, ascii grid, yaml
-        self.objects: list[tuple[int, int, function]] = []
+        self.objects: dict[tuple[int, int], GameObject] = {}
+        self.fn_objects: dict[tuple[int, int], function] = {}
         self.power_up_spawns: list[tuple[int, int]] = []
+        self.traversability: list[list[bool]] = []
         with open(self.map_name, "r") as f:
             contents = list(f.readlines())
         self.map_width, self.map_height = list(map(int, contents[0].split()))
         map_ascii = contents[1:self.map_height+1]
         yaml = "\n".join(contents[self.map_height+1:]).strip()
         self.extra_config = safe_load(yaml)  # TODO: Do something with this.
-        self.map = np.zeros((self.map_height, self.map_width), dtype=GameObject)
         for y in range(self.map_height):
             if len(map_ascii[y]) < self.map_width:
                 raise MapLoadError(
@@ -67,8 +89,11 @@ class Map:
                     f"Not enough characters to define {self.map_width} wide "
                     f"by {self.map_height} tall grid"
                 )
+            self.traversability.append([False] * self.map_width)
             for x in range(self.map_width):
                 self._handle_character(y, x, map_ascii[y][x])
+
+        self._precomp()
 
     def _handle_character(self, y: int, x: int, character: str) -> None:
         """
@@ -82,13 +107,90 @@ class Map:
             raise MapLoadError(
                 f"Invalid character found in map file {character} at line {y+2} column {x+1}."
             )
+        self.traversability[y][x] = character in self.TRAVERSABLE
         if character in self.CHARACTER_MAP:
             if self.CHARACTER_MAP[character] is not None:
-                self.objects.append((y, x, self.CHARACTER_MAP[character]))
+                self.fn_objects[(y, x)] = self.CHARACTER_MAP[character]
         else:                         # SPECIAL
             if character == "P":      # Powerup
                 self.power_up_spawns.append((y, x))
 
     def create_game_objects(self, space) -> Generator[GameObject]:
-        for y, x, mapper in self.objects:
-            yield mapper(self, y, x, space)
+        for (y, x), mapper in self.fn_objects.items():
+            self.objects[(y, x)] = mapper(self, y, x, space)
+            yield self.objects[(y, x)]
+
+    # PATHFINDING UTILS
+
+    def _precomp(self):
+        from pathfinding.core.grid import Grid
+
+        self._gen_special_points()
+        self.pf_grid = Grid(matrix=self.traversability)
+
+    def _is_special(self, y, x):
+        if not self.traversability[y][x]:
+            return False
+        points = [(y, x+1), (y+1, x+1), (y+1, x), (y+1, x-1), (y, x-1), (y-1, x-1), (y-1, x), (y-1, x+1), (y, x+1)]
+        for z in range(0, 7, 2):
+            if 0 <= points[z][0] < self.map_height and 0 <= points[z][1] < self.map_width and 0 <= points[z+2][0] < self.map_height and 0 <= points[z+2][1] < self.map_width:
+                if (
+                    self.traversability[points[z][0]][points[z][1]] and
+                    not self.traversability[points[z+1][0]][points[z+1][1]] and
+                    self.traversability[points[z+2][0]][points[z+2][1]]
+                ):
+                    return True
+        return False
+
+    def _gen_special_points(self):
+        """
+        A special point is one with two traversable tiles adjacent and a non-traversable tile in between.
+        This ensures that the shortest path between any tiles on the map can begin with a straight line to a special point.
+        """
+        self.special_points = set()
+        for y in range(self.map_height):
+            for x in range(self.map_width):
+                if self._is_special(y, x):
+                    self.special_points.add((y, x))
+
+    def register_wall_broken(self, coords):
+        """Call this function when a wall is broken to update pathfinding."""
+        from pathfinding.core.node import Node
+        av = (coords[0][0] + coords[1][0]) / 2, (coords[0][1] + coords[1][1]) / 2
+        (cy, cx) = self.from_global_coords(*av)
+        self.pf_grid.nodes[cy][cx] = Node(cx, cy, True)
+        self.traversability[cy][cx] = True
+        # Re-check if this point or those surrounding is special
+        for y in range(cy-1, cy+2):
+            for x in range(cx-1, cx+2):
+                if self._is_special(y, x):
+                    self.special_points.add((y, x))
+
+    def path(self, c1, c2):
+        """
+        Finds the shortest path between two grid points,
+        when constrained to the grid world (but allowed to move diagonally)
+        Inefficient path chosen on large open fields.
+        """
+        from pathfinding.finder.a_star import AStarFinder
+        from pathfinding.core.diagonal_movement import DiagonalMovement
+        start = self.pf_grid.node(c1[1], c1[0])
+        end = self.pf_grid.node(c2[1], c2[0])
+        finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+        path, runs = finder.find_path(start, end, self.pf_grid)
+        self.pf_grid.cleanup()
+        return list(map(lambda p: (p[1], p[0]), path))
+
+    def path_shortcut(self, c1, c2):
+        """
+        Finds a pretty good path on an open gridworld by restricting the grid-path
+        to some particular points.
+        """
+        to_remove = []
+        path = self.path(c1, c2)
+        for x in range(1, len(path)-1):
+            if path[x] not in self.special_points:
+                to_remove.append(x)
+        for x in to_remove[::-1]:
+            del path[x]
+        return path
