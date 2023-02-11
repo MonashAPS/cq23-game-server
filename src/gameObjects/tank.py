@@ -11,7 +11,7 @@ class Tank(GameObject):
     ):
         super().__init__(space, coord, velocity, pymunk.Body.KINEMATIC)
 
-        self.dims = config.TANK.DIMS
+        self.dims = (config.TANK.DIM_MULT[0] * config.GRID_SCALING, config.TANK.DIM_MULT[1] * config.GRID_SCALING)
         self.hp = config.TANK.HP  # health points
 
         self.shape = pymunk.Poly.create_box(self.body, self.dims)
