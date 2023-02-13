@@ -24,9 +24,10 @@ def get_config():
 
 
 defaults = {
-    "TANK": {"DIMS": (30, 30), "HP": 3, "COLOR": pygame.Color("blue"), "DENSITY": 1},
-    "MAP": {"DIMS": (500, 500)},
+    "TANK": {"DIM_MULT": (1, 1), "HP": 3, "COLOR": pygame.Color("blue"), "DENSITY": 1},
+    "MAP": {"PATH": "maps/simple.map"},
     "COLLISION_TYPE": {"TANK": 1, "BULLET": 2, "WALL": 3, "DESTRUCTIBLE_WALL": 4},
+    "GRID_SCALING": 20,
     "BULLET": {
         "RADIUS": 5,
         "COLOR": pygame.Color("orange"),
