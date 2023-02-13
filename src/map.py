@@ -5,12 +5,9 @@ from collections.abc import Callable, Generator
 from yaml import safe_load
 
 from config import config
+from exceptions import CoordinateError, MapLoadError
 from gameObjects import Tank, Wall
 from gameObjects.game_object import GameObject
-
-
-class MapLoadError(Exception):
-    pass
 
 
 class Map:
@@ -119,6 +116,9 @@ class Map:
             self.objects[(y, x)] = mapper(self, y, x, space)
             yield self.objects[(y, x)]
 
+    def _is_valid_coord(self, y, x):
+        return 0 <= y < self.map_height and 0 <= x < self.map_width
+
     # PATHFINDING UTILS
 
     def _precomp(self):
@@ -190,6 +190,9 @@ class Map:
         """
         from pathfinding.core.diagonal_movement import DiagonalMovement
         from pathfinding.finder.a_star import AStarFinder
+
+        if not (self._is_valid_coord(*c1) and self._is_valid_coord(*c2)):
+            raise CoordinateError(f"Coordinates out of map's bounds: {c1}, {c2}")
 
         start = self.pf_grid.node(c1[1], c1[0])
         end = self.pf_grid.node(c2[1], c2[0])
