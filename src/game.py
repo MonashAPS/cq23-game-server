@@ -7,8 +7,9 @@ from map import Map
 
 
 class Game:
-    def __init__(self, space: pymunk.Space):
+    def __init__(self, space: pymunk.Space, m: Map):
         self.space = space
+        self.map = m
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
@@ -30,7 +31,7 @@ class Game:
         shape1, shape2 = arbiter.shapes
         for shape in (shape1, shape2):
             if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                Map.get_map().register_wall_broken(shape._wall_coords)
+                self.map.register_wall_broken(shape._wall_coords)
         self.space.remove(shape1, shape1.body)
         self.space.remove(shape2, shape2.body)
 
