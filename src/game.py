@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Callable
 
 import pymunk
 
@@ -13,27 +14,53 @@ class Game:
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
-        # add bullet-tank collision handler
-        bullet_tank_handler = self.space.add_collision_handler(
-            config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.BULLET
-        )
-        bullet_tank_handler.post_solve = self.post_solve_collision_handler
+        collision_groups: list[tuple[int, int, Callable | None]] = [
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.WALL, None),
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.DESTRUCTIBLE_WALL, None),
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.TANK, None),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.TANK,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.BULLET,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.WALL,
+                self.damage_collision_handler,
+            ),
+        ]
 
-        # add bullet-wall collision handler
-        bullet_dwall_handler = self.space.add_collision_handler(
-            config.COLLISION_TYPE.DESTRUCTIBLE_WALL, config.COLLISION_TYPE.BULLET
-        )
-        bullet_dwall_handler.post_solve = self.post_solve_collision_handler
+        for coltype_a, coltype_b, handler in collision_groups:
+            collision_handler = self.space.add_collision_handler(coltype_a, coltype_b)
+            if handler:
+                collision_handler.post_solve = handler
 
-    def post_solve_collision_handler(
+    def damage_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
-        shape1, shape2 = arbiter.shapes
-        for shape in (shape1, shape2):
-            if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                self.map.register_wall_broken(shape._wall_coords)
-        self.space.remove(shape1, shape1.body)
-        self.space.remove(shape2, shape2.body)
+        game_objects = self.map.get_game_objects()
+
+        for go in game_objects:
+            for shape in arbiter.shapes:
+                if shape == go.shape:
+                    if go.apply_damage(config.BULLET.DAMAGE).is_destroyed():
+                        # TODO: remove the destroyed object from the map
+                        if (
+                            shape.collision_type
+                            == config.COLLISION_TYPE.DESTRUCTIBLE_WALL
+                        ):
+                            self.map.register_wall_broken(shape._wall_coords)
+                        self.space.remove(shape, shape.body)
 
     def _initialise_state(self):
         # initialise the map by either loading from a file or randomly generating one (handled by other methods)

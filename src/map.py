@@ -6,7 +6,7 @@ from yaml import safe_load
 
 from config import config
 from exceptions import CoordinateError, MapLoadError
-from gameObjects import Tank, Wall
+from gameObjects import Bullet, Tank, Wall
 from gameObjects.game_object import GameObject
 
 
@@ -33,6 +33,9 @@ class Map:
             ),
             "S": lambda self, y, x, space: Tank(
                 space, self.to_global_coords(y, x), (0, 0)
+            ),
+            "B": lambda self, y, x, space: Bullet(
+                space, self.to_global_coords(y, x), (0, -10)
             ),
         }
         self.TRAVERSABLE = ".SP"
@@ -105,6 +108,11 @@ class Map:
         for (y, x), mapper in self.fn_objects.items():
             self.objects[(y, x)] = mapper(self, y, x, space)
             yield self.objects[(y, x)]
+
+    def get_game_objects(self) -> list[GameObject]:
+        if not self.objects:
+            return []
+        return list(self.objects.values())
 
     def _is_valid_coord(self, y, x):
         return 0 <= y < self.map_height and 0 <= x < self.map_width
