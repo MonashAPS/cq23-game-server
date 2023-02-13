@@ -11,46 +11,36 @@ from gameObjects.game_object import GameObject
 
 
 class Map:
-    """
-    Singleton class
-    """
-
-    instance = None
-
-    @classmethod
-    def get_map(cls):
-        return cls.instance
-
-    # map(self, y, x, space) -> Physics object.
-    CHARACTER_MAP = {
-        ".": None,
-        "X": lambda self, y, x, space: Wall(
-            space,
-            self.to_global_coords(y - 0.5, x - 0.5),
-            self.to_global_coords(y + 0.5, x + 0.5),
-            False,
-        ),
-        "D": lambda self, y, x, space: Wall(
-            space,
-            self.to_global_coords(y - 0.5, x - 0.5),
-            self.to_global_coords(y + 0.5, x + 0.5),
-            True,
-        ),
-        "S": lambda self, y, x, space: Tank(space, self.to_global_coords(y, x), (0, 0)),
-    }
-    TRAVERSABLE = ".SP"
-    SPECIAL_CHARS = "P"
-
     def __init__(self, map_name: str):
         """_summary_
 
         Args:
             map_name (str): name of the json file that holds the map information
         """
+        self.CHARACTER_MAP = {
+            ".": None,
+            "X": lambda self, y, x, space: Wall(
+                space,
+                self.to_global_coords(y - 0.5, x - 0.5),
+                self.to_global_coords(y + 0.5, x + 0.5),
+                False,
+            ),
+            "D": lambda self, y, x, space: Wall(
+                space,
+                self.to_global_coords(y - 0.5, x - 0.5),
+                self.to_global_coords(y + 0.5, x + 0.5),
+                True,
+            ),
+            "S": lambda self, y, x, space: Tank(
+                space, self.to_global_coords(y, x), (0, 0)
+            ),
+        }
+        self.TRAVERSABLE = ".SP"
+        self.SPECIAL_CHARS = "P"
+
         self.map_name = map_name
 
         self._load_map()
-        Map.instance = self
 
     def to_global_coords(self, y, x):
         """Translates grid coordinates to pymunk space coordinates in the same visual direction."""
