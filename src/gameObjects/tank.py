@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from math import copysign
+
 import pymunk
 
 from config import config
@@ -26,11 +28,11 @@ class Tank(GameObject):
     def move_to_pos(self, coord: tuple[int, int]):
         px, py = self.body.position  # current position
         tx, ty = coord  # target coordinates
-        dx = 1 - ((tx - px) <= 0)  # x direction
-        dy = 1 - ((ty - py) <= 0)  # y direction
+        dx = copysign(1, tx - px)  # x direction
+        dy = copysign(1, ty - py)  # y direction
         self.set_velocity((dx, dy))
 
-    def set_velocity(self, direction: tuple[int, int]):
+    def set_velocity(self, direction: tuple[float, float]):
         self.body.velocity = (
             direction[0] * config.TANK.VELOCITY,
             direction[1] * config.TANK.VELOCITY,

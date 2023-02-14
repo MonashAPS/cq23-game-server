@@ -35,7 +35,7 @@ class Map:
                 space, self.to_global_coords(y, x), (0, 0)
             ),
             "B": lambda self, y, x, space: Bullet(
-                space, self.to_global_coords(y, x), (0, -10)
+                space, self.to_global_coords(y, x), (0, 0)
             ),
         }
         self.TRAVERSABLE = ".SP"

@@ -4,13 +4,23 @@ from collections.abc import Callable
 import pymunk
 
 from config import config
+from gameObjects.tank import Tank
 from map import Map
+from player import Player
 
 
 class Game:
-    def __init__(self, space: pymunk.Space, m: Map):
+    def __init__(self, space: pymunk.Space, map: Map):
         self.space = space
-        self.map = m
+        self.map = map
+        self.game_objects = list(self.map.create_game_objects(self.space))
+
+        tanks = filter(lambda go: isinstance(go, Tank), self.game_objects)
+        self.players = [Player(tank, map) for tank in tanks]
+
+        for player in self.players:  # TODO: remove this. It's only for testing purposes
+            player._set_path((150, 200))
+
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
@@ -48,9 +58,7 @@ class Game:
     def damage_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
-        game_objects = self.map.get_game_objects()
-
-        for go in game_objects:
+        for go in self.game_objects[:]:
             for shape in arbiter.shapes:
                 if shape == go.shape:
                     if go.apply_damage(config.BULLET.DAMAGE).is_destroyed():
@@ -61,19 +69,14 @@ class Game:
                         ):
                             self.map.register_wall_broken(shape._wall_coords)
                         self.space.remove(shape, shape.body)
+                        self.game_objects.remove(go)  # remove reference to game object
 
-    def _initialise_state(self):
-        # initialise the map by either loading from a file or randomly generating one (handled by other methods)
-        # select spawn location for players, etc
-        pass
+    def tick(self):
+        self._play_turn()
 
     def _play_turn(self):
-        # request move from each player
-        # check if the moves are valid in the context of the gamestate (e.g. check bot has ammo if trying to shoot)
-        # play moves
-        # update the gamestate for a single tick (calculate collisions, bullet movements, closing map ring, etc)
-        # if the game is terminal, return the result
-        pass
+        for player in self.players:
+            player.tick()
 
     def _is_terminal(self):
         # check which players still have hp

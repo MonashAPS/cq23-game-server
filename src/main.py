@@ -4,17 +4,17 @@ import pymunk.pygame_util
 
 from config import config
 from game import Game
-from map import Map
-from gameObjects.bullet import Bullet
 from gameObjects.tank import Tank
-from gameObjects.wall import Wall
+from map import Map
 
 
 def run_pygame():
     # PyGame init
     pygame.init()
     m = Map(config.MAP.PATH)
-    display = pygame.display.set_mode((m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING))
+    display = pygame.display.set_mode(
+        (m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING)
+    )
     clock = pygame.time.Clock()
     FPS = 50
     running = True
@@ -24,9 +24,7 @@ def run_pygame():
     draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
 
     # example objects
-    Game(space)
-
-    objects = list(m.create_game_objects(space))
+    game = Game(space, m)
 
     while running:
         # Did the user click the window close button?
@@ -47,6 +45,7 @@ def run_pygame():
 
         # Update physics
         space.step(1 / FPS)
+        game.tick()
 
         pygame.display.flip()
         clock.tick(FPS)
