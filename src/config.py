@@ -29,6 +29,7 @@ defaults = {
         "HP": 2,
         "COLOR": pygame.Color("blue"),
         "DENSITY": 100,
+        "VELOCITY": 10,
     },
     "MAP": {"PATH": "maps/simple.map"},
     "COLLISION_TYPE": {"TANK": 1, "BULLET": 2, "WALL": 3, "DESTRUCTIBLE_WALL": 4},

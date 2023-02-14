@@ -53,6 +53,7 @@ class Map:
         )
 
     def from_global_coords(self, x, y):
+        "From pymunk coordinates to grid coordinates"
         return (
             round(-y / config.GRID_SCALING - 0.5 + self.map_height),
             round(x / config.GRID_SCALING - 0.5),

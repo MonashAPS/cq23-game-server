@@ -12,16 +12,6 @@ class Move:
         pass
 
 
-class Player:
-    def __init__(self):
-        # setup communication channel with the player's bot
-        pass
-
-    def request_move(self):
-        # supply the relevant gamestate info to the player, then await their move
-        pass
-
-
 class Result:
     def __init__(self):
         self.winning_player_id = None  # if =None, the game was a draw

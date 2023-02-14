@@ -23,5 +23,15 @@ class Tank(GameObject):
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.space.add(self.body, self.shape)
 
-    def set_velocity(self, velocity: tuple[int, int]):
-        self.body.velocity = velocity
+    def move_to_pos(self, coord: tuple[int, int]):
+        px, py = self.body.position  # current position
+        tx, ty = coord  # target coordinates
+        dx = 1 - ((tx - px) <= 0)  # x direction
+        dy = 1 - ((ty - py) <= 0)  # y direction
+        self.set_velocity((dx, dy))
+
+    def set_velocity(self, direction: tuple[int, int]):
+        self.body.velocity = (
+            direction[0] * config.TANK.VELOCITY,
+            direction[1] * config.TANK.VELOCITY,
+        )
