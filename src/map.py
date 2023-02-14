@@ -115,7 +115,7 @@ class Map:
             return []
         return list(self.objects.values())
 
-    def _is_valid_coord(self, y, x):
+    def _is_valid_coord(self, y: int, x: int):
         return 0 <= y < self.map_height and 0 <= x < self.map_width
 
     # PATHFINDING UTILS

@@ -24,6 +24,7 @@ class Game:
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
+        """register all collision handlers in the pymunk space"""
         collision_groups: list[tuple[int, int, Callable | None]] = [
             (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.WALL, None),
             (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.DESTRUCTIBLE_WALL, None),
@@ -58,6 +59,13 @@ class Game:
     def damage_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
+        """collision handler for collisions that would cause HP loss to an object
+
+        Args:
+            arbiter (pymunk.Arbiter): pymunk provided arg
+            space (pymunk.Space): pymunk provided arg
+            data (_type_): pymunk provided arg
+        """
         for go in self.game_objects[:]:
             for shape in arbiter.shapes:
                 if shape == go.shape:
@@ -72,6 +80,7 @@ class Game:
                         self.game_objects.remove(go)  # remove reference to game object
 
     def tick(self):
+        """called at every tick"""
         self._play_turn()
 
     def _play_turn(self):

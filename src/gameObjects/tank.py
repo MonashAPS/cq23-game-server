@@ -26,6 +26,12 @@ class Tank(GameObject):
         self.space.add(self.body, self.shape)
 
     def move_to_pos(self, coord: tuple[int, int]):
+        """This function can be called when the tank needs to be moved to a specific pymunk coordinate.
+        The tank's velocity will be set so that it is travelling towards coord.
+
+        Args:
+            coord (tuple[int, int]): coordinate to move to
+        """
         px, py = self.body.position  # current position
         tx, ty = coord  # target coordinates
         dx = copysign(1, tx - px)  # x direction
@@ -33,6 +39,11 @@ class Tank(GameObject):
         self.set_velocity((dx, dy))
 
     def set_velocity(self, direction: tuple[float, float]):
+        """Set the velocity of the tank.
+
+        Args:
+            direction (tuple[float, float]): The direction the tank should move towards (x,y). (1,1) is up and right
+        """
         self.body.velocity = (
             direction[0] * config.TANK.VELOCITY,
             direction[1] * config.TANK.VELOCITY,

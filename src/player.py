@@ -15,6 +15,7 @@ class Player:
         # TODO: setup communication channel with the player's bot
 
     def tick(self):
+        """This will be called at every tick."""
         self._traverse_path()
 
     def request_move(self):
@@ -22,6 +23,7 @@ class Player:
         pass
 
     def _traverse_path(self):
+        """Move the player through a previously calculated path (self.path) until the path is complete"""
         if not self.path:
             self._set_direction(
                 (0, 0)
@@ -35,6 +37,11 @@ class Player:
         self.object.move_to_pos(self.path[0])
 
     def _set_path(self, coord: tuple[int, int]):
+        """calculate and set the path attribute if the target is coord
+
+        Args:
+            coord (tuple[int, int]): the target coordinate the function will create a path to
+        """
         self.path = deque(
             map(
                 lambda p: self.map.to_global_coords(*p),
@@ -47,4 +54,9 @@ class Player:
         self.target = coord
 
     def _set_direction(self, direction: tuple[int, int]):
+        """manually set the direction that the tank should move towards
+
+        Args:
+            direction (tuple[int, int]): The direction the tank should move towards (i.e. (x,y)). (1,1) is up and right
+        """
         self.object.set_velocity(direction)
