@@ -4,7 +4,6 @@ import pymunk.pygame_util
 
 from config import config
 from game import Game
-from gameObjects.tank import Tank
 from map import Map
 
 
@@ -55,16 +54,34 @@ def run_pygame():
 
 
 def run_pymunk():
-    # example tank
-    tank = Tank(space, (200, 200), (50, 50))
-    tank.body.position = (201, 201)
+    FPS = 50
+    running = True
+
+    # Physics stuff
+    space = pymunk.Space()
+
+    # example objects
+    map = Map(config.MAP.PATH)
+    game = Game(space, map)
+
+    while running:
+        state = []
+        for x in space.shapes:
+            if x.collision_type == config.COLLISION_TYPE.TANK:
+                s = f"{x} {x.body.position} {x.body.velocity}"
+                state.append(s)
+
+        # Update physics
+        space.step(1 / FPS)
+        game.tick()
 
 
 if __name__ == "__main__":
     # setup pymunk
     space = pymunk.Space()
+    visualise_game = True
 
-    if True:  # run game in pygame
+    if visualise_game:  # run game in pygame
         run_pygame()
     else:
         run_pymunk()
