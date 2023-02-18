@@ -23,6 +23,8 @@ class Tank(GameObject):
         self.shape = pymunk.Poly.create_box(self.body, self.dims)
         self.shape.density = config.TANK.DENSITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
+        self.shape._gameobject = self
+
         self.space.add(self.body, self.shape)
 
     def move_to_pos(self, coord: tuple[int, int]):

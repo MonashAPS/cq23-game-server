@@ -20,5 +20,6 @@ class Bullet(GameObject):
         self.shape.elasticity = config.BULLET.ELASTICITY
         self.shape.color = config.BULLET.COLOR
         self.shape.collision_type = config.COLLISION_TYPE.BULLET
+        self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)

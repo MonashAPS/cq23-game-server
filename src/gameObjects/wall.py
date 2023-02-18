@@ -40,5 +40,6 @@ class Wall(GameObject):
         self.shape.color = color
         self.shape.collision_type = collision_type
         self.shape._wall_coords = endpoint1, endpoint2
+        self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)

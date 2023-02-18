@@ -66,18 +66,16 @@ class Game:
             space (pymunk.Space): pymunk provided arg
             data (_type_): pymunk provided arg
         """
-        for go in self.game_objects[:]:
-            for shape in arbiter.shapes:
-                if shape == go.shape:
-                    if go.apply_damage(config.BULLET.DAMAGE).is_destroyed():
-                        # TODO: remove the destroyed object from the map
-                        if (
-                            shape.collision_type
-                            == config.COLLISION_TYPE.DESTRUCTIBLE_WALL
-                        ):
-                            self.map.register_wall_broken(shape._wall_coords)
-                        self.space.remove(shape, shape.body)
-                        self.game_objects.remove(go)  # remove reference to game object
+
+        for shape in arbiter.shapes:
+            if shape._gameobject.apply_damage(config.BULLET.DAMAGE).is_destroyed():
+                # TODO: remove the destroyed object from the map
+                if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
+                    self.map.register_wall_broken(shape._wall_coords)
+                self.space.remove(shape, shape.body)
+                self.game_objects.remove(
+                    shape._gameobject
+                )  # remove reference to game object
 
     def tick(self):
         """called at every tick"""
