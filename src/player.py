@@ -1,4 +1,3 @@
-import math
 from collections import deque
 
 from gameObjects.tank import Tank
@@ -7,7 +6,7 @@ from map import Map
 
 class Player:
     def __init__(self, player_object: Tank, map: Map):
-        self.object: Tank = player_object
+        self.gameobject: Tank = player_object
         self.map: Map = map
         self.path: deque = deque()
         self.target: tuple[int, int] | None = None
@@ -30,11 +29,16 @@ class Player:
             )  # stop moving the player once the target has been reached
             return
         if (
-            tuple(map(math.floor, self.object.body.position)) == self.path[0]
+            sum(
+                map(
+                    lambda x, y: abs(x - y), self.gameobject.body.position, self.path[0]
+                )
+            )
+            <= 0.3
         ):  # pymunk coordinates are floating point nums
             self.path.popleft()
             return
-        self.object.move_to_pos(self.path[0])
+        self.gameobject.move_to_pos(self.path[0])
 
     def _set_path(self, coord: tuple[int, int]):
         """calculate and set the path attribute if the target is coord
@@ -46,7 +50,7 @@ class Player:
             map(
                 lambda p: self.map.to_global_coords(*p),
                 self.map.path(
-                    self.map.from_global_coords(*self.object.body.position),
+                    self.map.from_global_coords(*self.gameobject.body.position),
                     self.map.from_global_coords(*coord),
                 ),
             )
@@ -59,4 +63,4 @@ class Player:
         Args:
             direction (tuple[int, int]): The direction the tank should move towards (i.e. (x,y)). (1,1) is up and right
         """
-        self.object.set_velocity(direction)
+        self.gameobject.set_velocity(direction)
