@@ -6,22 +6,11 @@ from yaml import safe_load
 
 from config import config
 from exceptions import CoordinateError, MapLoadError
-from gameObjects import Tank, Wall
+from gameObjects import Bullet, Tank, Wall
 from gameObjects.game_object import GameObject
 
 
 class Map:
-    """
-    Singleton class
-    """
-
-    instance = None
-
-    @classmethod
-    def get_map(cls):
-        return cls.instance
-
-    # map(self, y, x, space) -> Physics object.
     CHARACTER_MAP = {
         ".": None,
         "X": lambda self, y, x, space: Wall(
@@ -37,6 +26,9 @@ class Map:
             True,
         ),
         "S": lambda self, y, x, space: Tank(space, self.to_global_coords(y, x), (0, 0)),
+        "B": lambda self, y, x, space: Bullet(
+            space, self.to_global_coords(y, x), (0, 0)
+        ),
     }
     TRAVERSABLE = ".SP"
     SPECIAL_CHARS = "P"
@@ -50,7 +42,6 @@ class Map:
         self.map_name = map_name
 
         self._load_map()
-        Map.instance = self
 
     def to_global_coords(self, y, x):
         """Translates grid coordinates to pymunk space coordinates in the same visual direction."""
@@ -60,6 +51,7 @@ class Map:
         )
 
     def from_global_coords(self, x, y):
+        "From pymunk coordinates to grid coordinates"
         return (
             round(-y / config.GRID_SCALING - 0.5 + self.map_height),
             round(x / config.GRID_SCALING - 0.5),
@@ -116,7 +108,12 @@ class Map:
             self.objects[(y, x)] = mapper(self, y, x, space)
             yield self.objects[(y, x)]
 
-    def _is_valid_coord(self, y, x):
+    def get_game_objects(self) -> list[GameObject]:
+        if not self.objects:
+            return []
+        return list(self.objects.values())
+
+    def _is_valid_coord(self, y: int, x: int):
         return 0 <= y < self.map_height and 0 <= x < self.map_width
 
     # PATHFINDING UTILS

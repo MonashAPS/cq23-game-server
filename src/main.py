@@ -5,16 +5,15 @@ import pymunk.pygame_util
 from config import config
 from game import Game
 from map import Map
-from gameObjects.bullet import Bullet
-from gameObjects.tank import Tank
-from gameObjects.wall import Wall
 
 
 def run_pygame():
     # PyGame init
     pygame.init()
     m = Map(config.MAP.PATH)
-    display = pygame.display.set_mode((m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING))
+    display = pygame.display.set_mode(
+        (m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING)
+    )
     clock = pygame.time.Clock()
     FPS = 50
     running = True
@@ -24,9 +23,7 @@ def run_pygame():
     draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
 
     # example objects
-    Game(space)
-
-    objects = list(m.create_game_objects(space))
+    game = Game(space, m)
 
     while running:
         # Did the user click the window close button?
@@ -47,6 +44,7 @@ def run_pygame():
 
         # Update physics
         space.step(1 / FPS)
+        game.tick()
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -56,16 +54,34 @@ def run_pygame():
 
 
 def run_pymunk():
-    # example tank
-    tank = Tank(space, (200, 200), (50, 50))
-    tank.body.position = (201, 201)
+    FPS = 50
+    running = True
+
+    # Physics stuff
+    space = pymunk.Space()
+
+    # example objects
+    map = Map(config.MAP.PATH)
+    game = Game(space, map)
+
+    while running:
+        state = []
+        for x in space.shapes:
+            if x.collision_type == config.COLLISION_TYPE.TANK:
+                s = f"{x} {x.body.position} {x.body.velocity}"
+                state.append(s)
+
+        # Update physics
+        space.step(1 / FPS)
+        game.tick()
 
 
 if __name__ == "__main__":
     # setup pymunk
     space = pymunk.Space()
+    visualise_game = True
 
-    if True:  # run game in pygame
+    if visualise_game:  # run game in pygame
         run_pygame()
     else:
         run_pymunk()

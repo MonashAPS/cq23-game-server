@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import pymunk
 
 from config import config
@@ -18,7 +19,7 @@ class Wall(GameObject):
         self.is_destructible = is_destructible
 
         if is_destructible:
-            self.hp = config.WALL.HP  # health points
+            self.hp = config.WALL.DESTRUCTIBLE_HP  # health points
             color = config.WALL.DESTRUCTIBLE_COLOR
             collision_type = config.COLLISION_TYPE.DESTRUCTIBLE_WALL
         else:
@@ -30,7 +31,7 @@ class Wall(GameObject):
             endpoint1,
             (endpoint1[0], endpoint2[1]),
             endpoint2,
-            (endpoint2[0], endpoint1[1])
+            (endpoint2[0], endpoint1[1]),
         ]
 
         self.shape = pymunk.Poly(self.body, verts)
@@ -39,5 +40,6 @@ class Wall(GameObject):
         self.shape.color = color
         self.shape.collision_type = collision_type
         self.shape._wall_coords = endpoint1, endpoint2
+        self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)

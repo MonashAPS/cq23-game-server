@@ -1,51 +1,89 @@
 import logging
+from collections.abc import Callable
 
 import pymunk
 
 from config import config
+from gameObjects.tank import Tank
 from map import Map
+from player import Player
 
 
 class Game:
-    def __init__(self, space: pymunk.Space):
+    def __init__(self, space: pymunk.Space, map: Map):
         self.space = space
+        self.map = map
+        self.game_objects = list(self.map.create_game_objects(self.space))
+
+        tanks = filter(lambda go: isinstance(go, Tank), self.game_objects)
+        self.players = [Player(tank, map) for tank in tanks]
+
+        for player in self.players:  # TODO: remove this. It's only for testing purposes
+            player._set_path((150, 200))
+
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
-        # add bullet-tank collision handler
-        bullet_tank_handler = self.space.add_collision_handler(
-            config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.BULLET
-        )
-        bullet_tank_handler.post_solve = self.post_solve_collision_handler
+        """register all collision handlers in the pymunk space"""
+        collision_groups: list[tuple[int, int, Callable | None]] = [
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.WALL, None),
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.DESTRUCTIBLE_WALL, None),
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.TANK, None),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.TANK,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.BULLET,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
+                self.damage_collision_handler,
+            ),
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.WALL,
+                self.damage_collision_handler,
+            ),
+        ]
 
-        # add bullet-wall collision handler
-        bullet_dwall_handler = self.space.add_collision_handler(
-            config.COLLISION_TYPE.DESTRUCTIBLE_WALL, config.COLLISION_TYPE.BULLET
-        )
-        bullet_dwall_handler.post_solve = self.post_solve_collision_handler
+        for coltype_a, coltype_b, handler in collision_groups:
+            collision_handler = self.space.add_collision_handler(coltype_a, coltype_b)
+            if handler:
+                collision_handler.post_solve = handler
 
-    def post_solve_collision_handler(
+    def damage_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
     ):
-        shape1, shape2 = arbiter.shapes
-        for shape in (shape1, shape2):
-            if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                Map.get_map().register_wall_broken(shape._wall_coords)
-        self.space.remove(shape1, shape1.body)
-        self.space.remove(shape2, shape2.body)
+        """collision handler for collisions that would cause HP loss to an object
 
-    def _initialise_state(self):
-        # initialise the map by either loading from a file or randomly generating one (handled by other methods)
-        # select spawn location for players, etc
-        pass
+        Args:
+            arbiter (pymunk.Arbiter): pymunk provided arg
+            space (pymunk.Space): pymunk provided arg
+            data (_type_): pymunk provided arg
+        """
+
+        for shape in arbiter.shapes:
+            if shape._gameobject.apply_damage(config.BULLET.DAMAGE).is_destroyed():
+                # TODO: remove the destroyed object from the map
+                if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
+                    self.map.register_wall_broken(shape._wall_coords)
+                self.space.remove(shape, shape.body)
+                self.game_objects.remove(
+                    shape._gameobject
+                )  # remove reference to game object
+
+    def tick(self):
+        """called at every tick"""
+        self._play_turn()
 
     def _play_turn(self):
-        # request move from each player
-        # check if the moves are valid in the context of the gamestate (e.g. check bot has ammo if trying to shoot)
-        # play moves
-        # update the gamestate for a single tick (calculate collisions, bullet movements, closing map ring, etc)
-        # if the game is terminal, return the result
-        pass
+        for player in self.players:
+            player.tick()
 
     def _is_terminal(self):
         # check which players still have hp
