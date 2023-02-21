@@ -54,6 +54,9 @@ defaults = {
         "PHYSICS_TIMESTEP": 1/60,
         "PHYSICS_ITERATIONS_PER_COMMUNICATION": 6,
         "COMMUNICATION_POLLING_TIME": 1/10,
+    },
+    "REPLAY": {
+        "PATH": "replay.txt",
     }
 }
 config = get_config()

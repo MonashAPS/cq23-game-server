@@ -5,9 +5,10 @@ import pymunk.pygame_util
 from config import config
 from game import Game
 from map import Map
+from replay import ReplayManager
 
 
-def run(use_pygame=False):
+def run(replay: ReplayManager, use_pygame=False):
 
     m = Map(config.MAP.PATH)
     running = True
@@ -41,7 +42,7 @@ def run(use_pygame=False):
             state.append(s)
 
         # TODO: POST COMMUNICATIONS TO CLIENTS
-        # TODO: POST REPLAY DATA
+        replay.post_replay_line()
         # TODO: RECEIVE COMMUNICATIONS FROM CLIENTS - Blocking operation.
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
@@ -59,8 +60,12 @@ def run(use_pygame=False):
 
 
 if __name__ == "__main__":
-    # setup pymunk
-    space = pymunk.Space()
-    use_pygame = True
+    replay = ReplayManager(config.REPLAY.PATH)
 
-    run(use_pygame)
+    try:
+        run(replay, use_pygame=True)
+    except Exception as e:
+        replay.close()
+        raise e
+    finally:
+        replay.close()
