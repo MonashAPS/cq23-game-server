@@ -36,10 +36,12 @@ def run(replay: ReplayManager, use_pygame=False):
             display.fill(pygame.Color("white"))
             space.debug_draw(draw_options)
 
-        state = []
         for x in space.shapes:
-            s = f"{x} {x.body.position} {x.body.velocity}"
-            state.append(s)
+            replay.set_info(x._gameobject.id, {
+                "position": x.body.position,
+                "velocity": x.body.velocity,
+                "rotation": x.body.angle,
+            })
 
         # TODO: POST COMMUNICATIONS TO CLIENTS
         replay.post_replay_line()
