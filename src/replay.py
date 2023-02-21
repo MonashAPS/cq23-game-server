@@ -43,7 +43,7 @@ class ReplayManager:
     """
     Manager for posting replays to a file.
     Replay format is a file where each line contains a JSON object.
-    Each json object is either a custom message, or a tick update, containing events and updated locations.
+    Each json object is either a custom message, or a tick update, containing events and updated information.
 
     Be sure to execute instance.close() once you are certain no more replays will be passed through.
     """
@@ -52,14 +52,14 @@ class ReplayManager:
         self.output_path = output_path
         self._file = open(output_path, "w")
         self.events = []
-        self.current_locations = {}
-        self.new_locations = {}
+        self.current_info = {}
+        self.new_info = {}
 
     def add_event(self, e: Event) -> None:
         self.events.append(e)
 
-    def set_location(self, key: str, position: tuple[float, float]) -> None:
-        self.new_locations[key] = position
+    def set_info(self, key: str, data: tuple[float, float]) -> None:
+        self.new_info[key] = data
 
     def post_custom_replay_line(self, obj: dict) -> None:
         """
@@ -69,19 +69,19 @@ class ReplayManager:
         self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
 
     def post_replay_line(self) -> dict:
-        updated_locations = {}
-        for key in self.new_locations:
-            if self.current_locations.get(key, None) != self.new_locations[key]:
-                updated_locations[key] = self.new_locations[key]
+        updated_info = {}
+        for key in self.new_info:
+            if self.current_info.get(key, None) != self.new_info[key]:
+                updated_info[key] = self.new_info[key]
 
         obj = {
             "events": list(map(asdict, self.events)),
-            "locations": updated_locations,
+            "object_info": updated_info,
         }
         self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
 
         # Clear events and update stale locations
-        self.current_locations.update(self.new_locations)
+        self.current_info.update(self.new_info)
         self.events = []
         return obj
 
