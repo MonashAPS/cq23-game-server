@@ -1,3 +1,4 @@
+from __future__ import annotations
 from collections import deque
 
 from gameObjects.tank import Tank
