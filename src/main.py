@@ -40,8 +40,6 @@ def run(use_pygame=False):
             s = f"{x} {x.body.position} {x.body.velocity}"
             state.append(s)
 
-        clock.get_time()
-
         # TODO: POST COMMUNICATIONS TO CLIENTS
         # TODO: POST REPLAY DATA
         # TODO: RECEIVE COMMUNICATIONS FROM CLIENTS - Blocking operation.
