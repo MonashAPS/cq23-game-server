@@ -50,5 +50,10 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
     },
+    "SIMULATION": {
+        "PHYSICS_TIMESTEP": 1/60,
+        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 6,
+        "COMMUNICATION_POLLING_TIME": 1/10,
+    }
 }
 config = get_config()
