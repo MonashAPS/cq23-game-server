@@ -2,6 +2,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field, asdict, is_dataclass
 from enum import Enum, auto
+from typing import Any
 
 class EventType(Enum):
 
@@ -58,7 +59,7 @@ class ReplayManager:
     def add_event(self, e: Event) -> None:
         self.events.append(e)
 
-    def set_info(self, key: str, data: tuple[float, float]) -> None:
+    def set_info(self, key: str, data: dict[str, Any]) -> None:
         self.new_info[key] = data
 
     def post_custom_replay_line(self, obj: dict) -> None:
