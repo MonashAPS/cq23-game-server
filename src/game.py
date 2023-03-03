@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import logging
 from collections.abc import Callable
 
 import pymunk
 
+from communicator import communicator
 from config import config
 from gameObjects.tank import Tank
 from map import Map
@@ -17,10 +17,16 @@ class Game:
         self.map = map
         self.game_objects = list(self.map.create_game_objects(self.space))
 
+        self.comms = communicator()
         tanks = filter(lambda go: isinstance(go, Tank), self.game_objects)
-        self.players = [Player(tank, map) for tank in tanks]
+        self.players = {
+            client_info["id"]: Player(tank, map, client_info)
+            for tank, client_info in zip(tanks, self.comms.client_info)
+        }
 
-        for player in self.players:  # TODO: remove this. It's only for testing purposes
+        for (
+            player
+        ) in self.players.values():  # TODO: remove this. It's only for testing purposes
             player._set_path((150, 200))
 
         self.add_collision_handlers()
@@ -79,21 +85,20 @@ class Game:
                     shape._gameobject
                 )  # remove reference to game object
 
+    def handle_client_response(self):
+        message = self.comms.get_message()
+        for client_id in message:
+            self.players[client_id].register_actions(message[client_id])
+
     def tick(self):
         """called at every tick"""
         self._play_turn()
 
     def _play_turn(self):
-        for player in self.players:
+        for player in self.players.values():
             player.tick()
 
     def _is_terminal(self):
         # check which players still have hp
         # if both players have 0 hp, it is a draw. Else the player with 0 hp loses
-        pass
-
-    def run(self):
-        # initialise state
-        logging.info("Starting game between players: ... and ...")
-        # while true (or number of turns is less than max turns), play_move
         pass

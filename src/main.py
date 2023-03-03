@@ -1,3 +1,5 @@
+import json
+
 import pygame
 import pymunk
 import pymunk.pygame_util
@@ -17,10 +19,9 @@ def run(use_pygame=False):
 
     if use_pygame:
         pygame.init()
-        display = pygame.display.set_mode((
-            m.map_width * config.GRID_SCALING,
-            m.map_height * config.GRID_SCALING
-        ))
+        display = pygame.display.set_mode(
+            (m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING)
+        )
         clock = pygame.time.Clock()
         draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
 
@@ -37,8 +38,11 @@ def run(use_pygame=False):
 
         state = []
         for x in space.shapes:
-            s = f"{x} {x.body.position} {x.body.velocity}"
+            s = f"{x.collision_type} {x.body.position} {x.body.velocity}"
             state.append(s)
+
+        game.comms.post_message(json.dumps(state))
+        game.handle_client_response()
 
         # TODO: POST COMMUNICATIONS TO CLIENTS
         # TODO: POST REPLAY DATA
@@ -52,7 +56,7 @@ def run(use_pygame=False):
 
         if use_pygame:
             pygame.display.flip()
-            clock.tick(1/config.SIMULATION.COMMUNICATION_POLLING_TIME)
+            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
 
     if use_pygame:
         pygame.quit()
