@@ -24,11 +24,6 @@ class Game:
             for tank, client_info in zip(tanks, self.comms.client_info)
         }
 
-        for (
-            player
-        ) in self.players.values():  # TODO: remove this. It's only for testing purposes
-            player._set_path((150, 200))
-
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
@@ -88,7 +83,9 @@ class Game:
     def handle_client_response(self):
         message = self.comms.get_message()
         for client_id in message:
-            self.players[client_id].register_actions(message[client_id])
+            self.game_objects.extend(  # keep the reference to any object created
+                self.players[client_id].register_actions(message[client_id])
+            )
 
     def tick(self):
         """called at every tick"""

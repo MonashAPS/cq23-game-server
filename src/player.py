@@ -19,11 +19,13 @@ class Player:
 
     def register_actions(self, actions: dict):
         """register action for the player"""
+        created_game_objects = []
         for action in actions:
             if action == "path":
                 self._set_path(actions[action])
             if action == "shoot":
-                pass  # TODO: create a bullet for the tank
+                created_game_objects.append(self._shoot_bullet(actions[action]))
+        return created_game_objects
 
     def tick(self):
         """This will be called at every tick."""
@@ -78,3 +80,6 @@ class Player:
             direction (tuple[int, int]): The direction the tank should move towards (i.e. (x,y)). (1,1) is up and right
         """
         self.gameobject.set_velocity(direction)
+
+    def _shoot_bullet(self, angle: float):
+        return self.gameobject.shoot(angle)

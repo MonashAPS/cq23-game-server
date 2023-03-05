@@ -8,7 +8,7 @@ from gameObjects.game_object import GameObject
 
 class Bullet(GameObject):
     def __init__(
-        self, space: pymunk.Space, coord: tuple[int, int], velocity: tuple[int, int]
+        self, space: pymunk.Space, coord: tuple[int, int], velocity: tuple[float, float]
     ):
         super().__init__(space, coord, velocity)
 

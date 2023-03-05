@@ -41,6 +41,7 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
         "DAMAGE": 1,
+        "VELOCITY": 30,
     },
     "WALL": {
         "HP": math.inf,
