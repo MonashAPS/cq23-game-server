@@ -5,7 +5,7 @@ from math import copysign
 import pymunk
 
 from config import config
-from gameObjects.game_object import GameObject
+from gameObjects.game_object import GameObject, IDCounter
 
 
 class Tank(GameObject):
@@ -26,6 +26,8 @@ class Tank(GameObject):
         self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)
+
+        self.id = f"tank-{IDCounter.get_id('tank')}"
 
     def move_to_pos(self, coord: tuple[int, int]):
         """This function can be called when the tank needs to be moved to a specific pymunk coordinate.
