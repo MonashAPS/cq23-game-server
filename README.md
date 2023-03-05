@@ -1,7 +1,7 @@
 # CodeQuest Game Server 2023
 
 ## Purpose
-This repo is the game server for the 2023 Code Quest competition.
+This repo is the game server for the 2023 Code Quest competition. The game implemented in this repo is a multiplayer tanks game where the objective is to destroy the opponent's tanks.
 
 ## installation
 Installation can be done with pip:
