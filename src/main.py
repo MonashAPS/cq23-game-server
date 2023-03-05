@@ -53,7 +53,12 @@ def run(replay: ReplayManager, use_pygame=False):
 
             # Update physics and do game logic.
             space.step(config.SIMULATION.PHYSICS_TIMESTEP)
-            game.tick()
+            if game.tick():  # game is terminal
+                running = False
+                replay.post_custom_replay_line(
+                    game.results()
+                )  # post results in replay file
+                break
 
         if use_pygame:
             pygame.display.flip()

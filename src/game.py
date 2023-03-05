@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from collections.abc import Callable
 
 import pymunk
@@ -90,12 +91,29 @@ class Game:
     def tick(self):
         """called at every tick"""
         self._play_turn()
+        if self._is_terminal():
+            self.comms.terminate_game()
+            return True
+        return False
 
     def _play_turn(self):
         for player in self.players.values():
             player.tick()
 
     def _is_terminal(self):
-        # check which players still have hp
-        # if both players have 0 hp, it is a draw. Else the player with 0 hp loses
-        pass
+        active_players = 0
+        for player in self.players.values():
+            if player.gameobject.hp > 0:
+                active_players += 1
+        if active_players > 1:
+            return False
+        return True
+
+    def results(self):
+        results = defaultdict(list)
+        for playerId, player in self.players.items():
+            if player.gameobject.hp > 0:
+                results["victor"].append(playerId)
+            else:
+                results["vanquished"].append(playerId)
+        return results
