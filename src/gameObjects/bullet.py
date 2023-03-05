@@ -3,7 +3,7 @@ from __future__ import annotations
 import pymunk
 
 from config import config
-from gameObjects.game_object import GameObject
+from gameObjects.game_object import GameObject, IDCounter
 
 
 class Bullet(GameObject):
@@ -23,3 +23,5 @@ class Bullet(GameObject):
         self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)
+
+        self.id = f"bullet-{IDCounter.get_id('bullet')}"

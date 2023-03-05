@@ -3,7 +3,7 @@ from __future__ import annotations
 import pymunk
 
 from config import config
-from gameObjects.game_object import GameObject
+from gameObjects.game_object import GameObject, IDCounter
 
 
 class Wall(GameObject):
@@ -43,3 +43,5 @@ class Wall(GameObject):
         self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)
+
+        self.id = f"wall-{IDCounter.get_id('wall')}"

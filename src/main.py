@@ -1,5 +1,3 @@
-import json
-
 import pygame
 import pymunk
 import pymunk.pygame_util
@@ -7,9 +5,10 @@ import pymunk.pygame_util
 from config import config
 from game import Game
 from map import Map
+from replay import ReplayManager
 
 
-def run(use_pygame=False):
+def run(replay: ReplayManager, use_pygame=False):
 
     m = Map(config.MAP.PATH)
     running = True
@@ -36,17 +35,19 @@ def run(use_pygame=False):
             display.fill(pygame.Color("white"))
             space.debug_draw(draw_options)
 
-        state = []
         for x in space.shapes:
-            s = f"{x.collision_type} {x.body.position} {x.body.velocity}"
-            state.append(s)
+            replay.set_info(
+                x._gameobject.id,
+                {
+                    "position": x.body.position,
+                    "velocity": x.body.velocity,
+                    "rotation": x.body.angle,
+                },
+            )
 
-        game.comms.post_message(json.dumps(state))
+        # game.comms.post_message(json.dumps(state))
+        replay.post_replay_line()
         game.handle_client_response()
-
-        # TODO: POST COMMUNICATIONS TO CLIENTS
-        # TODO: POST REPLAY DATA
-        # TODO: RECEIVE COMMUNICATIONS FROM CLIENTS - Blocking operation.
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
 
@@ -63,8 +64,12 @@ def run(use_pygame=False):
 
 
 if __name__ == "__main__":
-    # setup pymunk
-    space = pymunk.Space()
-    use_pygame = True
+    replay = ReplayManager(config.REPLAY.PATH)
 
-    run(use_pygame)
+    try:
+        run(replay, use_pygame=True)
+    except Exception as e:
+        replay.close()
+        raise e
+    finally:
+        replay.close()
