@@ -62,6 +62,9 @@ class Player:
         Args:
             coord (tuple[int, int]): the target coordinate the function will create a path to
         """
+        if not coord:
+            self.action["path"] = deque()
+            return
         self.action["path"] = deque(
             map(
                 lambda p: self.map.to_global_coords(*p),
