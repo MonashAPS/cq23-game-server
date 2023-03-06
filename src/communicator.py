@@ -3,7 +3,7 @@ import json
 from config import config
 
 
-class communicator:
+class Communicator:
     def __init__(self):
         self.timeout = config.COMMUNICATION.TIMEOUT
         self.client_info = self.get_message()["clients"]
