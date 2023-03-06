@@ -41,6 +41,7 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
         "DAMAGE": 1,
+        "VELOCITY": 30,
     },
     "WALL": {
         "HP": math.inf,
@@ -51,12 +52,13 @@ defaults = {
         "DENSITY": 1,
     },
     "SIMULATION": {
-        "PHYSICS_TIMESTEP": 1/60,
+        "PHYSICS_TIMESTEP": 1 / 60,
         "PHYSICS_ITERATIONS_PER_COMMUNICATION": 6,
-        "COMMUNICATION_POLLING_TIME": 1/10,
+        "COMMUNICATION_POLLING_TIME": 1 / 10,
     },
     "REPLAY": {
         "PATH": "replay.txt",
-    }
+    },
+    "COMMUNICATION": {"TIMEOUT": 0.5},
 }
 config = get_config()

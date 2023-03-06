@@ -18,10 +18,9 @@ def run(replay: ReplayManager, use_pygame=False):
 
     if use_pygame:
         pygame.init()
-        display = pygame.display.set_mode((
-            m.map_width * config.GRID_SCALING,
-            m.map_height * config.GRID_SCALING
-        ))
+        display = pygame.display.set_mode(
+            (m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING)
+        )
         clock = pygame.time.Clock()
         draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
 
@@ -37,25 +36,33 @@ def run(replay: ReplayManager, use_pygame=False):
             space.debug_draw(draw_options)
 
         for x in space.shapes:
-            replay.set_info(x._gameobject.id, {
-                "position": x.body.position,
-                "velocity": x.body.velocity,
-                "rotation": x.body.angle,
-            })
+            replay.set_info(
+                x._gameobject.id,
+                {
+                    "position": x.body.position,
+                    "velocity": x.body.velocity,
+                    "rotation": x.body.angle,
+                },
+            )
 
-        # TODO: POST COMMUNICATIONS TO CLIENTS
+        # game.comms.post_message(json.dumps(state))
         replay.post_replay_line()
-        # TODO: RECEIVE COMMUNICATIONS FROM CLIENTS - Blocking operation.
+        game.handle_client_response()
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
 
             # Update physics and do game logic.
             space.step(config.SIMULATION.PHYSICS_TIMESTEP)
-            game.tick()
+            if game.tick():  # game is terminal
+                running = False
+                replay.post_custom_replay_line(
+                    game.results()
+                )  # post results in replay file
+                break
 
         if use_pygame:
             pygame.display.flip()
-            clock.tick(1/config.SIMULATION.COMMUNICATION_POLLING_TIME)
+            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
 
     if use_pygame:
         pygame.quit()
