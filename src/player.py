@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import typing as t
 from collections import deque
 
 from gameObjects.tank import Tank
@@ -17,9 +18,11 @@ class Player:
 
         self.action = {"path": deque(), "shoot": None}
 
-    def register_actions(self, actions: dict):
+    def register_actions(self, actions: t.Optional[dict]) -> t.List:
         """register action for the player"""
         created_game_objects = []
+        if actions is None:
+            return created_game_objects
         for action in actions:
             if action == "path":
                 self._set_path(actions[action])

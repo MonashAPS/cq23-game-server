@@ -35,6 +35,7 @@ def run(replay: ReplayManager, use_pygame=False):
             display.fill(pygame.Color("white"))
             space.debug_draw(draw_options)
 
+        state = {}
         for x in space.shapes:
             replay.set_info(
                 x._gameobject.id,
@@ -44,8 +45,14 @@ def run(replay: ReplayManager, use_pygame=False):
                     "rotation": x.body.angle,
                 },
             )
+            state[x._gameobject.id] = {
+                "type": x.collision_type,  # this is to let the clients know what type of object this is
+                "position": x.body.position,
+                "velocity": x.body.velocity,
+                "rotation": x.body.angle,
+            }
 
-        # game.comms.post_message(json.dumps(state))
+        game.comms.post_message(message=state)
         replay.post_replay_line()
         game.handle_client_response()
 

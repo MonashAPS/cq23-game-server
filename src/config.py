@@ -7,7 +7,6 @@ config.EXAMPLE_CONSTANT
 import math
 
 import dotenv
-import pygame
 from addict import Dict
 
 
@@ -27,16 +26,18 @@ defaults = {
     "TANK": {
         "DIM_MULT": (1, 1),
         "HP": 2,
-        "COLOR": pygame.Color("blue"),
+        "COLOR": (0, 0, 255, 255),
         "DENSITY": 100,
         "VELOCITY": 10,
     },
-    "MAP": {"PATH": "maps/simple.map"},
+    "MAP": {
+        "PATH": "maps/simple.map"
+    },  # TODO: change this so it is the correct path in docker container /codequest/maps/simple.map
     "COLLISION_TYPE": {"TANK": 1, "BULLET": 2, "WALL": 3, "DESTRUCTIBLE_WALL": 4},
     "GRID_SCALING": 20,
     "BULLET": {
         "RADIUS": 5,
-        "COLOR": pygame.Color("orange"),
+        "COLOR": (255, 165, 0, 255),
         "HP": 1,
         "ELASTICITY": 1,
         "DENSITY": 1,
@@ -46,8 +47,8 @@ defaults = {
     "WALL": {
         "HP": math.inf,
         "DESTRUCTIBLE_HP": 1,
-        "COLOR": pygame.Color("black"),
-        "DESTRUCTIBLE_COLOR": pygame.Color("red"),
+        "COLOR": (0, 0, 0, 255),
+        "DESTRUCTIBLE_COLOR": (255, 0, 0, 255),
         "ELASTICITY": 1,
         "DENSITY": 1,
     },

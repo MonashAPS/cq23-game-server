@@ -5,7 +5,7 @@ from collections.abc import Callable
 
 import pymunk
 
-from communicator import communicator
+from communicator import Communicator
 from config import config
 from gameObjects.tank import Tank
 from map import Map
@@ -18,7 +18,7 @@ class Game:
         self.map = map
         self.game_objects = list(self.map.create_game_objects(self.space))
 
-        self.comms = communicator()
+        self.comms = Communicator()
         tanks = filter(lambda go: isinstance(go, Tank), self.game_objects)
         self.players = {
             client_info["id"]: Player(tank, map, client_info)
