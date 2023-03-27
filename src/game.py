@@ -7,6 +7,7 @@ import pymunk
 
 from communicator import Communicator
 from config import config
+from gameObjects.boundary import Boundary
 from gameObjects.tank import Tank
 from map import Map
 from player import Player
@@ -25,6 +26,24 @@ class Game:
             for tank, client_info in zip(tanks, self.comms.client_info)
         }
 
+        # create map boundary
+        self.boundary = Boundary(
+            self.space,
+            self.map.to_global_coords(-0.5, -0.5),
+            self.map.to_global_coords(
+                self.map.map_height - 0.5, self.map.map_width - 0.5
+            ),
+        )
+        self.closing_boundary = Boundary(
+            self.space,
+            self.map.to_global_coords(-0.5, -0.5),
+            self.map.to_global_coords(
+                self.map.map_height - 0.5, self.map.map_width - 0.5
+            ),
+            is_closing_boundary=True,
+        )
+        self.game_objects.append(self.boundary)
+
         self.add_collision_handlers()
 
     def add_collision_handlers(self):
@@ -33,6 +52,13 @@ class Game:
             (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.WALL, None),
             (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.DESTRUCTIBLE_WALL, None),
             (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.TANK, None),
+            (config.COLLISION_TYPE.BOUNDARY, config.COLLISION_TYPE.TANK, None),
+            (config.COLLISION_TYPE.BOUNDARY, config.COLLISION_TYPE.BULLET, None),
+            (
+                config.COLLISION_TYPE.CLOSING_BOUNDARY,
+                config.COLLISION_TYPE.BULLET,
+                None,
+            ),
             (
                 config.COLLISION_TYPE.BULLET,
                 config.COLLISION_TYPE.TANK,
@@ -53,12 +79,37 @@ class Game:
                 config.COLLISION_TYPE.WALL,
                 self.damage_collision_handler,
             ),
+            (
+                config.COLLISION_TYPE.CLOSING_BOUNDARY,
+                config.COLLISION_TYPE.TANK,
+                self.closing_boundary_collision_handler,
+            ),
         ]
 
         for coltype_a, coltype_b, handler in collision_groups:
             collision_handler = self.space.add_collision_handler(coltype_a, coltype_b)
             if handler:
                 collision_handler.post_solve = handler
+
+    def closing_boundary_collision_handler(
+        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
+    ):
+        """collision handler for collisions with the closing boundary
+
+        Args:
+            arbiter (pymunk.Arbiter): pymunk provided arg
+            space (pymunk.Space): pymunk provided arg
+            data (_type_): pymunk provided arg
+        """
+
+        for shape in arbiter.shapes:
+            if shape._gameobject.apply_damage(
+                config.CLOSING_BOUNDARY.DAMAGE
+            ).is_destroyed():
+                self.space.remove(shape, shape.body)
+                self.game_objects.remove(
+                    shape._gameobject
+                )  # remove reference to game object
 
     def damage_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data

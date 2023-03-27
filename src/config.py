@@ -33,7 +33,14 @@ defaults = {
     "MAP": {
         "PATH": "maps/simple.map"
     },  # TODO: change this so it is the correct path in docker container /codequest/maps/simple.map
-    "COLLISION_TYPE": {"TANK": 1, "BULLET": 2, "WALL": 3, "DESTRUCTIBLE_WALL": 4},
+    "COLLISION_TYPE": {
+        "TANK": 1,
+        "BULLET": 2,
+        "WALL": 3,
+        "DESTRUCTIBLE_WALL": 4,
+        "BOUNDARY": 5,
+        "CLOSING_BOUNDARY": 6,
+    },
     "GRID_SCALING": 20,
     "BULLET": {
         "RADIUS": 5,
@@ -51,6 +58,17 @@ defaults = {
         "DESTRUCTIBLE_COLOR": (255, 0, 0, 255),
         "ELASTICITY": 1,
         "DENSITY": 1,
+    },
+    "BOUNDARY": {
+        "HP": math.inf,
+        "COLOR": (38, 205, 38, 0),
+        "ELASTICITY": 1,
+        "DENSITY": 1,
+    },
+    "CLOSING_BOUNDARY": {
+        "COLOR": (205, 38, 38, 0),
+        "DAMAGE": 1,
+        "VELOCITY": 5,
     },
     "SIMULATION": {
         "PHYSICS_TIMESTEP": 1 / 60,

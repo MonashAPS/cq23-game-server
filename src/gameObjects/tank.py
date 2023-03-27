@@ -28,6 +28,9 @@ class Tank(GameObject):
 
         self.space.add(self.body, self.shape)
 
+        # prevent tanks from rotating. moment has to be set after the body is added to the space
+        self.body.moment = float("inf")
+
         self.id = f"tank-{IDCounter.get_id('tank')}"
 
     def move_to_pos(self, coord: tuple[int, int]):

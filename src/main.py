@@ -19,7 +19,10 @@ def run(replay: ReplayManager, use_pygame=False):
     if use_pygame:
         pygame.init()
         display = pygame.display.set_mode(
-            (m.map_width * config.GRID_SCALING, m.map_height * config.GRID_SCALING)
+            (
+                (m.map_width + 1) * config.GRID_SCALING,
+                (m.map_height + 1) * config.GRID_SCALING,
+            )
         )
         clock = pygame.time.Clock()
         draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
