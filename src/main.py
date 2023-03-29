@@ -1,6 +1,4 @@
-import pygame
 import pymunk
-import pymunk.pygame_util
 
 from config import config
 from game import Game
@@ -13,10 +11,13 @@ def run(replay: ReplayManager, use_pygame=False):
     m = Map(config.MAP.PATH)
     running = True
     space = pymunk.Space()
-    pymunk.pygame_util.positive_y_is_up = True
     game = Game(space, m)
 
     if use_pygame:
+        import pygame
+        from pymunk import pygame_util
+
+        pygame_util.positive_y_is_up = True
         pygame.init()
         display = pygame.display.set_mode(
             (
@@ -76,6 +77,12 @@ def run(replay: ReplayManager, use_pygame=False):
 
     if use_pygame:
         pygame.quit()
+
+
+def game_started():
+    import os.path
+
+    return os.path.isfile("/codequest/GAME_STARTED")
 
 
 if __name__ == "__main__":
