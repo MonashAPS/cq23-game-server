@@ -76,6 +76,6 @@ defaults = {
     "REPLAY": {
         "PATH": "replay.txt",
     },
-    "COMMUNICATION": {"TIMEOUT": 0.5},
+    "COMMUNICATION": {"TIMEOUT": 0.1},
 }
 config = get_config()
