@@ -13,6 +13,10 @@ def run(replay: ReplayManager, use_pygame=False):
     space = pymunk.Space()
     game = Game(space, m)
 
+    with open(config.MAP.PATH) as mapFile:
+        replay.post_custom_replay_line({"map": mapFile.readlines()})
+    replay.post_custom_replay_line({"client_info": game.comms.client_info})
+
     if use_pygame:
         import pygame
         from pymunk import pygame_util
