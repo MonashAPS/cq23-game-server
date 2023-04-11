@@ -30,7 +30,7 @@ defaults = {
         "DENSITY": 100,
         "VELOCITY": 10,
     },
-    "MAP": {"PATH": "maps/simple.map"},
+    "MAP": {"PATH": "maps/big.map"},
     "COLLISION_TYPE": {
         "TANK": 1,
         "BULLET": 2,
@@ -69,13 +69,13 @@ defaults = {
         "VELOCITY": 0.5,
     },
     "SIMULATION": {
-        "PHYSICS_TIMESTEP": 1 / 60,
-        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 6,
-        "COMMUNICATION_POLLING_TIME": 1 / 10,
+        "PHYSICS_TIMESTEP": 1 / 600,
+        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 60,
+        "COMMUNICATION_POLLING_TIME": 1 / 100,
     },
     "REPLAY": {
         "PATH": "replay.txt",
     },
-    "COMMUNICATION": {"TIMEOUT": 0.1},
+    "COMMUNICATION": {"TIMEOUT": 0.01},
 }
 config = get_config()
