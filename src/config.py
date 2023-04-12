@@ -47,7 +47,7 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
         "DAMAGE": 1,
-        "VELOCITY": 30,
+        "VELOCITY": 250,
     },
     "WALL": {
         "HP": math.inf,
@@ -66,12 +66,12 @@ defaults = {
     "CLOSING_BOUNDARY": {
         "COLOR": (205, 38, 38, 0),
         "DAMAGE": 1,
-        "VELOCITY": 0.5,
+        "VELOCITY": 10,
     },
     "SIMULATION": {
-        "PHYSICS_TIMESTEP": 1 / 600,
-        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 60,
-        "COMMUNICATION_POLLING_TIME": 1 / 100,
+        "PHYSICS_TIMESTEP": 1 / 6000,
+        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 100,
+        "COMMUNICATION_POLLING_TIME": 60,
     },
     "REPLAY": {
         "PATH": "replay/replay.txt",

@@ -44,7 +44,6 @@ def run(replay: ReplayManager, use_pygame=False):
             space.debug_draw(draw_options)
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
-
             # Update physics and do game logic.
             space.step(config.SIMULATION.PHYSICS_TIMESTEP)
             if game.tick():  # game is terminal
@@ -53,7 +52,7 @@ def run(replay: ReplayManager, use_pygame=False):
 
         if use_pygame:
             pygame.display.flip()
-            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
+            clock.tick(config.SIMULATION.COMMUNICATION_POLLING_TIME)
 
         for x in space.shapes:
             replay.set_info(
