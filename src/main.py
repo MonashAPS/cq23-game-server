@@ -43,6 +43,18 @@ def run(replay: ReplayManager, use_pygame=False):
             display.fill(pygame.Color("white"))
             space.debug_draw(draw_options)
 
+        for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
+
+            # Update physics and do game logic.
+            space.step(config.SIMULATION.PHYSICS_TIMESTEP)
+            if game.tick():  # game is terminal
+                running = False
+                break
+
+        if use_pygame:
+            pygame.display.flip()
+            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
+
         for x in space.shapes:
             replay.set_info(
                 x._gameobject.id,
@@ -56,24 +68,14 @@ def run(replay: ReplayManager, use_pygame=False):
             )
 
         replay_line = replay.post_replay_line()
-        game.comms.post_message(message=replay_line)
-        game.handle_client_response()
-
-        for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
-
-            # Update physics and do game logic.
-            space.step(config.SIMULATION.PHYSICS_TIMESTEP)
-            if game.tick():  # game is terminal
-                running = False
-                replay.post_custom_replay_line(
+        if running:
+            game.comms.post_message(message=replay_line)
+            game.handle_client_response()
+        else:
+            replay.post_custom_replay_line(
                     game.results()
                 )  # post results in replay file
-                break
-
-        if use_pygame:
-            pygame.display.flip()
-            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
-
+        
     if use_pygame:
         pygame.quit()
 
