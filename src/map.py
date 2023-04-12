@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Callable, Generator
 
 from yaml import safe_load
-import math
+
 from config import config
 from exceptions import CoordinateError, MapLoadError
 from gameObjects import Bullet, Tank, Wall

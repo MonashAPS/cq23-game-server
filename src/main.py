@@ -59,7 +59,7 @@ def run(replay: ReplayManager, use_pygame=False):
             replay.set_info(
                 x._gameobject.id,
                 {
-                    "type": x.collision_type, # this is to let the clients know what type of object this is
+                    "type": x.collision_type,  # this is to let the clients know what type of object this is
                     "position": x.body.position,
                     "velocity": x.body.velocity,
                     "rotation": x.body.angle,
@@ -73,9 +73,9 @@ def run(replay: ReplayManager, use_pygame=False):
             game.handle_client_response()
         else:
             replay.post_custom_replay_line(
-                    game.results()
-                )  # post results in replay file
-        
+                game.results()
+            )  # post results in replay file
+
     if use_pygame:
         pygame.quit()
 
