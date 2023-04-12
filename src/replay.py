@@ -4,14 +4,14 @@ from dataclasses import dataclass, field, asdict, is_dataclass
 from enum import Enum, auto
 from typing import Any
 
-class EventType(Enum):
-
-    BULLET_SPAWN = auto()
-    BULLET_DESTROYED = auto()
-    TANK_HEALTH_LOSS = auto()
-    TANK_DESTROYED = auto()
-    POWERUP_SPAWN = auto()
-
+class EventType(str, Enum):
+    BULLET_SPAWN = "BULLET_SPAWN"
+    BULLET_DESTROYED = "BULLET_DESTROYED"
+    TANK_HEALTH_LOSS = "TANK_HEALTH_LOSS"
+    TANK_DESTROYED = "TANK_DESTROYED"
+    POWERUP_SPAWN = "POWERUP_SPAWN"
+    WALL_HEALTH_LOSS = "WALL_HEALTH_LOSS"
+    WALL_DESTROYED = "WALL_DESTROYED"
 
 @dataclass
 class Event:
@@ -22,13 +22,48 @@ class Event:
 
     event_type: EventType
     data: dict = field(default_factory=dict)
-
+    
     @classmethod
-    def bullet_spawn(cls, player_index: int, position: tuple[float, float], rotation: float):
+    def tank_health_loss(cls, tank_id: str, position: tuple[float, float]):
+        return Event(EventType.TANK_HEALTH_LOSS, {
+            "id": tank_id,
+            "position": position
+        })
+    
+    @classmethod
+    def tank_destroyed(cls, tank_id: str, position: tuple[float, float]):
+        return Event(EventType.TANK_DESTROYED, {
+            "id": tank_id,
+            "position": position
+        })
+    
+    @classmethod
+    def wall_destroyed(cls, wall_id: str, position: tuple[float, float]):
+        return Event(EventType.WALL_DESTROYED, {
+            "id": wall_id,
+            "position": position
+        })
+    
+    @classmethod
+    def wall_health_loss(cls, wall_id: str, position: tuple[float, float]):
+        return Event(EventType.WALL_HEALTH_LOSS, {
+            "id": wall_id,
+            "position": position
+        })
+    
+    @classmethod
+    def bullet_destroyed(cls, bullet_id: str, position: tuple[float, float]):
+        return Event(EventType.BULLET_DESTROYED, {
+            "id": bullet_id,
+            "position": position
+        })
+    
+    @classmethod
+    def bullet_spawn(cls, bullet_id: str, position: tuple[float, float], velocity: tuple[float, float]):
         return Event(EventType.BULLET_SPAWN, {
-            "player_index": player_index,
+            "id": bullet_id,
             "position": position,
-            "rotation": rotation,
+            "velocity": velocity
         })
 
 class ReplayJSONEncoder(json.JSONEncoder):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable, Generator
 
 from yaml import safe_load
-
+import math
 from config import config
 from exceptions import CoordinateError, MapLoadError
 from gameObjects import Bullet, Tank, Wall
@@ -53,8 +53,8 @@ class Map:
     def from_global_coords(self, x, y):
         "From pymunk coordinates to grid coordinates"
         return (
-            round(-y / config.GRID_SCALING - 0.5 + self.map_height),
-            round(x / config.GRID_SCALING - 0.5),
+            math.floor(-y / config.GRID_SCALING - 0.5 + self.map_height),
+            math.floor(x / config.GRID_SCALING - 0.5),
         )
 
     def _load_map(self):

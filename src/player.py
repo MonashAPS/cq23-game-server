@@ -34,10 +34,6 @@ class Player:
         """This will be called at every tick."""
         self._traverse_path()
 
-    def request_move(self):
-        # supply the relevant gamestate info to the player, then await their move
-        pass
-
     def _traverse_path(self):
         """Move the player through a previously calculated path (self.action["path"]) until the path is complete"""
         if not self.action["path"]:

@@ -11,7 +11,7 @@ def run(replay: ReplayManager, use_pygame=False):
     m = Map(config.MAP.PATH)
     running = True
     space = pymunk.Space()
-    game = Game(space, m)
+    game = Game(space, m, replay)
 
     with open(config.MAP.PATH) as mapFile:
         replay.post_custom_replay_line({"map": mapFile.readlines()})
@@ -43,25 +43,20 @@ def run(replay: ReplayManager, use_pygame=False):
             display.fill(pygame.Color("white"))
             space.debug_draw(draw_options)
 
-        state = {}
         for x in space.shapes:
             replay.set_info(
                 x._gameobject.id,
                 {
+                    "type": x.collision_type, # this is to let the clients know what type of object this is
                     "position": x.body.position,
                     "velocity": x.body.velocity,
                     "rotation": x.body.angle,
+                    "hp": x._gameobject.hp,
                 },
             )
-            state[x._gameobject.id] = {
-                "type": x.collision_type,  # this is to let the clients know what type of object this is
-                "position": x.body.position,
-                "velocity": x.body.velocity,
-                "rotation": x.body.angle,
-            }
 
-        game.comms.post_message(message=state)
-        replay.post_replay_line()
+        replay_line = replay.post_replay_line()
+        game.comms.post_message(message=replay_line)
         game.handle_client_response()
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):

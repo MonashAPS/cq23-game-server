@@ -74,7 +74,7 @@ defaults = {
         "COMMUNICATION_POLLING_TIME": 1 / 100,
     },
     "REPLAY": {
-        "PATH": "replay.txt",
+        "PATH": "replay/replay.txt",
     },
     "COMMUNICATION": {"TIMEOUT": 0.01},
 }
