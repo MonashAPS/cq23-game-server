@@ -34,7 +34,9 @@ class Wall(GameObject):
             (endpoint2[0], endpoint1[1]),
         ]
 
-        self.shape = pymunk.Poly(self.body, verts)
+        self.shape = pymunk.Poly(
+            body=self.body, vertices=verts, radius=config.WALL.RADIUS
+        )
         self.shape.density = config.WALL.DENSITY
         self.shape.elasticity = config.WALL.ELASTICITY
         self.shape.color = color

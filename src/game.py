@@ -102,7 +102,9 @@ class Game:
                 )
             elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                 self.replay_manager.add_event(
-                    Event.wall_health_loss(shape._gameobject.id, shape.body.position)
+                    Event.wall_health_loss(
+                        shape._gameobject.id, shape.get_vertices()[0]
+                    )
                 )
         elif event == "DESTRUCTION":
             # record destruction in replay file
@@ -112,7 +114,7 @@ class Game:
                 )
             elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                 self.replay_manager.add_event(
-                    Event.wall_destroyed(shape._gameobject.id, shape.body.position)
+                    Event.wall_destroyed(shape._gameobject.id, shape.get_vertices()[0])
                 )
             elif shape.collision_type == config.COLLISION_TYPE.BULLET:
                 self.replay_manager.add_event(
@@ -168,7 +170,9 @@ class Game:
         message = self.comms.get_message()
         for client_id in message:
             self.game_objects.extend(  # keep the reference to any object created
-                self.players[client_id].register_actions(message[client_id])
+                self.players[client_id].register_actions(
+                    actions=message[client_id], replay_manager=self.replay_manager
+                )
             )
 
     def tick(self):

@@ -7,6 +7,7 @@ import pymunk
 from config import config
 from gameObjects.bullet import Bullet
 from gameObjects.game_object import GameObject, IDCounter
+from replay import Event, ReplayManager
 
 
 class Tank(GameObject):
@@ -21,7 +22,9 @@ class Tank(GameObject):
         )
         self.hp = config.TANK.HP  # health points
 
-        self.shape = pymunk.Poly.create_box(self.body, self.dims)
+        self.shape = pymunk.Poly.create_box(
+            body=self.body, size=self.dims, radius=config.TANK.RADIUS
+        )
         self.shape.density = config.TANK.DENSITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.shape._gameobject = self
@@ -57,8 +60,8 @@ class Tank(GameObject):
             direction[1] * config.TANK.VELOCITY,
         )
 
-    def shoot(self, angle: float):
-        return Bullet(
+    def shoot(self, angle: float, replay_manager: ReplayManager):
+        bullet = Bullet(
             space=self.space,
             coord=tuple(
                 map(
@@ -76,6 +79,12 @@ class Tank(GameObject):
                 sin(angle) * config.BULLET.VELOCITY,
             ),
         )
+        replay_manager.add_event(
+            Event.bullet_spawn(
+                bullet.id, self.id, bullet.body.position, bullet.body.velocity
+            )
+        )
+        return bullet
 
     def get_radius(self):
         return sqrt((self.dims[0] / 2) ** 2 + (self.dims[1] / 2) ** 2)

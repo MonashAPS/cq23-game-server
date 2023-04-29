@@ -5,6 +5,7 @@ from collections import deque
 
 from gameObjects.tank import Tank
 from map import Map
+from replay import ReplayManager
 
 
 class Player:
@@ -18,7 +19,9 @@ class Player:
 
         self.action = {"path": deque(), "shoot": None}
 
-    def register_actions(self, actions: t.Optional[dict]) -> t.List:
+    def register_actions(
+        self, actions: t.Optional[dict], replay_manager: ReplayManager
+    ) -> t.List:
         """register action for the player"""
         created_game_objects = []
         if actions is None:
@@ -27,7 +30,11 @@ class Player:
             if action == "path":
                 self._set_path(actions[action])
             if action == "shoot":
-                created_game_objects.append(self._shoot_bullet(actions[action]))
+                created_game_objects.append(
+                    self._shoot_bullet(
+                        angle=actions[action], replay_manager=replay_manager
+                    )
+                )
         return created_game_objects
 
     def tick(self):
@@ -83,5 +90,5 @@ class Player:
         """
         self.gameobject.set_velocity(direction)
 
-    def _shoot_bullet(self, angle: float):
-        return self.gameobject.shoot(angle)
+    def _shoot_bullet(self, angle: float, replay_manager: ReplayManager):
+        return self.gameobject.shoot(angle=angle, replay_manager=replay_manager)

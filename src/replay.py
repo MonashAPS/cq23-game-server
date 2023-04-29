@@ -52,12 +52,18 @@ class Event:
     def bullet_spawn(
         cls,
         bullet_id: str,
+        tank_id: str,
         position: tuple[float, float],
         velocity: tuple[float, float],
     ):
         return Event(
             EventType.BULLET_SPAWN,
-            {"id": bullet_id, "position": position, "velocity": velocity},
+            {
+                "id": bullet_id,
+                "tank_id": tank_id,
+                "position": position,
+                "velocity": velocity,
+            },
         )
 
 

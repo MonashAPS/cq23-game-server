@@ -44,7 +44,6 @@ def run(replay: ReplayManager, use_pygame=False):
             space.debug_draw(draw_options)
 
         for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
-
             # Update physics and do game logic.
             space.step(config.SIMULATION.PHYSICS_TIMESTEP)
             if game.tick():  # game is terminal
@@ -53,17 +52,25 @@ def run(replay: ReplayManager, use_pygame=False):
 
         if use_pygame:
             pygame.display.flip()
-            clock.tick(1 / config.SIMULATION.COMMUNICATION_POLLING_TIME)
+            clock.tick(config.SIMULATION.COMMUNICATION_POLLING_TIME)
 
         for x in space.shapes:
             replay.set_info(
                 x._gameobject.id,
                 {
                     "type": x.collision_type,  # this is to let the clients know what type of object this is
-                    "position": x.body.position,
+                    "position": x.get_vertices()[0]  # bottom left vertex for walls
+                    if x.collision_type
+                    in [
+                        config.COLLISION_TYPE.WALL,
+                        config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
+                    ]
+                    else x.body.position,
                     "velocity": x.body.velocity,
-                    "rotation": x.body.angle,
-                    "hp": x._gameobject.hp,
+                    # "rotation": x.body.angle,
+                    "hp": "inf"
+                    if x._gameobject.hp == float("inf")
+                    else x._gameobject.hp,
                 },
             )
 
