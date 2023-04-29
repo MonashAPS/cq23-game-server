@@ -59,10 +59,18 @@ def run(replay: ReplayManager, use_pygame=False):
                 x._gameobject.id,
                 {
                     "type": x.collision_type,  # this is to let the clients know what type of object this is
-                    "position": x.body.position,
+                    "position": x.get_vertices()[0]  # bottom left vertex for walls
+                    if x.collision_type
+                    in [
+                        config.COLLISION_TYPE.WALL,
+                        config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
+                    ]
+                    else x.body.position,
                     "velocity": x.body.velocity,
-                    "rotation": x.body.angle,
-                    "hp": x._gameobject.hp,
+                    # "rotation": x.body.angle,
+                    "hp": "inf"
+                    if x._gameobject.hp == float("inf")
+                    else x._gameobject.hp,
                 },
             )
 

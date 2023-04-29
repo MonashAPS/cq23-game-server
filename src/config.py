@@ -25,10 +25,11 @@ def get_config():
 defaults = {
     "TANK": {
         "DIM_MULT": (1, 1),
-        "HP": 2,
+        "HP": 10,
         "COLOR": (0, 0, 255, 255),
         "DENSITY": 100,
         "VELOCITY": 10,
+        "RADIUS": 0.1,
     },
     "MAP": {"PATH": "maps/big.map"},
     "COLLISION_TYPE": {
@@ -56,6 +57,7 @@ defaults = {
         "DESTRUCTIBLE_COLOR": (255, 0, 0, 255),
         "ELASTICITY": 1,
         "DENSITY": 1,
+        "RADIUS": 0.1,
     },
     "BOUNDARY": {
         "HP": math.inf,
