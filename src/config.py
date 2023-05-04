@@ -28,7 +28,7 @@ defaults = {
         "HP": 10,
         "COLOR": (0, 0, 255, 255),
         "DENSITY": 100,
-        "VELOCITY": 10,
+        "VELOCITY": 100,
         "RADIUS": 0.1,
     },
     "MAP": {"PATH": "maps/big.map"},

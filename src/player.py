@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing as t
 from collections import deque
 
+import exceptions
 from gameObjects.tank import Tank
 from map import Map
 from replay import ReplayManager
@@ -71,15 +72,21 @@ class Player:
         if not coord:
             self.action["path"] = deque()
             return
-        self.action["path"] = deque(
-            map(
-                lambda p: self.map.to_global_coords(*p),
-                self.map.path(
-                    self.map.from_global_coords(*self.gameobject.body.position),
-                    self.map.from_global_coords(*coord),
-                ),
+        try:
+            self.action["path"] = deque(
+                map(
+                    lambda p: self.map.to_global_coords(*p),
+                    self.map.path(
+                        self.map.from_global_coords(*self.gameobject.body.position),
+                        self.map.from_global_coords(*coord),
+                    ),
+                )
             )
-        )
+        except exceptions.CoordinateError:
+            # TODO: client input coordinates were out of bounds.
+            # The server shouldn't care about coordinates being out of bounds because the game has boundaries.
+            self.action["path"] = deque()
+
         self.target = coord
 
     def _set_direction(self, direction: tuple[int, int]):
