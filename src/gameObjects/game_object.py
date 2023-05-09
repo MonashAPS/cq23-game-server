@@ -46,3 +46,12 @@ class GameObject:
 
     def is_destroyed(self):
         return self.hp <= 0
+
+    def info(self):
+        # TODO: should we throw an error if this is called and not implemented in more specific objects?
+        return {
+            "type": "",  # this is to let the clients know what type of object this is
+            "position": self.body.position,
+            "velocity": self.body.velocity,
+            "hp": "",
+        }

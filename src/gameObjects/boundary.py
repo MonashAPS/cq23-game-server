@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 import pymunk
 
 from config import config
@@ -41,7 +43,7 @@ class Boundary(GameObject):
 
         self.hp = float("inf")
 
-        verts = [
+        self.verts = [
             p1,
             (p1[0], p2[1]),
             p2,
@@ -49,13 +51,36 @@ class Boundary(GameObject):
         ]
 
         for i in range(segment_no):
-            shape = pymunk.Segment(self.body[i], verts[i], verts[(i + 1) % 4], 2)
+            shape = pymunk.Segment(
+                self.body[i], self.verts[i], self.verts[(i + 1) % 4], 2
+            )
             shape.density = config.BOUNDARY.DENSITY
             shape.elasticity = config.BOUNDARY.ELASTICITY
             shape.color = color
             shape.collision_type = collision_type
-            shape._boundary_coords = verts[i]
+            shape._boundary_coords = self.verts[i]
             shape._gameobject = self
 
             self.shape[i] = shape
             space.add(self.body[i], shape)
+
+        logging.warn(f"verts: {1}")
+
+    def info(self):
+        pos = [
+            [x.position[0] + self.verts[i][0], x.position[1] + self.verts[i][1]]
+            for i, x in enumerate(self.body)
+        ]
+        return {
+            "type": self.shape[
+                0
+            ].collision_type,  # this is to let the clients know what type of object this is
+            "position": [
+                [pos[0][0], pos[3][1]],
+                [pos[0][0], pos[1][1]],
+                [pos[2][0], pos[1][1]],
+                [pos[2][0], pos[3][1]],
+            ],
+            "velocity": [x.velocity for x in self.body],
+            "hp": "inf" if self.hp == float("inf") else self.hp,
+        }

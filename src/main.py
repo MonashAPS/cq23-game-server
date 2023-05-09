@@ -1,3 +1,5 @@
+import logging
+
 import pymunk
 
 from config import config
@@ -57,21 +59,7 @@ def run(replay: ReplayManager, use_pygame=False):
         for x in space.shapes:
             replay.set_info(
                 x._gameobject.id,
-                {
-                    "type": x.collision_type,  # this is to let the clients know what type of object this is
-                    "position": x.get_vertices()[0]  # bottom left vertex for walls
-                    if x.collision_type
-                    in [
-                        config.COLLISION_TYPE.WALL,
-                        config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
-                    ]
-                    else x.body.position,
-                    "velocity": x.body.velocity,
-                    # "rotation": x.body.angle,
-                    "hp": "inf"
-                    if x._gameobject.hp == float("inf")
-                    else x._gameobject.hp,
-                },
+                x._gameobject.info(),
             )
 
         replay_line = replay.post_replay_line()
@@ -94,6 +82,9 @@ def game_started():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        filename="replay/server.log", encoding="utf-8", level=logging.WARNING
+    )
     replay = ReplayManager(config.REPLAY.PATH)
 
     try:

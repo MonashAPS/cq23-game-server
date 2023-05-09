@@ -65,9 +65,9 @@ class Tank(GameObject):
             space=self.space,
             coord=tuple(
                 map(
-                    lambda tank, vel, offset: tank + vel + offset,
+                    lambda tank, safe_space, offset: tank + offset + safe_space,
                     self.body.position,
-                    self.body.velocity,
+                    (1, 1),
                     (
                         cos(angle) * (self.get_radius() + config.BULLET.RADIUS),
                         sin(angle) * (self.get_radius() + config.BULLET.RADIUS),
@@ -88,3 +88,11 @@ class Tank(GameObject):
 
     def get_radius(self):
         return sqrt((self.dims[0] / 2) ** 2 + (self.dims[1] / 2) ** 2)
+
+    def info(self):
+        return {
+            "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
+            "position": self.body.position,
+            "velocity": self.body.velocity,
+            "hp": "inf" if self.hp == float("inf") else self.hp,
+        }

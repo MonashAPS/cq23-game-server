@@ -25,3 +25,11 @@ class Bullet(GameObject):
         self.space.add(self.body, self.shape)
 
         self.id = f"bullet-{IDCounter.get_id('bullet')}"
+
+    def info(self):
+        return {
+            "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
+            "position": self.body.position,
+            "velocity": self.body.velocity,
+            "hp": "inf" if self.hp == float("inf") else self.hp,
+        }

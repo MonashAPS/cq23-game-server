@@ -47,3 +47,11 @@ class Wall(GameObject):
         self.space.add(self.body, self.shape)
 
         self.id = f"wall-{IDCounter.get_id('wall')}"
+
+    def info(self):
+        return {
+            "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
+            "position": self.shape.get_vertices()[0],  # bottom left vertex for walls
+            "velocity": self.body.velocity,
+            "hp": "inf" if self.hp == float("inf") else self.hp,
+        }
