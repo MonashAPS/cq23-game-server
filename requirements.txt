@@ -13,3 +13,4 @@ pygame==2.1.2
 pymunk==6.4.0
 numpy==1.24.2
 pathfinding==1.0.1
+mkdocs==1.4.3

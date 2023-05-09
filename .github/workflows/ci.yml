@@ -82,3 +82,34 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+
+  build_docs:
+    name: Build and Push Docs
+    needs: [ linter ]
+    if: ${{ !contains(github.event.head_commit.message, '#skip-docs') && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.repository }}-docs-concurrency
+      cancel-in-progress: false
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Build Docs
+        run: mkdocs build -d docs_site
+
+      - name: Set-up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - run: npm install
+
+      - name: Push
+        run: node ftp_upload.js 'docs.codequest.club' '${{ secrets.DOCS_FTP_USERNAME }}' '${{ secrets.DOCS_FTP_PASSWORD }}' . docs_site
