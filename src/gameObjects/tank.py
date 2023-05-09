@@ -81,7 +81,7 @@ class Tank(GameObject):
         )
         replay_manager.add_event(
             Event.bullet_spawn(
-                bullet.id, self.id, bullet.body.position, bullet.body.velocity
+                bullet.id, self.id, bullet.body.position, bullet.body.velocity, angle
             )
         )
         return bullet

@@ -55,6 +55,7 @@ class Event:
         tank_id: str,
         position: tuple[float, float],
         velocity: tuple[float, float],
+        angle: float,
     ):
         return Event(
             EventType.BULLET_SPAWN,
@@ -63,6 +64,7 @@ class Event:
                 "tank_id": tank_id,
                 "position": position,
                 "velocity": velocity,
+                "angle": angle,
             },
         )
 
