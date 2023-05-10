@@ -20,4 +20,4 @@ class Communicator:
         return json.loads(input())
 
     def terminate_game(self):
-        print("END")
+        print('"END"')
