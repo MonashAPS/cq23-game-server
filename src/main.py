@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 import pymunk
 
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     replay = ReplayManager(config.REPLAY.PATH)
 
     try:
-        run(replay, use_pygame=True)
+        run(replay, use_pygame=str(os.environ.get("USE_PYGAME", 1)) == "1")
     except Exception as e:
         replay.close()
         raise e
