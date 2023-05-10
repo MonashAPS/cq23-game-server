@@ -14,7 +14,7 @@ WORKDIR /codequest
 
 ENV USE_PYGAME 0
 
-RUN echo "python src/main.py" > run.sh
+RUN echo 'python src/main.py "$@"' > run.sh
 RUN chmod +x /codequest/run.sh
 
 CMD ["/bin/sh", "-c", "./run.sh"]
