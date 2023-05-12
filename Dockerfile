@@ -4,6 +4,7 @@ RUN apt -y update
 RUN apt -y install gcc socat
 RUN mkdir -p /codequest
 
+COPY requirements/base.txt base.txt
 COPY requirements/prod.txt requirements.txt
 RUN pip install -r requirements.txt
 

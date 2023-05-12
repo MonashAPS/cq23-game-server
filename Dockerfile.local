@@ -6,6 +6,7 @@ RUN apt -y update
 RUN apt -y install gcc socat libsdl2-2.0-0
 RUN mkdir -p /codequest
 
+COPY requirements/base.txt base.txt
 COPY requirements/local.txt requirements.txt
 RUN pip install -r requirements.txt
 
