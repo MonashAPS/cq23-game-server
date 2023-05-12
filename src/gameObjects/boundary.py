@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import logging
-
 import pymunk
 
 from config import config
@@ -63,8 +61,6 @@ class Boundary(GameObject):
 
             self.shape[i] = shape
             space.add(self.body[i], shape)
-
-        logging.warn(f"verts: {1}")
 
     def info(self):
         pos = [

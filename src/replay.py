@@ -93,6 +93,7 @@ class ReplayManager:
         self.events = []
         self.current_info = {}
         self.new_info = {}
+        self.comms_info = {}
 
     def add_event(self, e: Event) -> None:
         self.events.append(e)
@@ -107,22 +108,45 @@ class ReplayManager:
         """
         self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
 
-    def post_replay_line(self) -> dict:
+    def set_game_info(self, space):
+        for x in space.shapes:
+            self.set_info(
+                x._gameobject.id,
+                x._gameobject.info(),
+            )
+
+    def post_replay_line(self, include_events=False) -> dict:
         updated_info = {}
         for key in self.new_info:
             if self.current_info.get(key, None) != self.new_info[key]:
                 updated_info[key] = self.new_info[key]
 
         obj = {
-            "events": list(map(asdict, self.events)),
+            "events": list(map(asdict, self.events)) if include_events else [],
             "object_info": updated_info,
         }
         self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
 
-        # Clear events and update stale locations
+        # Update stale locations
         self.current_info.update(self.new_info)
+        self.new_info = {}
+
+    def get_comms_line(self):
+        comms_updated_info = {}
+        for key in self.new_info:
+            if self.comms_info.get(key, None) != self.new_info[key]:
+                comms_updated_info[key] = self.new_info[key]
+        comms_obj = {
+            "events": list(map(asdict, self.events)),
+            "object_info": comms_updated_info,
+        }
+
+        # Clear events and update all objects' info
+        self.comms_info.update(self.current_info)
         self.events = []
-        return obj
+        self.new_info = {}
+
+        return comms_obj
 
     def close(self):
         self._file.close()

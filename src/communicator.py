@@ -1,4 +1,5 @@
 import json
+import logging
 
 from config import config
 
@@ -15,6 +16,8 @@ class Communicator:
     ):
         print(json.dumps({client_id: message}))
         print(self.timeout)
+        logging.info(json.dumps({client_id: message}))
+        logging.info(self.timeout)
 
     def get_message(self):
         return json.loads(input())

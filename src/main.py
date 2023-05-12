@@ -18,7 +18,7 @@ def run(replay: ReplayManager, use_pygame=False):
     game = Game(space, m, replay)
 
     with open(config.MAP.PATH) as mapFile:
-        replay.post_custom_replay_line({"map": mapFile.readlines()})
+        replay.post_custom_replay_line({"map": mapFile.read().splitlines()})
     replay.post_custom_replay_line({"client_info": game.comms.client_info})
 
     if use_pygame:
@@ -37,36 +37,39 @@ def run(replay: ReplayManager, use_pygame=False):
         draw_options = pymunk.pygame_util.DrawOptions(display)  # type: ignore
 
     while running:
-        if use_pygame:
-            # Visual mainloop
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+        for i in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
+            if use_pygame:
+                # Visual mainloop
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                        break
+
+                # Reset screen and draw all physics objects
+                display.fill(pygame.Color("white"))
+                space.debug_draw(draw_options)
+
+            for _ in range(config.SIMULATION.PYMUNK_TIMESTEP_ITERATIONS):
+                # Update physics and do game logic.
+                space.step(config.SIMULATION.PHYSICS_TIMESTEP)
+                if game.tick():  # game is terminal
                     running = False
+                    break
 
-            # Reset screen and draw all physics objects
-            display.fill(pygame.Color("white"))
-            space.debug_draw(draw_options)
-
-        for _ in range(config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION):
-            # Update physics and do game logic.
-            space.step(config.SIMULATION.PHYSICS_TIMESTEP)
-            if game.tick():  # game is terminal
-                running = False
-                break
-
-        if use_pygame:
-            pygame.display.flip()
-            clock.tick(config.SIMULATION.COMMUNICATION_POLLING_TIME)
-
-        for x in space.shapes:
-            replay.set_info(
-                x._gameobject.id,
-                x._gameobject.info(),
+            replay.set_game_info(space)
+            replay.post_replay_line(
+                include_events=i
+                == config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION - 1
             )
 
-        replay_line = replay.post_replay_line()
+            if use_pygame:
+                pygame.display.flip()
+                clock.tick(config.SIMULATION.PYGAME_FPS)
+
         if running:
-            game.comms.post_message(message=replay_line)
+            replay.set_game_info(space)
+            comms_line = replay.get_comms_line()
+            game.comms.post_message(message=comms_line)
             game.handle_client_response()
         else:
             results = game.results()
@@ -86,7 +89,7 @@ def game_started():
 
 if __name__ == "__main__":
     logging.basicConfig(
-        filename="replay/server.log", encoding="utf-8", level=logging.WARNING
+        filename="replay/server.log", encoding="utf-8", level=logging.INFO
     )
     replay = ReplayManager(config.REPLAY.PATH)
 

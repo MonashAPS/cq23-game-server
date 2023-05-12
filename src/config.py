@@ -72,8 +72,9 @@ defaults = {
     },
     "SIMULATION": {
         "PHYSICS_TIMESTEP": 1 / 6000,
-        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 100,
-        "COMMUNICATION_POLLING_TIME": 60,
+        "PHYSICS_ITERATIONS_PER_COMMUNICATION": 15,
+        "PYGAME_FPS": 60,
+        "PYMUNK_TIMESTEP_ITERATIONS": 100,
     },
     "REPLAY": {
         "PATH": "replay/replay.txt",
