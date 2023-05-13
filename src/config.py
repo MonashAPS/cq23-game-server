@@ -31,7 +31,7 @@ defaults = {
         "VELOCITY": 100,
         "RADIUS": 0.1,
     },
-    "MAP": {"PATH": "maps/big.map"},
+    "MAP": {"PATH": "maps/big.map", "DIR": "maps/"},
     "COLLISION_TYPE": {
         "TANK": 1,
         "BULLET": 2,

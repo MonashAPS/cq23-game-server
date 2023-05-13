@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import os
@@ -10,9 +11,9 @@ from map import Map
 from replay import ReplayManager
 
 
-def run(replay: ReplayManager, use_pygame=False):
+def run(replay: ReplayManager, use_pygame=False, map_name=config.MAP.PATH):
 
-    m = Map(config.MAP.PATH)
+    m = Map(map_name=map_name)
     running = True
     space = pymunk.Space()
     game = Game(space, m, replay)
@@ -88,13 +89,24 @@ def game_started():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="GameServer", description="Game server for codequest-23 competition"
+    )
+
+    parser.add_argument("-m", "--map")
+    args = parser.parse_args()
+
     logging.basicConfig(
         filename="replay/server.log", encoding="utf-8", level=logging.INFO
     )
     replay = ReplayManager(config.REPLAY.PATH)
 
     try:
-        run(replay, use_pygame=str(os.environ.get("USE_PYGAME", 1)) == "1")
+        run(
+            replay,
+            use_pygame=str(os.environ.get("USE_PYGAME", 1)) == "1",
+            map_name=config.MAP.DIR + args.map or config.MAP.PATH,
+        )
     except Exception as e:
         replay.close()
         raise e
