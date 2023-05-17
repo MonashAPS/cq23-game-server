@@ -56,6 +56,8 @@ def run(replay: ReplayManager, use_pygame=False, map_name=config.MAP.PATH):
                 if game.tick():  # game is terminal
                     running = False
                     break
+            if not running:
+                break
 
             replay.set_game_info(space)
             replay.post_replay_line(

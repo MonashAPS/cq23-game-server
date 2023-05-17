@@ -62,21 +62,24 @@ class Boundary(GameObject):
             self.shape[i] = shape
             space.add(self.body[i], shape)
 
-    def info(self):
+    def get_vertices(self):
         pos = [
             [x.position[0] + self.verts[i][0], x.position[1] + self.verts[i][1]]
             for i, x in enumerate(self.body)
         ]
+        return [
+            [pos[0][0], pos[3][1]],
+            [pos[0][0], pos[1][1]],
+            [pos[2][0], pos[1][1]],
+            [pos[2][0], pos[3][1]],
+        ]
+
+    def info(self):
         return {
             "type": self.shape[
                 0
             ].collision_type,  # this is to let the clients know what type of object this is
-            "position": [
-                [pos[0][0], pos[3][1]],
-                [pos[0][0], pos[1][1]],
-                [pos[2][0], pos[1][1]],
-                [pos[2][0], pos[3][1]],
-            ],
+            "position": self.get_vertices(),
             "velocity": [x.velocity for x in self.body],
             "hp": "inf" if self.hp == float("inf") else self.hp,
         }

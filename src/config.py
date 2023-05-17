@@ -39,6 +39,7 @@ defaults = {
         "DESTRUCTIBLE_WALL": 4,
         "BOUNDARY": 5,
         "CLOSING_BOUNDARY": 6,
+        "POWERUP": 7,
     },
     "GRID_SCALING": 20,
     "BULLET": {
@@ -80,5 +81,16 @@ defaults = {
         "PATH": "replay/replay.txt",
     },
     "COMMUNICATION": {"TIMEOUT": 0.1},
+    "POWERUP": {
+        "RADIUS": 15,
+        "COLOR": (255, 165, 255, 0),
+        "HP": math.inf,
+        "ELASTICITY": 1,
+        "DENSITY": 1,
+        "HP_BOOST": 2,
+        "BULLET_BOOST": 2,
+        "SPEED_BOOST": 2,
+    },
+    "TICKS_PER_POWERUP": 15000,
 }
 config = get_config()

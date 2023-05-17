@@ -7,6 +7,7 @@ import pymunk
 from config import config
 from gameObjects.bullet import Bullet
 from gameObjects.game_object import GameObject, IDCounter
+from gameObjects.powerup import Powerup, PowerupType
 from replay import Event, ReplayManager
 
 
@@ -22,14 +23,18 @@ class Tank(GameObject):
         )
         self.hp = config.TANK.HP  # health points
 
-        self.shape = pymunk.Poly.create_box(
-            body=self.body, size=self.dims, radius=config.TANK.RADIUS
-        )
+        self.shape = pymunk.Poly.create_box(body=self.body, size=self.dims, radius=0)
         self.shape.density = config.TANK.DENSITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)
+
+        # multiplier for velocity
+        self.velocity_mult = 1
+
+        # the tank determines the damage for a bullet. this value changes when powerups are activated
+        self.bullet_damage = config.BULLET.DAMAGE
 
         # prevent tanks from rotating. moment has to be set after the body is added to the space
         self.body.moment = float("inf")
@@ -56,8 +61,8 @@ class Tank(GameObject):
             direction (tuple[float, float]): The direction the tank should move towards (x,y). (1,1) is up and right
         """
         self.body.velocity = (
-            direction[0] * config.TANK.VELOCITY,
-            direction[1] * config.TANK.VELOCITY,
+            direction[0] * config.TANK.VELOCITY * self.velocity_mult,
+            direction[1] * config.TANK.VELOCITY * self.velocity_mult,
         )
 
     def shoot(self, angle: float, replay_manager: ReplayManager):
@@ -67,7 +72,7 @@ class Tank(GameObject):
                 map(
                     lambda tank, safe_space, offset: tank + offset + safe_space,
                     self.body.position,
-                    (1, 1),
+                    (0, 0),
                     (
                         cos(angle) * (self.get_radius() + config.BULLET.RADIUS),
                         sin(angle) * (self.get_radius() + config.BULLET.RADIUS),
@@ -78,6 +83,7 @@ class Tank(GameObject):
                 cos(angle) * config.BULLET.VELOCITY,
                 sin(angle) * config.BULLET.VELOCITY,
             ),
+            damage=self.bullet_damage,
         )
         replay_manager.add_event(
             Event.bullet_spawn(
@@ -96,3 +102,11 @@ class Tank(GameObject):
             "velocity": self.body.velocity,
             "hp": "inf" if self.hp == float("inf") else self.hp,
         }
+
+    def apply_powerup(self, powerup: Powerup):
+        if powerup.powerup_type == PowerupType.HEALTH:
+            self.hp += config.POWERUP.HP_BOOST
+        elif powerup.powerup_type == PowerupType.SPEED:
+            self.velocity_mult = config.POWERUP.SPEED_BOOST
+        elif powerup.powerup_type == PowerupType.DAMAGE:
+            self.bullet_damage = config.POWERUP.BULLET_BOOST

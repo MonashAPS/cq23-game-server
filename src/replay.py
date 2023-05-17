@@ -5,6 +5,8 @@ from dataclasses import asdict, dataclass, field, is_dataclass
 from enum import Enum
 from typing import Any
 
+from gameObjects.powerup import PowerupType
+
 
 class EventType(str, Enum):
     BULLET_SPAWN = "BULLET_SPAWN"
@@ -14,6 +16,7 @@ class EventType(str, Enum):
     POWERUP_SPAWN = "POWERUP_SPAWN"
     WALL_HEALTH_LOSS = "WALL_HEALTH_LOSS"
     WALL_DESTROYED = "WALL_DESTROYED"
+    POWERUP_COLLECTED = "POWERUP_COLLECTED"
 
 
 @dataclass
@@ -65,6 +68,37 @@ class Event:
                 "position": position,
                 "velocity": velocity,
                 "angle": angle,
+            },
+        )
+
+    @classmethod
+    def powerup_collected(
+        cls,
+        tank_id: str,
+        position: tuple[float, float],
+        powerup_id: str,
+        powerup_type: PowerupType,
+    ):
+        return Event(
+            EventType.POWERUP_COLLECTED,
+            {
+                "tank_id": tank_id,
+                "position": position,
+                "powerup_id": powerup_id,
+                "powerup_type": powerup_type,
+            },
+        )
+
+    @classmethod
+    def powerup_spawn(
+        cls, powerup_id: str, position: tuple[float, float], powerup_type: PowerupType
+    ):
+        return Event(
+            EventType.POWERUP_SPAWN,
+            {
+                "position": position,
+                "powerup_id": powerup_id,
+                "powerup_type": powerup_type,
             },
         )
 

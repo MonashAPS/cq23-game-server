@@ -8,7 +8,11 @@ from gameObjects.game_object import GameObject, IDCounter
 
 class Bullet(GameObject):
     def __init__(
-        self, space: pymunk.Space, coord: tuple[int, int], velocity: tuple[float, float]
+        self,
+        space: pymunk.Space,
+        coord: tuple[int, int],
+        velocity: tuple[float, float],
+        damage: int = config.BULLET.DAMAGE,
     ):
         super().__init__(space, coord, velocity)
 
@@ -23,6 +27,8 @@ class Bullet(GameObject):
         self.shape._gameobject = self
 
         self.space.add(self.body, self.shape)
+
+        self.damage = damage
 
         self.id = f"bullet-{IDCounter.get_id('bullet')}"
 
