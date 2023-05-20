@@ -54,6 +54,7 @@ class Game:
         self.tick_count = 0
 
         self.add_collision_handlers()
+        self.remove_collision_handlers()
 
     def add_collision_handlers(self):
         """register all collision handlers in the pymunk space"""
