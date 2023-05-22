@@ -1,1 +1,15 @@
 site_name: CodeQuest 23 Game Documentation
+nav:
+    - Getting Started: index.md
+    - Game Objects:
+      - Tank: tank.md
+      - Bullet: bullet.md
+      - Wall: tank.md
+      - Destructible-Wall: destructibleWall.md
+      - Powerup: powerup.md
+      - Boundary: boundary.md
+    - Game Logic:
+      - Communication: communication.md
+      - Actions: actions.md
+      - Collisions: collisions.md
+theme: readthedocs
