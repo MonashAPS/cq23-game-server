@@ -49,7 +49,7 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
         "DAMAGE": 1,
-        "VELOCITY": 250,
+        "VELOCITY": 450,
     },
     "WALL": {
         "HP": math.inf,
@@ -91,6 +91,6 @@ defaults = {
         "BULLET_BOOST": 2,
         "SPEED_BOOST": 2,
     },
-    "TICKS_PER_POWERUP": 15000,
+    "TICKS_PER_POWERUP": 25000,
 }
 config = get_config()
