@@ -95,7 +95,7 @@ if __name__ == "__main__":
         prog="GameServer", description="Game server for codequest-23 competition"
     )
 
-    parser.add_argument("-m", "--map")
+    parser.add_argument("-m", "--map", default="nuketown.map")
     args = parser.parse_args()
 
     logging.basicConfig(
