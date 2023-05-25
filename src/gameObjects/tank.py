@@ -9,6 +9,7 @@ from gameObjects.bullet import Bullet
 from gameObjects.game_object import GameObject, IDCounter
 from gameObjects.powerup import Powerup, PowerupType
 from replay import Event, ReplayManager
+from util import round_position
 
 
 class Tank(GameObject):
@@ -98,7 +99,7 @@ class Tank(GameObject):
     def info(self):
         return {
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
-            "position": self.body.position,
+            "position": round_position(self.body.position),
             "velocity": self.body.velocity,
             "hp": "inf" if self.hp == float("inf") else self.hp,
         }

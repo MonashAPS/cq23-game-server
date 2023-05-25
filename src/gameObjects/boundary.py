@@ -4,6 +4,7 @@ import pymunk
 
 from config import config
 from gameObjects.game_object import GameObject, IDCounter
+from util import round_position
 
 
 class Boundary(GameObject):
@@ -67,12 +68,17 @@ class Boundary(GameObject):
             [x.position[0] + self.verts[i][0], x.position[1] + self.verts[i][1]]
             for i, x in enumerate(self.body)
         ]
-        return [
-            [pos[0][0], pos[3][1]],
-            [pos[0][0], pos[1][1]],
-            [pos[2][0], pos[1][1]],
-            [pos[2][0], pos[3][1]],
-        ]
+        return list(
+            map(
+                round_position,
+                [
+                    [pos[0][0], pos[3][1]],
+                    [pos[0][0], pos[1][1]],
+                    [pos[2][0], pos[1][1]],
+                    [pos[2][0], pos[3][1]],
+                ],
+            )
+        )
 
     def info(self):
         return {

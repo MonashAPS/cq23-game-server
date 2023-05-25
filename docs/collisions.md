@@ -17,5 +17,3 @@ Tanks will receive damage from colliding with bullets and the closing boundary.
 | Destructible Wall | collide | damage   | None   | None              | None       | None    |
 |  Boundary         | damage  | collide  | None   | None              | None       | None    |
 | Powerup           | collect | None     | None   | None              | None       | None    |
-
-
