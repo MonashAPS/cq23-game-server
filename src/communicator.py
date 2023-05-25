@@ -15,11 +15,11 @@ class Communicator:
         These messages are sent to all clients.
         """
         json_message = json.dumps(message)
-        print(json_message)
+        print(json_message, flush=True)
         logging.info(json_message)
 
     def terminate_init_world_sequence(self):
-        print(json.dumps("END_INIT"))
+        print(json.dumps("END_INIT"), flush=True)
         logging.info(json.dumps("END_INIT"))
 
     def post_message(
@@ -27,7 +27,7 @@ class Communicator:
         message: str,
         client_id: str = "",
     ):
-        print(json.dumps({client_id: message}))
+        print(json.dumps({client_id: message}), flush=True)
         print(self.timeout)
         logging.info(json.dumps({client_id: message}))
         logging.info(self.timeout)
@@ -36,4 +36,4 @@ class Communicator:
         return json.loads(input())
 
     def terminate_game(self):
-        print('"END"')
+        print('"END"', flush=True)
