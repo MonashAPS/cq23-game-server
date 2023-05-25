@@ -4,7 +4,7 @@ nav:
     - Game Objects:
       - Tank: tank.md
       - Bullet: bullet.md
-      - Wall: tank.md
+      - Wall: wall.md
       - Destructible-Wall: destructibleWall.md
       - Powerup: powerup.md
       - Boundary: boundary.md
