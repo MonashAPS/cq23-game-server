@@ -97,6 +97,9 @@ if __name__ == "__main__":
     )
     logging.info(sys.argv)
 
+    while not sys.argv[-1].strip():
+        del sys.argv[-1]
+
     parser = argparse.ArgumentParser(
         prog="GameServer", description="Game server for codequest-23 competition"
     )
