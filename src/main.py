@@ -2,6 +2,7 @@ import argparse
 import json
 import logging
 import os
+import sys
 
 import pymunk
 
@@ -94,6 +95,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         filename="replay/server.log", encoding="utf-8", level=logging.INFO
     )
+    logging.info(sys.argv)
 
     parser = argparse.ArgumentParser(
         prog="GameServer", description="Game server for codequest-23 competition"
