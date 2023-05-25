@@ -91,6 +91,10 @@ def game_started():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        filename="replay/server.log", encoding="utf-8", level=logging.INFO
+    )
+
     parser = argparse.ArgumentParser(
         prog="GameServer", description="Game server for codequest-23 competition"
     )
@@ -98,9 +102,6 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--map", default="nuketown.map")
     args = parser.parse_args()
 
-    logging.basicConfig(
-        filename="replay/server.log", encoding="utf-8", level=logging.INFO
-    )
     replay = ReplayManager(config.REPLAY.PATH)
 
     try:
