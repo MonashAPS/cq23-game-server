@@ -56,6 +56,12 @@ class Game:
         self.add_collision_handlers()
         self.remove_collision_handlers()
 
+        self.send_map_info_to_clients()
+
+    def send_map_info_to_clients(self):
+        # self.comms.post_init_world_message(...)
+        self.comms.terminate_init_world_sequence()
+
     def add_collision_handlers(self):
         """register all collision handlers in the pymunk space"""
         collision_groups: list[tuple[int, int, Callable | None]] = [
