@@ -59,7 +59,10 @@ class Game:
         self.send_map_info_to_clients()
 
     def send_map_info_to_clients(self):
-        # self.comms.post_init_world_message(...)
+        self.replay_manager.set_game_info(self.space)
+        comms_line = self.replay_manager.get_comms_line()
+        # self.replay_manager.post_replay_line() #TODO: uncomment this
+        self.comms.post_init_world_message(comms_line)
         self.comms.terminate_init_world_sequence()
 
     def add_collision_handlers(self):

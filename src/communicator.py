@@ -1,5 +1,6 @@
 import json
 import logging
+from time import sleep
 
 from config import config
 
@@ -14,22 +15,37 @@ class Communicator:
         Prints an init world message - refer to the GCS docs.
         These messages are sent to all clients.
         """
-        json_message = json.dumps(message)
-        print(json_message, flush=True)
-        logging.info(json_message)
+        object_info = message["object_info"]
+        current_message = {"events": [], "object_info": {}}
+
+        for key, value in object_info.items():
+            if len(current_message["object_info"]) == 10:
+                json_message = json.dumps(current_message, separators=(",", ":"))
+                print(json_message, flush=True)
+                sleep(0.01)
+                logging.info(json_message)
+                current_message = {"events": [], "object_info": {}}
+            current_message["object_info"][key] = value
+
+        if len(current_message["object_info"]) > 0:
+            json_message = json.dumps(current_message, separators=(",", ":"))
+            print(json_message, flush=True)
+            logging.info(json_message)
+            current_message = {"events": [], "object_info": {}}
 
     def terminate_init_world_sequence(self):
-        print(json.dumps("END_INIT"), flush=True)
-        logging.info(json.dumps("END_INIT"))
+        print('"END_INIT"', flush=True)
+        logging.info('"END_INIT"')
 
     def post_message(
         self,
         message: str,
         client_id: str = "",
     ):
-        print(json.dumps({client_id: message}), flush=True)
-        print(self.timeout)
-        logging.info(json.dumps({client_id: message}))
+        print(json.dumps({client_id: message}, separators=(",", ":")), flush=True)
+        print(self.timeout, flush=True)
+
+        logging.info(json.dumps({client_id: message}, separators=(",", ":")))
         logging.info(self.timeout)
 
     def get_message(self):

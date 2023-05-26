@@ -140,7 +140,9 @@ class ReplayManager:
         Post a custom JSON message to replay.
         Used for initial messaging / finale
         """
-        self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
+        self._file.write(
+            json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
+        )
 
     def set_game_info(self, space):
         for x in space.shapes:
@@ -159,7 +161,9 @@ class ReplayManager:
             "events": list(map(asdict, self.events)) if include_events else [],
             "object_info": updated_info,
         }
-        self._file.write(json.dumps(obj, cls=ReplayJSONEncoder) + "\n")
+        self._file.write(
+            json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
+        )
 
         # Update stale locations
         self.current_info.update(self.new_info)

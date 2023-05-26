@@ -79,7 +79,7 @@ def run(replay: ReplayManager, use_pygame=False, map_name=config.MAP.PATH):
             results = game.results()
             replay.post_custom_replay_line(results)  # post results in replay file
             with open("replay/results.json", "w") as file:
-                file.write(json.dumps(results))
+                file.write(json.dumps(results, separators=(",", ":")))
 
     if use_pygame:
         pygame.quit()
