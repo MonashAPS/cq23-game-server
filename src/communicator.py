@@ -22,7 +22,7 @@ class Communicator:
             if len(current_message["object_info"]) == 10:
                 json_message = json.dumps(current_message, separators=(",", ":"))
                 print(json_message, flush=True)
-                sleep(0.01)
+                sleep(0.1)
                 logging.info(json_message)
                 current_message = {"events": [], "object_info": {}}
             current_message["object_info"][key] = value
@@ -30,8 +30,8 @@ class Communicator:
         if len(current_message["object_info"]) > 0:
             json_message = json.dumps(current_message, separators=(",", ":"))
             print(json_message, flush=True)
+            sleep(0.1)
             logging.info(json_message)
-            current_message = {"events": [], "object_info": {}}
 
     def terminate_init_world_sequence(self):
         print('"END_INIT"', flush=True)
