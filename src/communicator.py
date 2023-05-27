@@ -20,18 +20,21 @@ class Communicator:
 
         for key, value in object_info.items():
             if len(current_message["object_info"]) == 10:
-                json_message = json.dumps(current_message, separators=(",", ":"))
-                print(json_message, flush=True)
-                sleep(0.1)
-                logging.info(json_message)
+                self.post_message_with_delay(current_message)
                 current_message = {"events": [], "object_info": {}}
             current_message["object_info"][key] = value
 
         if len(current_message["object_info"]) > 0:
-            json_message = json.dumps(current_message, separators=(",", ":"))
-            print(json_message, flush=True)
-            sleep(0.1)
-            logging.info(json_message)
+            self.post_message_with_delay(current_message)
+
+    def post_message_with_delay(
+        self,
+        message: str,
+    ):
+        json_message = json.dumps(message, separators=(",", ":"))
+        print(json_message, flush=True)
+        sleep(0.1)
+        logging.info(json_message)
 
     def terminate_init_world_sequence(self):
         print('"END_INIT"', flush=True)
