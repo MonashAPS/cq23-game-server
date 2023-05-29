@@ -2,12 +2,12 @@
 
 The collision behaviour for different objects are quite different in this game. Each object reacts differently to other objects and you can see a summary of these below.
 
-## Tank
-
-Tanks collide with other tanks, walls, destructible walls, bullets and the boundaries.
-Tanks will receive damage from colliding with bullets and the closing boundary.
-
 ## Collision Table
+
+- Damage: damage is dealt to the objects after collision
+- None: the objects do NOT collide
+- Collide: the objects collide but nothing happens to either of them
+- Collect: special case for powerups where they collide and they're collected by the tanks
 
 |                   | Tank    | Bullet   | Wall   | Destructible Wall | Boundary   | Powerup |
 | ----------------- | :-----: | :------: | :----: | :---------------: | :--------: | :-----: |

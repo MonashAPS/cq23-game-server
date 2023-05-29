@@ -12,4 +12,6 @@ nav:
       - Communication: communication.md
       - Actions: actions.md
       - Collisions: collisions.md
+      - Map: map.md
+      - Types: types.md
 theme: readthedocs
