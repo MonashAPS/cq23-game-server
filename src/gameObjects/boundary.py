@@ -4,7 +4,7 @@ import pymunk
 
 from config import config
 from gameObjects.game_object import GameObject, IDCounter
-from util import round_position
+from util import round_vec2d
 
 
 class Boundary(GameObject):
@@ -70,7 +70,7 @@ class Boundary(GameObject):
         ]
         return list(
             map(
-                round_position,
+                round_vec2d,
                 [
                     [pos[0][0], pos[3][1]],
                     [pos[0][0], pos[1][1]],

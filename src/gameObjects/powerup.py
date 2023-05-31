@@ -6,7 +6,7 @@ import pymunk
 
 from config import config
 from gameObjects.game_object import GameObject, IDCounter
-from util import round_position
+from util import round_vec2d
 
 
 class PowerupType(str, Enum):
@@ -44,7 +44,7 @@ class Powerup(GameObject):
     def info(self):
         return {
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
-            "position": round_position(self.body.position),
+            "position": round_vec2d(self.body.position),
             "hp": "inf" if self.hp == float("inf") else self.hp,
             "powerup_type": self.powerup_type,
         }

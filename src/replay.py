@@ -6,6 +6,7 @@ from enum import Enum
 from typing import Any
 
 from gameObjects.powerup import PowerupType
+from util import round_vec2d
 
 
 class EventType(str, Enum):
@@ -31,24 +32,35 @@ class Event:
 
     @classmethod
     def tank_health_loss(cls, tank_id: str, position: tuple[float, float]):
-        return Event(EventType.TANK_HEALTH_LOSS, {"id": tank_id, "position": position})
+        return Event(
+            EventType.TANK_HEALTH_LOSS,
+            {"id": tank_id, "position": round_vec2d(position)},
+        )
 
     @classmethod
     def tank_destroyed(cls, tank_id: str, position: tuple[float, float]):
-        return Event(EventType.TANK_DESTROYED, {"id": tank_id, "position": position})
+        return Event(
+            EventType.TANK_DESTROYED, {"id": tank_id, "position": round_vec2d(position)}
+        )
 
     @classmethod
     def wall_destroyed(cls, wall_id: str, position: tuple[float, float]):
-        return Event(EventType.WALL_DESTROYED, {"id": wall_id, "position": position})
+        return Event(
+            EventType.WALL_DESTROYED, {"id": wall_id, "position": round_vec2d(position)}
+        )
 
     @classmethod
     def wall_health_loss(cls, wall_id: str, position: tuple[float, float]):
-        return Event(EventType.WALL_HEALTH_LOSS, {"id": wall_id, "position": position})
+        return Event(
+            EventType.WALL_HEALTH_LOSS,
+            {"id": wall_id, "position": round_vec2d(position)},
+        )
 
     @classmethod
     def bullet_destroyed(cls, bullet_id: str, position: tuple[float, float]):
         return Event(
-            EventType.BULLET_DESTROYED, {"id": bullet_id, "position": position}
+            EventType.BULLET_DESTROYED,
+            {"id": bullet_id, "position": round_vec2d(position)},
         )
 
     @classmethod
@@ -65,8 +77,8 @@ class Event:
             {
                 "id": bullet_id,
                 "tank_id": tank_id,
-                "position": position,
-                "velocity": velocity,
+                "position": round_vec2d(position),
+                "velocity": round_vec2d(velocity),
                 "angle": angle,
             },
         )
@@ -83,7 +95,7 @@ class Event:
             EventType.POWERUP_COLLECTED,
             {
                 "tank_id": tank_id,
-                "position": position,
+                "position": round_vec2d(position),
                 "powerup_id": powerup_id,
                 "powerup_type": powerup_type,
             },
@@ -96,7 +108,7 @@ class Event:
         return Event(
             EventType.POWERUP_SPAWN,
             {
-                "position": position,
+                "position": round_vec2d(position),
                 "powerup_id": powerup_id,
                 "powerup_type": powerup_type,
             },

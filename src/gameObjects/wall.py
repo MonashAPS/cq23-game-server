@@ -4,7 +4,7 @@ import pymunk
 
 from config import config
 from gameObjects.game_object import GameObject, IDCounter
-from util import round_position
+from util import round_vec2d
 
 
 class Wall(GameObject):
@@ -52,7 +52,7 @@ class Wall(GameObject):
     def info(self):
         return {
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
-            "position": round_position(
+            "position": round_vec2d(
                 self.shape.get_vertices()[0]
             ),  # bottom left vertex for walls
             "hp": "inf" if self.hp == float("inf") else self.hp,
