@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import random
 from collections import defaultdict
 from collections.abc import Callable
@@ -229,9 +230,14 @@ class Game:
                 if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                     self.map.register_wall_broken(shape._wall_coords)
                 space.remove(shape, shape.body)
-                self.game_objects.remove(
-                    shape._gameobject
-                )  # remove reference to game object
+                try:
+                    self.game_objects.remove(
+                        shape._gameobject
+                    )  # remove reference to game object
+                except ValueError:
+                    logging.warning(
+                        f"Could not find {shape._gameobject.id} in self.game_object"
+                    )
 
                 self.register_replay_manager_event(shape, "DESTRUCTION")
 
