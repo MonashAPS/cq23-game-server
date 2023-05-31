@@ -19,6 +19,7 @@ The data that you will be given about each powerup is as follows:
     "type": 7,
     "position": [356.12, 534.39],
     "hp": "inf",
+    "powerup_type": "HEALTH"
 }
 ```
 
@@ -27,3 +28,5 @@ The data that you will be given about each powerup is as follows:
 * position: This refers to the position of this object on the game map. For more information on the map, please refer to [Map](map.md)
 
 * hp: This is the health points of this object. The health points of powerups would generally be `"inf"` indicating that you cannot destroy them by shooting at them.
+
+* powerup_type: This indicates the type of this powerup. This will be one of three values: `"HEALTH"`, `"SPEED"`, `"DAMAGE"`

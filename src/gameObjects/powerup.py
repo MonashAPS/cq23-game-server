@@ -46,4 +46,5 @@ class Powerup(GameObject):
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
             "position": round_position(self.body.position),
             "hp": "inf" if self.hp == float("inf") else self.hp,
+            "powerup_type": self.powerup_type,
         }
