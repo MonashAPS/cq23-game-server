@@ -166,7 +166,7 @@ class ReplayManager:
         )
 
         # Update stale locations
-        self.current_info.update(self.new_info)
+        self.current_info.update(updated_info)
         self.new_info = {}
 
     def get_comms_line(self):
@@ -180,7 +180,7 @@ class ReplayManager:
         }
 
         # Clear events and update all objects' info
-        self.comms_info.update(self.current_info)
+        self.comms_info.update(comms_updated_info)
         self.events = []
         self.new_info = {}
 
