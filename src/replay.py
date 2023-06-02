@@ -79,7 +79,7 @@ class Event:
                 "tank_id": tank_id,
                 "position": round_vec2d(position),
                 "velocity": round_vec2d(velocity),
-                "angle": angle,
+                "angle": round(angle, 2),
             },
         )
 

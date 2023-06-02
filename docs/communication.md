@@ -1,38 +1,89 @@
-# Getting Started
+# Communication
 
-Welcome to CodeQuest-23!
+The communication between you and the game server is pretty straight forward.
+The game server gives you information about the game and you will decide what your tank should do based on the information you have received.
 
-This year's game is a game of tanks, where two tanks will battle it out in several maps.
+All the communication happens through standard input and standard output, that means that any time you want to receive information about the game you take an input (`input()` in python or `std::cin` in c++ etc.) and any time you want to tell the game server something to do, you print it (`print()` in python or `std::cout` in c++ etc.).
 
-Each team is in control of one of the tanks and each tank is allowed to take some given actions in each turn.
-Please refer to [Actions](actions.md) for more information on actions.
+## Receiving game info
 
-![Screenshot](img/gameView.png)
+All the messages you receive from the game server will be json messages and in the following format:
 
-## Game Objects
+```json
+{
+    "events": [
+        {
+            "event_type": "BULLET_SPAWN",
+            "data": {
+                "id": "bullet-3",
+                "tank_id": "tank-1",
+                "position": [
+                    661.92,
+                    833.83
+                ],
+                "velocity": [
+                    -425.74,
+                    -145.75
+                ],
+                "angle": 3.47
+            }
+        },
+        {
+            "event_type": "BULLET_DESTROYED",
+            "data": {
+                "id": "bullet-3",
+                "position": [
+                    577.98,
+                    805.1
+                ]
+            }
+        }
+    ],
+    "object_info": {
+        "tank-1": {
+            "type": 1,
+            "position": [
+                655.03,
+                815.03
+            ],
+            "velocity": [
+                -100.0,
+                -100.0
+            ],
+            "hp": 10
+        },
+        "tank-2": {
+            "type": 1,
+            "position": [
+                595.03,
+                130.0
+            ],
+            "velocity": [
+                -100.0,
+                100.0
+            ],
+            "hp": 10
+        },
+        "bullet-2": {
+            "type": 2,
+            "position": [
+                572.43,
+                171.76
+            ],
+            "velocity": [
+                -133.83,
+                449.64
+            ],
+            "hp": 1
+        }
+    }
+}
+```
 
-The game consists of several different objects which interact with each other, for more information on each object, click on the links below.
+As you can see the message you receive from the game server has two main parts, the object information and the events. For more information on events you can refer to [events](events.md) and for more information about object information you can refer to the corresponding object page. (i.e. [tank](tank.md))
 
-* [Tank](tank.md)
-* [Bullet](bullet.md)
-* [Wall](wall.md)
-* [DestructibleWall](destructibleWall.md)
-* [Powerup](powerup.md)
-* [Boundary](boundary.md)
+## Sending actions
 
-## Communication (I/O)
+Once you have received a message from the game server, you will have approximately 0.1 seconds to make a decision and respond to the game server with the action that you'd like to take.
 
-The game clients (your code) communicate with the game server by sending and receiving json messages through standard input and standard output.
-
-Standard input is where you would receive updates about the game from game server, for example the new position of the enemy tank.
-Standard output is where you can in turn choose an action that your tank should take, for example shoot towards the enemy tank.
-
-For more information on communication please see [Communication](communication.md).
-
-## Actions
-
-Each time it is your turn in the game, you get to decide what your tank should do, you are given a set of actions that you can choose from such as the "shoot" action. You can find a full list of the available actions and the way they should be communicated in [Actions](actions.md).
-
-## Collisions
-
-Different objects in the game react and interact differently to each other. For example a tank bullet would be destroyed when it collides with a wall but it would bounce off the boundary. To see the collision information for all game objects, you can visit [Collisions](collisions.md)
+For more information on actions and their format, refer to [actions](actions.md)
