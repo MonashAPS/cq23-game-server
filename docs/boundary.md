@@ -1,4 +1,4 @@
-# Powerup
+# Boundary
 
 There are two types of boundaries in the game.
 
@@ -25,8 +25,7 @@ The data that you will be given about each boundary is as follows:
         [0.0, 10.0],
         [-10.0, 0.0],
         [0.0, -10.0]
-    ], 
-    "hp": "inf"
+    ]
 }
 ```
 
@@ -35,5 +34,3 @@ The data that you will be given about each boundary is as follows:
 * position: Unlike other objects in the game, the boundary will have a json array as its position value with 4 elements. Each of those 4 elements will be another json array containing the position of each of the vertex of the boundary. For more information on the map, please refer to [Map](map.md)
 
 * velocity: Similar to the position field, this will be a json array with 4 elements where each element is the velocity of its corresponding wall of the boundary. (i.e. `[x_speed, y_speed]`)
-
-* hp: This is the health points of this object. The health points of powerups would generally be `"inf"` indicating that you cannot destroy them by shooting at them.

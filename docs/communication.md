@@ -82,6 +82,42 @@ All the messages you receive from the game server will be json messages and in t
 
 As you can see the message you receive from the game server has two main parts, the object information and the events. For more information on events you can refer to [events](events.md) and for more information about object information you can refer to the corresponding object page. (i.e. [tank](tank.md))
 
+Note that the object information you receive will only be the UPDATES. Consider the following example.
+
+### Example
+
+You're given the following message in the first tick of the game:
+
+```json
+"object_info": {
+    "tank-1": {
+        "position": [
+            655.03,
+            815.03
+        ],
+        ...
+    },
+    ...
+}
+```
+
+`tank-1` decides to not move or do anything else after the first tick, in other words there are no UPDATES for tank-1. So when you receive the object information in the second tick of the game, there will be no information about tank-1.
+
+```json
+"object_info": {
+    "bullet-23": {
+        "position": [
+            353.12,
+            112.53
+        ],
+        ...
+    },
+    ...
+}
+```
+
+The purpose of this way of communicating is that you don't have to process redundant messages like the position of the stationary objects every tick so we only send you what has changed in the game since the last tick.
+
 ## Sending actions
 
 Once you have received a message from the game server, you will have approximately 0.1 seconds to make a decision and respond to the game server with the action that you'd like to take.

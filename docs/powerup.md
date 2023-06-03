@@ -18,7 +18,6 @@ The data that you will be given about each powerup is as follows:
 {
     "type": 7,
     "position": [356.12, 534.39],
-    "hp": "inf",
     "powerup_type": "HEALTH"
 }
 ```

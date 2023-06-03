@@ -9,7 +9,7 @@ The data that you will be given about each bullet is as follows:
     "type": 2,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],
-    "hp": 10,
+    "damage": 1,
 }
 ```
 
@@ -19,4 +19,4 @@ The data that you will be given about each bullet is as follows:
 
 * velocity: This is the directional velocity of this object. (i.e. `[x_speed, y_speed]`)
 
-* hp: This is the health points of this object.
+* damage: This is how much damage this particular bullet will deal. This value can change if a tank collects a powerup.

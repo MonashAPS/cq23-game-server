@@ -38,5 +38,5 @@ class Bullet(GameObject):
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
             "position": round_vec2d(self.body.position),
             "velocity": round_vec2d(self.body.velocity),
-            "hp": "inf" if self.hp == float("inf") else self.hp,
+            "damage": self.damage,
         }

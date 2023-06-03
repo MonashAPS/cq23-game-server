@@ -87,5 +87,4 @@ class Boundary(GameObject):
             ].collision_type,  # this is to let the clients know what type of object this is
             "position": self.get_vertices(),
             "velocity": [x.velocity for x in self.body],
-            "hp": "inf" if self.hp == float("inf") else self.hp,
         }
