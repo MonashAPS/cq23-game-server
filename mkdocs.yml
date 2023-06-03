@@ -1,6 +1,7 @@
 site_name: CodeQuest 23 Game Documentation
 nav:
     - Getting Started: index.md
+    - Getting help: help.md
     - Game Objects:
       - Tank: game_objects/tank.md
       - Bullet: game_objects/bullet.md
