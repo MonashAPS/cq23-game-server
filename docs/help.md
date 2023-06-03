@@ -17,7 +17,7 @@ If you're having technical issues with the game (not with your code) like
 ## Email
 
 If you need assistance with something that can't be found/shared in the Discord server, you may email us
-at info@codequest.club. We will try to respond to all emails quickly.
+at `info@codequest.club`. We will try to respond to all emails quickly.
 
 *Important Note*: Our team will not help you with debugging your code. That is part of the competition. So please do not
 send emails asking for that sort of help. You may still post programming questions in Discord and maybe some other team
