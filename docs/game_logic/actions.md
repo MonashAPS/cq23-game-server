@@ -24,7 +24,7 @@ For example, if you wanted to shoot in the "top-right" direction, you would post
 
 Refer to the diagram below for more information on what the angle means visually.
 
-![Screenshot](img/actionShootDegrees.png)
+![Screenshot](../img/actionShootDegrees.png)
 
 To brush up on some math regarding angles, quadrants and radians, you can visit [here](https://www.ipracticemath.com/learn/trigonometry/quadrants-quadrantal-angles)
 

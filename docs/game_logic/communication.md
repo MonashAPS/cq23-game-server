@@ -80,7 +80,7 @@ All the messages you receive from the game server will be json messages and in t
 }
 ```
 
-As you can see the message you receive from the game server has two main parts, the object information and the events. For more information on events you can refer to [events](events.md) and for more information about object information you can refer to the corresponding object page. (i.e. [tank](tank.md))
+As you can see the message you receive from the game server has two main parts, the object information and the events. For more information on events you can refer to [events](events.md) and for more information about object information you can refer to the corresponding object page. (i.e. [tank](../game_objects/tank.md))
 
 Note that the object information you receive will only be the UPDATES. Consider the following example.
 

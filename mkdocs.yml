@@ -2,17 +2,22 @@ site_name: CodeQuest 23 Game Documentation
 nav:
     - Getting Started: index.md
     - Game Objects:
-      - Tank: tank.md
-      - Bullet: bullet.md
-      - Wall: wall.md
-      - Destructible-Wall: destructibleWall.md
-      - Powerup: powerup.md
-      - Boundary: boundary.md
+      - Tank: game_objects/tank.md
+      - Bullet: game_objects/bullet.md
+      - Wall: game_objects/wall.md
+      - Destructible-Wall: game_objects/destructibleWall.md
+      - Powerup: game_objects/powerup.md
+      - Boundary: game_objects/boundary.md
     - Game Logic:
-      - Communication: communication.md
-      - Actions: actions.md
-      - Collisions: collisions.md
-      - Events: events.md
-      - Map: map.md
-      - Types: types.md
+      - Communication: game_logic/communication.md
+      - Actions: game_logic/actions.md
+      - Collisions: game_logic/collisions.md
+      - Events: game_logic/events.md
+      - Map: game_logic/map.md
+      - Types: game_logic/types.md
+    - Your Bots and Submissions:
+      - Requirements: bots_and_submissions/requirements.md
+      - Starting your code: bots_and_submissions/starting_your_code.md
+      - Running your code: bots_and_submissions/running_your_code.md
+      - Submitting your code: bots_and_submissions/submitting_your_code.md
 theme: readthedocs
