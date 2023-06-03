@@ -12,14 +12,14 @@ from map import Map
 from replay import ReplayManager
 
 
-def run(replay: ReplayManager, use_pygame=False, map_name=config.MAP.PATH):
+def run(replay: ReplayManager, map_name, use_pygame=False):
 
     m = Map(map_name=map_name)
     running = True
     space = pymunk.Space()
     game = Game(space, m, replay)
 
-    with open(config.MAP.PATH) as mapFile:
+    with open(map_name) as mapFile:
         replay.post_custom_replay_line({"map": mapFile.read().splitlines()})
     replay.post_custom_replay_line({"client_info": game.comms.client_info})
 
@@ -112,8 +112,8 @@ if __name__ == "__main__":
     try:
         run(
             replay,
+            map_name=config.MAP.DIR + args.map or config.MAP.NUKETOWN,
             use_pygame=str(os.environ.get("USE_PYGAME", 1)) == "1",
-            map_name=config.MAP.DIR + args.map or config.MAP.PATH,
         )
     except Exception as e:
         replay.close()

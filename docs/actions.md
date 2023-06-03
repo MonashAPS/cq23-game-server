@@ -18,13 +18,13 @@ print(
 
 ## Shoot
 
-The `shoot` action takes an angle in radians as its argument. This angle will determine the direction at which the tank will shoot.
+The `shoot` action takes an angle in degrees as its argument. This angle will determine the direction at which the tank will shoot.
 
-For example, if you wanted to shoot in the "top-right" direction, you would post `{"shoot": 0.78}` to the standard output(0.78 ~= π/4).
+For example, if you wanted to shoot in the "top-right" direction, you would post `{"shoot": 45}` to the standard output.
 
 Refer to the diagram below for more information on what the angle means visually.
 
-![Screenshot](img/actionShoot.png)
+![Screenshot](img/actionShootDegrees.png)
 
 To brush up on some math regarding angles, quadrants and radians, you can visit [here](https://www.ipracticemath.com/learn/trigonometry/quadrants-quadrantal-angles)
 

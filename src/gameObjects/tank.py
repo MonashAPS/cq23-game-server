@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import copysign, cos, sin, sqrt
+from math import copysign, cos, radians, sin, sqrt
 
 import pymunk
 
@@ -67,6 +67,7 @@ class Tank(GameObject):
         )
 
     def shoot(self, angle: float, replay_manager: ReplayManager):
+        angle = radians(angle)
         bullet = Bullet(
             space=self.space,
             coord=tuple(
