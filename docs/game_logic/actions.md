@@ -12,7 +12,7 @@ wanted to shoot, you would do the following in python:
 import json
 
 my_action = {
-    "shoot": 3.14
+    "shoot": 31
 }
 
 print(json.dumps(my_action))
