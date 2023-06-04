@@ -5,7 +5,6 @@ Welcome to CodeQuest-23!
 This year's game is a game of tanks, where two tanks will battle it out in several maps.
 
 Each team is in control of one of the tanks and each tank is allowed to take some given actions in each turn.
-Please refer to [Actions](game_logic/actions.md) for more information on actions.
 
 ![Screenshot](img/gameView.png)
 
@@ -36,3 +35,13 @@ Each time it is your turn in the game, you get to decide what your tank should d
 ## Collisions
 
 Different objects in the game react and interact differently to each other. For example a tank bullet would be destroyed when it collides with a wall but it would bounce off the boundary. To see the collision information for all game objects, you can visit [Collisions](game_logic/collisions.md)
+
+## Starting Your Players
+
+Once you know the basics of the game, it's time to start developing your bot. Please refer to [Requirements](bots_and_submissions/requirements.md)
+page to learn what you need to run the game and then [Starting Your Code](bots_and_submissions/starting_your_code.md) to
+learn how you can start working on your bots.
+
+## Need Help
+
+You can find out ways of getting help in [Help Page](help.md).

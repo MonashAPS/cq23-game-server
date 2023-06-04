@@ -10,6 +10,6 @@ Each object in the game has been assigned an integer value denoting their type. 
     "DESTRUCTIBLE_WALL": 4,
     "BOUNDARY": 5,
     "CLOSING_BOUNDARY": 6,
-    "POWERUP": 7,
+    "POWERUP": 7
 }
 ```

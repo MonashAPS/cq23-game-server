@@ -197,7 +197,6 @@ class Game:
             data (_type_): pymunk provided arg
         """
         for shape in arbiter.shapes:
-            self.register_replay_manager_event(shape, "HEALTH_LOSS")
             if shape._gameobject.apply_damage(
                 config.CLOSING_BOUNDARY.DAMAGE
             ).is_destroyed():
@@ -207,6 +206,8 @@ class Game:
                 )  # remove reference to game object
 
                 self.register_replay_manager_event(shape, "DESTRUCTION")
+            else:
+                self.register_replay_manager_event(shape, "HEALTH_LOSS")
 
     def bullet_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
@@ -225,7 +226,6 @@ class Game:
                 damage = shape._gameobject.damage
 
         for shape in arbiter.shapes:
-            self.register_replay_manager_event(shape, "HEALTH_LOSS")
             if shape._gameobject.apply_damage(damage).is_destroyed():
                 if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                     self.map.register_wall_broken(shape._wall_coords)
@@ -240,6 +240,8 @@ class Game:
                     )
 
                 self.register_replay_manager_event(shape, "DESTRUCTION")
+            else:
+                self.register_replay_manager_event(shape, "HEALTH_LOSS")
 
     def handle_client_response(self):
         message = self.comms.get_message()

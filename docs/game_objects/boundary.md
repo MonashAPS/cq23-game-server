@@ -5,7 +5,8 @@ There are two types of boundaries in the game.
 * Game boundary
 * Closing boundary
 
-The game boundary constitutes four walls that encapsulate the map. The closing boundary are four walls that will slowly close and make the map smaller. Battle royale style!
+The **game boundary** constitutes four walls that encapsulate the map. The **closing boundary** are four walls that will
+slowly close and make the map smaller. Battle Royale style!
 
 ## Data
 
@@ -29,8 +30,13 @@ The data that you will be given about each boundary is as follows:
 }
 ```
 
-* type: The type refers to what type of game object this is. For example, all the tanks will have `"type": 1`. For more information on types please refer to [Types](../game_logic/types.md)
+* `type`: The type for game boundary would be `5` and the type of closing boundary would be `6`. For more information on
+types please refer to [Types](../game_logic/types.md).
 
-* position: Unlike other objects in the game, the boundary will have a json array as its position value with 4 elements. Each of those 4 elements will be another json array containing the position of each of the vertex of the boundary. For more information on the map, please refer to [Map](../game_logic/map.md)
+* `position`: Unlike other objects in the game, the boundary will have a json array as its position value with 4
+elements. Each of those 4 elements will be another json array containing the position of each of the vertex of the
+boundary. For more information on the map, please refer to [Map](../game_logic/map.md).
 
-* velocity: Similar to the position field, this will be a json array with 4 elements where each element is the velocity of its corresponding wall of the boundary. (i.e. `[x_speed, y_speed]`)
+* `velocity`: Similar to the position field, this will be a json array with 4 elements where each element is the
+velocity of its corresponding wall of the boundary. (i.e. `[x_speed, y_speed]`). Please note that the velocity for game
+boundary will always be zero.
