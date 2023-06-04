@@ -7,8 +7,7 @@ goes right and up respectively.
 
 Different objects have different sizes on the map. You may need to use this information for some calculations.
 
-- **Walls** are 20x20 squares. The x,y position given for a wall shows its bottom left corner on the map.
-- **Tanks** are ... TODO
-- **Bullets** are ... TODO
-- **Powerups** are ... TODO
-
+- [**Walls**](../game_objects/wall.md) are 20x20 squares. The x,y position given for a wall shows the coordinates of its bottom left vertex.
+- [**Tanks**](../game_objects/tank.md) are 20x20 squares. The x,y position given for a tank shows the coordinates of its center.
+- [**Bullets**](../game_objects/bullet.md) are circles with a radius of 5. The x,y position given for a bullet shows the coordinates of its center.
+- [**Powerups**](../game_objects/powerup.md) are circles with a radius of 15. The x,y position given for a powerup shows the coordinates of its center.

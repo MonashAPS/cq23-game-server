@@ -7,7 +7,7 @@ This is the game object that you will be controlling.
 The data that you will be given about each tank is as follows:
 
 ```json
-{
+"tank_id": {
     "type": 1,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],
@@ -26,4 +26,4 @@ to [Map](../game_logic/map.md).
 
 * `hp`: This is the health points of this tank. This would be useful for knowing the health of the enemy tanks.
 
-TODO: We need a way of telling them what their tank id is. Perhaps in the init world messages.
+* `tank-id`: The tank id shown above would be your team name with a "tank" suffix. So if your team name is "tanksters" then your tank id will be `tanksters-tank`.

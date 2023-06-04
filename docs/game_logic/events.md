@@ -32,7 +32,7 @@ You can also see the information that you will receive with each event type belo
 ```
 
 ### TANK_HEALTH_LOSS
-TODO: Does this also make the tank appear in the game objects?
+
 ```json
 {
     "id": "tank_id",
@@ -50,7 +50,6 @@ TODO: Does this also make the tank appear in the game objects?
 ```
 
 ### WALL_HEALTH_LOSS
-TODO: Does this also make the wall appear in the game objects?
 
 ```json
 {
@@ -69,7 +68,6 @@ TODO: Does this also make the wall appear in the game objects?
 ```
 
 ### POWERUP_SPAWN
-TODO: Does this also make the powerup appear in the game objects?
 
 ```json
 {

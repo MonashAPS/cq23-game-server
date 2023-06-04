@@ -67,7 +67,7 @@ class Tank(GameObject):
         )
 
     def shoot(self, angle: float, replay_manager: ReplayManager):
-        angle = radians(angle)
+        angle_radians = radians(angle)
         bullet = Bullet(
             space=self.space,
             coord=tuple(
@@ -76,14 +76,14 @@ class Tank(GameObject):
                     self.body.position,
                     (0, 0),
                     (
-                        cos(angle) * (self.get_radius() + config.BULLET.RADIUS),
-                        sin(angle) * (self.get_radius() + config.BULLET.RADIUS),
+                        cos(angle_radians) * (self.get_radius() + config.BULLET.RADIUS),
+                        sin(angle_radians) * (self.get_radius() + config.BULLET.RADIUS),
                     ),
                 )
             ),
             velocity=(
-                cos(angle) * config.BULLET.VELOCITY,
-                sin(angle) * config.BULLET.VELOCITY,
+                cos(angle_radians) * config.BULLET.VELOCITY,
+                sin(angle_radians) * config.BULLET.VELOCITY,
             ),
             damage=self.bullet_damage,
         )

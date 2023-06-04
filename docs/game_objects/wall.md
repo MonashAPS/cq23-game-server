@@ -17,5 +17,4 @@ The data that you will be given about each wall is as follows:
 For more information on types please refer to [Types](../game_logic/types.md).
 
 * position: This refers to the position of this wall on the game map. This coordinate refers to the wall's bottom left
-vertex. For more information on the map, please refer to [Map](../game_logic/map.md). TODO: I didn't know this. In that case,
-maybe we should also let them know what the coordinate means for tanks and bullets. Maybe all of them can go in the Map page?
+vertex. For more information on the map, please refer to [Map](../game_logic/map.md).

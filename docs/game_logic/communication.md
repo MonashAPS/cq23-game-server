@@ -32,7 +32,7 @@ All the messages you receive from the game will be JSON messages and in the foll
                     -425.74,
                     -145.75
                 ],
-                "angle": 217  TODO lets make sure the server is also printing them in degrees now?
+                "angle": 217
             }
         },
         {

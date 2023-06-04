@@ -33,7 +33,7 @@ Refer to the diagram below for more information on what the angle means visually
 
 The angles start from `0 degress` being a straight line to the right, `90 degress` being a straight line up, `180 degress`
 being a straight line to the left and `270 degrees` a straight line down from where the tank is. You may use any angle
-between 0 and 360. TODO: Is this checked in the game server? What happens if they say 8245 degrees?
+between 0 and 360.
 
 ## Path
 

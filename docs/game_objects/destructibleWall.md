@@ -22,6 +22,4 @@ For more information on types please refer to [Types](../game_logic/types.md).
 * position: This refers to the position of this wall block on the game map.
 For more information on the map and object blocks, please refer to [Map](../game_logic/map.md).
 
-* velocity: This is the directional velocity of this object (i.e. `[x_speed, y_speed]`). TODO: should we remove velocity from walls?
-
 * hp: The health points of destructible walls would generally be `1` indicating that they will be destroyed with one bullet.
