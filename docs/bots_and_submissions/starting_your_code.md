@@ -28,3 +28,5 @@ cq23 new raw <a name for your bot>
 
 This will create a folder for your player. Refer to the `README.md` file in the folder for more information about how you
 can develop your player from there.
+
+Once you have the base source code, you can run the game. Go to [Running Your Code](running_your_code.md) for more information.
