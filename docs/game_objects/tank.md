@@ -26,4 +26,4 @@ to [Map](../game_logic/map.md).
 
 * `hp`: This is the health points of this tank. This would be useful for knowing the health of the enemy tanks.
 
-* `tank-id`: The tank id shown above would be your team name with a "tank" suffix. So if your team name is "tanksters" then your tank id will be `tanksters-tank`.
+* `tank-id`: The tank id shown above would be your client-id with a "tank" suffix. So if your client-id is "tanksters" then your tank id will be `tanksters-tank`.

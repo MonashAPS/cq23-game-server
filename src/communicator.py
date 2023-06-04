@@ -10,6 +10,20 @@ class Communicator:
         self.timeout = config.COMMUNICATION.TIMEOUT
         self.client_info = self.get_message()["clients"]
 
+        self.post_client_ids()
+
+    def post_client_ids(self):
+        print(
+            json.dumps(
+                {
+                    self.client_info[0]["id"]: {"client-id": self.client_info[0]["id"]},
+                    self.client_info[1]["id"]: {"client-id": self.client_info[1]["id"]},
+                },
+                separators=(",", ":"),
+            ),
+            flush=True,
+        )
+
     def post_init_world_message(self, message):
         """
         Prints an init world message - refer to the GCS docs.
