@@ -12,7 +12,9 @@ from replay import ReplayManager
 class Player:
     def __init__(self, player_object: Tank, map: Map, client_info: dict):
         self.gameobject: Tank = player_object
-        self.gameobject.id = f"{client_info['id']}-tank"  # set tank id to client id
+        self.gameobject.id = (
+            f"tank-{client_info['id']}"  # Override tank id to have client id
+        )
 
         self.map: Map = map
         self.target: tuple[int, int] | None = None

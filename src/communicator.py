@@ -10,14 +10,21 @@ class Communicator:
         self.timeout = config.COMMUNICATION.TIMEOUT
         self.client_info = self.get_message()["clients"]
 
+        for client in self.client_info:
+            client["id"] = str(client["id"])
+
         self.post_client_ids()
 
     def post_client_ids(self):
         print(
             json.dumps(
                 {
-                    self.client_info[0]["id"]: {"client-id": self.client_info[0]["id"]},
-                    self.client_info[1]["id"]: {"client-id": self.client_info[1]["id"]},
+                    self.client_info[0]["id"]: {
+                        "your-tank-id": f"tank-{self.client_info[0]['id']}"
+                    },
+                    self.client_info[1]["id"]: {
+                        "your-tank-id": f"tank-{self.client_info[1]['id']}"
+                    },
                 },
                 separators=(",", ":"),
             ),
@@ -45,8 +52,9 @@ class Communicator:
         self,
         message: str,
     ):
-        json_message = json.dumps(message, separators=(",", ":"))
+        json_message = json.dumps({"": message}, separators=(",", ":"))
         print(json_message, flush=True)
+        print(0.1, flush=True)  # GCS expects timeout time for all messages
         sleep(0.1)
         logging.info(json_message)
 
