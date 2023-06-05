@@ -30,6 +30,8 @@ class Communicator:
             ),
             flush=True,
         )
+        print(0.1, flush=True)
+        sleep(0.1)
 
     def post_init_world_message(self, message):
         """
