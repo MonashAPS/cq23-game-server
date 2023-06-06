@@ -7,7 +7,7 @@ This is the game object that you will be controlling.
 The data that you will be given about each tank is as follows:
 
 ```json
-"tank_id": {
+"tank-id": {
     "type": 1,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],

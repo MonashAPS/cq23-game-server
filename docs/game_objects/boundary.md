@@ -13,7 +13,7 @@ slowly close and make the map smaller. Battle Royale style!
 The data that you will be given about each boundary is as follows:
 
 ```json
-{
+"boundary-id": {
     "type": 6, 
     "position": [
         [1.50, 998.5],
@@ -40,3 +40,5 @@ boundary. For more information on the map, please refer to [Map](../game_logic/m
 * `velocity`: Similar to the position field, this will be a json array with 4 elements where each element is the
 velocity of its corresponding wall of the boundary. (i.e. `[x_speed, y_speed]`). Please note that the velocity for game
 boundary will always be zero.
+
+* `boundary-id` is the id of this boundary.

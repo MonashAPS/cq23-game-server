@@ -8,10 +8,9 @@ difference is that you can destroy destructible walls by shooting at them.
 The data that you will be given about each destructible wall is as follows:
 
 ```json
-{
+"destructibleWall-id": {
     "type": 4,
     "position": [356.12, 534.39],
-    "velocity": [0.0, 0.0],
     "hp": 1
 }
 ```
@@ -23,3 +22,5 @@ For more information on types please refer to [Types](../game_logic/types.md).
 For more information on the map and object blocks, please refer to [Map](../game_logic/map.md).
 
 * hp: The health points of destructible walls would generally be `1` indicating that they will be destroyed with one bullet.
+
+* `destructibleWall-id` is the id of this wall.

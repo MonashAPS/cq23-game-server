@@ -17,7 +17,7 @@ There are three different types of powerups.
 The data that you will be given about each powerup is as follows:
 
 ```json
-{
+"powerup-id": {
     "type": 7,
     "position": [356.12, 534.39],
     "powerup_type": "HEALTH"
@@ -31,3 +31,5 @@ For more information on types please refer to [Types](../game_logic/types.md).
 For more information on the map, please refer to [Map](../game_logic/map.md).
 
 * powerup_type: This indicates the type of this powerup. This will be one of three values: `"HEALTH"`, `"SPEED"`, `"DAMAGE"`.
+
+* `powerup-id` is the id of this powerup.

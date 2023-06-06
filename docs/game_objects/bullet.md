@@ -5,7 +5,7 @@
 The data that you will be given about each bullet is as follows:
 
 ```json
-{
+"bullet-id": {
     "type": 2,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],
@@ -22,3 +22,5 @@ please refer to [Map](../game_logic/map.md).
 * `velocity`: This is the directional velocity of this bullet (i.e. `[x_speed, y_speed]`).
 
 * `damage`: This is how much damage this particular bullet will deal. This value can change if a tank collects a powerup.
+
+* `bullet-id` is the id of this bullet.
