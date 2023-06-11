@@ -41,4 +41,4 @@ boundary. For more information on the map, please refer to [Map](../game_logic/m
 velocity of its corresponding wall of the boundary. (i.e. `[x_speed, y_speed]`). Please note that the velocity for game
 boundary will always be zero.
 
-* `boundary-id` is the id of this boundary.
+* Where `boundary-id` is mentioned, this will be replace with the id of this boundary.

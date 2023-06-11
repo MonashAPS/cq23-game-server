@@ -21,7 +21,7 @@ The game consists of several different objects which interact with each other, f
 
 ## Communication (I/O)
 
-The game clients (your code) communicate with the game server by sending and receiving json messages through standard input and standard output.
+The game clients (your code) communicate with the game server by sending and receiving [json](https://www.wikiwand.com/en/JSON#Syntax) messages through [standard input and standard output](https://stackoverflow.com/a/8980612).
 
 Standard input is where you would receive updates about the game from game server, for example the new position of the enemy tank.
 Standard output is where you can in turn choose an action that your tank should take, for example shoot towards the enemy tank.

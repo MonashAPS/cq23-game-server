@@ -32,4 +32,4 @@ For more information on the map, please refer to [Map](../game_logic/map.md).
 
 * powerup_type: This indicates the type of this powerup. This will be one of three values: `"HEALTH"`, `"SPEED"`, `"DAMAGE"`.
 
-* `powerup-id` is the id of this powerup.
+* Where `powerup-id` is mentioned, this will be replace with the id of this powerup.
