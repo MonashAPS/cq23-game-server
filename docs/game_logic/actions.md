@@ -58,3 +58,41 @@ your destination target if you decide to by calling the same action:
 In the example above, the client initially chose to travel to the coordinate point `[100,100]`, then the client took no
 action for 2 ticks and in the 4th tick they decided to interrupt their previous journey, change their destination and
 go to `[250,300]`. This is a valid set of events.
+
+## Move
+
+Much like the `shoot` action, the `move` action takes an angle in degrees. This action allows you to
+move in any direction. It kind of mimics the behaviour of a joystick for those who want more freedom
+with their tank's movements.
+
+### Example
+
+#### Move top-right
+
+Similar to the `shoot` action, moving in the top-right direction means you have to tell the game
+server to move in the 45º direction. Refer to the image in the `shoot` section for clarity.
+
+```json
+{
+    "move": 45
+}
+```
+
+#### Move right
+
+```json
+{
+    "move": 0
+}
+```
+
+#### Move left
+
+```json
+{
+    "move": 180
+}
+```
+
+**It's important to note that you can't take the `move` action and the `path` action at the same time.**
+**Doing this will result in the game ignoring your given actions.**

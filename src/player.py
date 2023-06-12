@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import typing as t
 from collections import deque
 
@@ -29,11 +30,14 @@ class Player:
     ) -> t.List:
         """register action for the player"""
         created_game_objects = []
-        if actions is None:
+        # dismiss the actions if path and move have been set at the same time
+        if actions is None or ("path" in actions and "move" in actions):
             return created_game_objects
         for action in actions:
             if action == "path":
                 self._set_path(actions[action])
+            if action == "move":
+                self._move(actions[action])
             if action == "shoot":
                 created_game_objects.append(
                     self._shoot_bullet(
@@ -45,6 +49,15 @@ class Player:
     def tick(self):
         """This will be called at every tick."""
         self._traverse_path()
+
+    def _move(self, angle: float):
+        # remove path if manual move is used
+        self.action["path"] = deque()
+
+        # the magnitude of the vector should be square root of 2
+        self._set_direction(
+            (math.sqrt(2) * math.cos(angle), math.sqrt(2) * math.sin(angle))
+        )
 
     def _traverse_path(self):
         """Move the player through a previously calculated path (self.action["path"]) until the path is complete"""
