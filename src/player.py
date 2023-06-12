@@ -23,7 +23,7 @@ class Player:
         self.client_id = client_info["id"]
         self.client_name = client_info["name"]
 
-        self.action = {"path": deque(), "shoot": None}
+        self.action = {"path": deque(), "move": False}
 
     def register_actions(
         self, actions: t.Optional[dict], replay_manager: ReplayManager
@@ -54,13 +54,24 @@ class Player:
         # remove path if manual move is used
         self.action["path"] = deque()
 
-        # the magnitude of the vector should be square root of 2
-        self._set_direction(
-            (math.sqrt(2) * math.cos(angle), math.sqrt(2) * math.sin(angle))
-        )
+        if angle == -1:
+            self.action["move"] = False
+        else:
+            self.action["move"] = True
+
+            # the magnitude of the vector should be square root of 2
+            angle_radians = math.radians(angle)
+            self._set_direction(
+                (
+                    math.sqrt(2) * math.cos(angle_radians),
+                    math.sqrt(2) * math.sin(angle_radians),
+                )
+            )
 
     def _traverse_path(self):
         """Move the player through a previously calculated path (self.action["path"]) until the path is complete"""
+        if self.action["move"]:
+            return
         if not self.action["path"]:
             self._set_direction(
                 (0, 0)
@@ -86,6 +97,8 @@ class Player:
         Args:
             coord (tuple[int, int]): the target coordinate the function will create a path to
         """
+        self.action["move"] = False
+
         if not coord:
             self.action["path"] = deque()
             return

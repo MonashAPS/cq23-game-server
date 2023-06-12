@@ -78,7 +78,7 @@ defaults = {
         "PYMUNK_TIMESTEP_ITERATIONS": 100,
     },
     "REPLAY": {
-        "PATH": "replay/replay.txt",
+        "PATH": "replay/replay",
     },
     "COMMUNICATION": {"TIMEOUT": 0.1},
     "POWERUP": {

@@ -107,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--map", default="nuketown.map")
     args = parser.parse_args()
 
-    replay = ReplayManager(config.REPLAY.PATH)
+    replay = ReplayManager(config.REPLAY.PATH, True)
 
     try:
         run(

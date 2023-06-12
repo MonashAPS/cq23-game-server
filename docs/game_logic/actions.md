@@ -65,6 +65,8 @@ Much like the `shoot` action, the `move` action takes an angle in degrees. This 
 move in any direction. It kind of mimics the behaviour of a joystick for those who want more freedom
 with their tank's movements.
 
+You can post `-1` as your angle to get your tank to stop moving (refer to the example below).
+
 ### Example
 
 #### Move top-right
@@ -91,6 +93,14 @@ server to move in the 45º direction. Refer to the image in the `shoot` section 
 ```json
 {
     "move": 180
+}
+```
+
+#### Stop moving
+
+```json
+{
+    "move": -1
 }
 ```
 
