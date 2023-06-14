@@ -23,4 +23,4 @@ please refer to [Map](../game_logic/map.md).
 
 * `damage`: This is how much damage this particular bullet will deal. This value can change if a tank collects a powerup.
 
-* `bullet-id` is the id of this bullet.
+* Where `bullet-id` is mentioned, this will be replace with the id of this bullet.

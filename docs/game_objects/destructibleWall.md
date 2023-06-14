@@ -23,4 +23,4 @@ For more information on the map and object blocks, please refer to [Map](../game
 
 * hp: The health points of destructible walls would generally be `1` indicating that they will be destroyed with one bullet.
 
-* `destructibleWall-id` is the id of this wall.
+* Where `destructibleWall-id` is mentioned, this will be replace with the id of this destructibleWall.

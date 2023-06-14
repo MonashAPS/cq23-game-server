@@ -22,7 +22,7 @@ It's important to always print your messages as JSON objects.
 
 ## Shoot
 
-The `shoot` action takes an angle in degrees as its argument. This angle will determine the direction at which the tank
+The `shoot` action takes an angle in [degrees](https://www.mathsisfun.com/geometry/degrees.html) as its argument. This angle will determine the direction at which the tank
 will shoot.
 
 For example, if you wanted to shoot in the "top-right" direction, you would post `{"shoot": 45}` to the standard output.
@@ -55,8 +55,9 @@ your destination target if you decide to by calling the same action:
 - tick 3: `{}`
 - tick 4: `{"path": [250,300]}`
 
-In the example above, the client initially chose to travel to the coordinate point `[100,100]`, then the client took no
-action for 2 ticks and in the 4th tick they decided to interrupt their previous journey, change their destination and
+In the example above, the client initially chose to travel to the coordinate point `[100,100]`, 
+then the client kept moving towards `[100,100]` for 2 extra ticks,
+and in the 4th tick they decided to interrupt their previous journey, change their destination and
 go to `[250,300]`. This is a valid set of events.
 
 ## Move

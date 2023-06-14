@@ -1,6 +1,6 @@
 # Submitting Your Code
 
-Once you're done with your code and want to submit it for the competition, you will need to upload a Zip archive on the
+Once you're done with your code and want to submit it for the competition/leaderboards, you will need to upload a Zip archive on the
 submissions page at https://teams.codequest.club. The archive should have your code's `Dockerfile` in its root. For
 convenience, you can use this command to create your submission file. Open the terminal and go to your code's folder.
 Then run:

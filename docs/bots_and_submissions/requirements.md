@@ -34,10 +34,17 @@ python --version
 If the printed version does not start with 3 (e.g. `3.9.12`) then try:
 
 ```shell
+py --version
+```
+
+OR
+
+```shell
 python3 --version
 ```
 
-If the printed version is 3, you have Python installed. If not (or if the command says "Command not found") then you
+If the printed version is 3, you have Python installed.
+If not (or if the command says "Command not found", or takes you to the Microsoft Store) then you
 need to install Python. You can download and install Python from <https://www.python.org/downloads/>.
 
 ## Pip

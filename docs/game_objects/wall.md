@@ -19,4 +19,4 @@ For more information on types please refer to [Types](../game_logic/types.md).
 * position: This refers to the position of this wall on the game map. This coordinate refers to the wall's bottom left
 vertex. For more information on the map, please refer to [Map](../game_logic/map.md).
 
-* `wall-id` is the id of this wall.
+* Where `wall-id` is mentioned, this will be replace with the id of this wall.

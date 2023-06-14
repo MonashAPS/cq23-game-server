@@ -18,5 +18,5 @@ cq23 run map=<map name>
 Make sure there are no spaces before or after `=` and replace `<map name>` with the name of the map. You can find all
 available maps in [Map](../game_logic/map.md).
 
-Once you're happy with your source code, you can submit it for the competition. Go to [Submitting Your Code](submitting_your_code.md)
+Once you're happy with your source code, you can submit it for the competition/leaderboards. Go to [Submitting Your Code](submitting_your_code.md)
 for more information.

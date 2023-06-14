@@ -4,9 +4,9 @@ The communication between you and the game server is pretty straight forward.
 The game server gives you information about the game and, you will decide what your tank should do based on the
 information you have received.
 
-All the communication happens through standard input and standard output. That means, when it's time for you to receive
+All the communication happens through [standard input and standard output](https://stackoverflow.com/a/8980612). That means, when it's time for you to receive
 new information about the game, you take an input (`input()` in python or `std::cin` in c++ etc.) and parse the received
-JSON message and, when it's time for you to tell the game server something to do, you print it as a JSON message
+[JSON](https://www.wikiwand.com/en/JSON#Syntax) message and, when it's time for you to tell the game server something to do, you print it as a JSON message
 (`print()` in python or `std::cout` in c++ etc.).
 
 ## Message Format
@@ -48,8 +48,9 @@ When you receive the end signal, you should close your program.
 
 ## World Init
 
-Before the main communication cycle starts between the game and your players, a few messages will be sent from the game
-to you in, one-way. These messages are some initial information about the game and the map that you will need to
+Before the main communication cycle starts between the game and your players,
+a few "one-way" messages will be sent from the game to you.
+These messages are some initial information about the game and the map that you will need to
 implement your strategies.
 
 These include, your tank id (so you would know which tank of the two you are controlling), the location of the walls,
