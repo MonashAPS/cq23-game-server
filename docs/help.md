@@ -1,18 +1,14 @@
 # Help
 
-
 ## Discord
+
 We will provide you with any necessary help during the competition. If you have any questions, the first place to ask
-them is our Discord server. You might even find the answer to your question 
-there: [Discord Server](https://codequest.club/discord).
+them is our Discord server. You might even find the answer to your question there: [Discord Server](https://codequest.club/discord).
 
 ## Announcements
+
 Another important place to check is the announcements page on the website. After you login and enter the competition,
 click on "Announcements". We will post all important messages that everyone should read in there.
-
-
-## Technical Self-Help
-If you're having technical issues with the game (not with your code) like 
 
 ## Email
 

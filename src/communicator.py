@@ -38,16 +38,16 @@ class Communicator:
         Prints an init world message - refer to the GCS docs.
         These messages are sent to all clients.
         """
-        object_info = message["object_info"]
-        current_message = {"events": [], "object_info": {}}
+        object_info = message["updated_objects"]
+        current_message = {"deleted_objects": [], "updated_objects": {}}
 
         for key, value in object_info.items():
-            if len(current_message["object_info"]) == 10:
+            if len(current_message["updated_objects"]) == 10:
                 self.post_message_with_delay(current_message)
-                current_message = {"events": [], "object_info": {}}
-            current_message["object_info"][key] = value
+                current_message = {"deleted_objects": [], "updated_objects": {}}
+            current_message["updated_objects"][key] = value
 
-        if len(current_message["object_info"]) > 0:
+        if len(current_message["updated_objects"]) > 0:
             self.post_message_with_delay(current_message)
 
     def post_message_with_delay(

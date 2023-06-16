@@ -150,39 +150,25 @@ class Game:
                 shape._gameobject.apply_powerup(powerup)
                 self.replay_manager.add_event(
                     Event.powerup_collected(
-                        shape._gameobject.id,
-                        shape.body.position,
-                        powerup.id,
-                        powerup.powerup_type,
+                        tank_id=shape._gameobject.id,
+                        powerup_id=powerup.id,
                     )
                 )
 
     def register_replay_manager_event(self, shape: pymunk.Shape, event: str):
-        if event == "HEALTH_LOSS":
-            # record health loss in replay file
-            if shape.collision_type == config.COLLISION_TYPE.TANK:
-                self.replay_manager.add_event(
-                    Event.tank_health_loss(shape._gameobject.id, shape.body.position)
-                )
-            elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                self.replay_manager.add_event(
-                    Event.wall_health_loss(
-                        shape._gameobject.id, shape.get_vertices()[0]
-                    )
-                )
-        elif event == "DESTRUCTION":
+        if event == "DESTRUCTION":
             # record destruction in replay file
             if shape.collision_type == config.COLLISION_TYPE.TANK:
                 self.replay_manager.add_event(
-                    Event.tank_destroyed(shape._gameobject.id, shape.body.position)
+                    Event.tank_destroyed(shape._gameobject.id)
                 )
             elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                 self.replay_manager.add_event(
-                    Event.wall_destroyed(shape._gameobject.id, shape.get_vertices()[0])
+                    Event.wall_destroyed(shape._gameobject.id)
                 )
             elif shape.collision_type == config.COLLISION_TYPE.BULLET:
                 self.replay_manager.add_event(
-                    Event.bullet_destroyed(shape._gameobject.id, shape.body.position)
+                    Event.bullet_destroyed(shape._gameobject.id)
                 )
 
     def closing_boundary_collision_handler(
@@ -205,8 +191,6 @@ class Game:
                 )  # remove reference to game object
 
                 self.register_replay_manager_event(shape, "DESTRUCTION")
-            else:
-                self.register_replay_manager_event(shape, "HEALTH_LOSS")
 
     def bullet_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
@@ -239,8 +223,6 @@ class Game:
                     )
 
                 self.register_replay_manager_event(shape, "DESTRUCTION")
-            else:
-                self.register_replay_manager_event(shape, "HEALTH_LOSS")
 
     def handle_client_response(self):
         message = self.comms.get_message()
@@ -293,11 +275,6 @@ class Game:
                 powerup_type = random.choice(list(PowerupType))
                 powerup = Powerup(
                     space=self.space, coord=poweup_coord, powerup_type=powerup_type
-                )
-                self.replay_manager.add_event(
-                    Event.powerup_spawn(
-                        powerup.id, powerup.body.position, powerup.powerup_type
-                    )
                 )
                 self.game_objects.append(powerup)
                 return powerup

@@ -8,7 +8,7 @@ from config import config
 from gameObjects.bullet import Bullet
 from gameObjects.game_object import GameObject, IDCounter
 from gameObjects.powerup import Powerup, PowerupType
-from replay import Event, ReplayManager
+from replay import ReplayManager
 from util import round_vec2d
 
 
@@ -87,11 +87,7 @@ class Tank(GameObject):
             ),
             damage=self.bullet_damage,
         )
-        replay_manager.add_event(
-            Event.bullet_spawn(
-                bullet.id, self.id, bullet.body.position, bullet.body.velocity, angle
-            )
-        )
+
         return bullet
 
     def get_radius(self):

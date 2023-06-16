@@ -81,10 +81,10 @@ This is the type of message you would receive here:
 ```json
 {
   "message": {
-    "events": [
+    "deleted_objects": [
       ...
     ],
-    "object_info": {
+    "updated_objects": {
       "bullet-23": {
         "position": [
           353.12,
@@ -118,15 +118,16 @@ next tick.
 This is where the main game loop starts. This is also where your code and the game will start to go back and forth and
 you will make decisions about what you want to do.
 
-Everytime you read information, the game will send you a message containing all the events that happened since the last
-turn and all the objects that have "changed" since the last turn. An object is changed if one of its attributes has changed.
+Everytime you read information, the game will send you a message containing all the objects that have been removed from
+the game since the last turn and all the objects that have been "updated" since the last turn. An object is considered
+updated if one of its attributes has changed.
 
 The format of these messages is exactly the same as the messages you received in world init:
 
 ```json
 {
   "message": {
-    "events": [
+    "deleted_objects": [
       {
         "event_type": "BULLET_SPAWN",
         "data": {
@@ -147,7 +148,7 @@ The format of these messages is exactly the same as the messages you received in
             ... data about another event ...
       }
     ],
-    "object_info": {
+    "updated_objects": {
       "tank-1": {
         "type": 1,
         "position": [
@@ -176,25 +177,28 @@ Once in the main game loop, make sure you respond with your actions in the given
 As said above, the messages have two keys. A `message` which contains the actual data and a `time`.
 In this section, we learn about what sort of data will be inside the `message` object.
 
-The `message` object has two main parts: the object information and the events.
-Events will be a list of `event` objects. For more information on `event` objects you can refer to [events](events.md).
-Object information will be an object where the keys are the object ids (e.g. `tank-1`, `bullet-24`) and the value will
+The `message` object has two main parts: the updated_objects and the [deleted_objects](deleted_objects.md).
+
+[deleted_objects](deleted_objects.md) will be a list of json objects letting you know which game objects have been removed
+from the game.
+
+updated_objects will be an object where the keys are the object ids (e.g. `tank-1`, `bullet-24`) and the value will
 be an object containing all the information. To see what's inside the information object you can refer to the
 corresponding type (e.g. [tank](../game_objects/tank.md), [bullet](../game_objects/bullet.md), etc.).
 
 Note that the object information you receive will only be the UPDATES. Consider the following example.
 
-#### Example
+### Example
 
 You're given the following message in the first tick of the game:
 
 ```json
 {
   "message": {
-    "events": [
+    "deleted_objects": [
       ...
     ],
-    "object_info": {
+    "updated_objects": {
       "tank-1": {
         "position": [
           655.03,
@@ -215,10 +219,10 @@ So when you receive the object information in the second tick of the game, there
 ```json
 {
   "message": {
-    "events": [
+    "deleted_objects": [
       ...
     ],
-    "object_info": {
+    "updated_objects": {
       "bullet-23": {
         "position": [
           353.12,

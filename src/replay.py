@@ -5,17 +5,10 @@ from dataclasses import asdict, dataclass, field, is_dataclass
 from enum import Enum
 from typing import Any
 
-from gameObjects.powerup import PowerupType
-from util import round_vec2d
-
 
 class EventType(str, Enum):
-    BULLET_SPAWN = "BULLET_SPAWN"
     BULLET_DESTROYED = "BULLET_DESTROYED"
-    TANK_HEALTH_LOSS = "TANK_HEALTH_LOSS"
     TANK_DESTROYED = "TANK_DESTROYED"
-    POWERUP_SPAWN = "POWERUP_SPAWN"
-    WALL_HEALTH_LOSS = "WALL_HEALTH_LOSS"
     WALL_DESTROYED = "WALL_DESTROYED"
     POWERUP_COLLECTED = "POWERUP_COLLECTED"
 
@@ -31,86 +24,27 @@ class Event:
     data: dict = field(default_factory=dict)
 
     @classmethod
-    def tank_health_loss(cls, tank_id: str, position: tuple[float, float]):
-        return Event(
-            EventType.TANK_HEALTH_LOSS,
-            {"id": tank_id, "position": round_vec2d(position)},
-        )
+    def tank_destroyed(cls, tank_id: str):
+        return Event(EventType.TANK_DESTROYED, {"id": tank_id})
 
     @classmethod
-    def tank_destroyed(cls, tank_id: str, position: tuple[float, float]):
-        return Event(
-            EventType.TANK_DESTROYED, {"id": tank_id, "position": round_vec2d(position)}
-        )
+    def wall_destroyed(cls, wall_id: str):
+        return Event(EventType.WALL_DESTROYED, {"id": wall_id})
 
     @classmethod
-    def wall_destroyed(cls, wall_id: str, position: tuple[float, float]):
-        return Event(
-            EventType.WALL_DESTROYED, {"id": wall_id, "position": round_vec2d(position)}
-        )
-
-    @classmethod
-    def wall_health_loss(cls, wall_id: str, position: tuple[float, float]):
-        return Event(
-            EventType.WALL_HEALTH_LOSS,
-            {"id": wall_id, "position": round_vec2d(position)},
-        )
-
-    @classmethod
-    def bullet_destroyed(cls, bullet_id: str, position: tuple[float, float]):
+    def bullet_destroyed(cls, bullet_id: str):
         return Event(
             EventType.BULLET_DESTROYED,
-            {"id": bullet_id, "position": round_vec2d(position)},
+            {"id": bullet_id},
         )
 
     @classmethod
-    def bullet_spawn(
-        cls,
-        bullet_id: str,
-        tank_id: str,
-        position: tuple[float, float],
-        velocity: tuple[float, float],
-        angle: float,
-    ):
-        return Event(
-            EventType.BULLET_SPAWN,
-            {
-                "id": bullet_id,
-                "tank_id": tank_id,
-                "position": round_vec2d(position),
-                "velocity": round_vec2d(velocity),
-                "angle": round(angle, 2),
-            },
-        )
-
-    @classmethod
-    def powerup_collected(
-        cls,
-        tank_id: str,
-        position: tuple[float, float],
-        powerup_id: str,
-        powerup_type: PowerupType,
-    ):
+    def powerup_collected(cls, tank_id: str, powerup_id: str):
         return Event(
             EventType.POWERUP_COLLECTED,
             {
                 "tank_id": tank_id,
-                "position": round_vec2d(position),
                 "powerup_id": powerup_id,
-                "powerup_type": powerup_type,
-            },
-        )
-
-    @classmethod
-    def powerup_spawn(
-        cls, powerup_id: str, position: tuple[float, float], powerup_type: PowerupType
-    ):
-        return Event(
-            EventType.POWERUP_SPAWN,
-            {
-                "position": round_vec2d(position),
-                "powerup_id": powerup_id,
-                "powerup_type": powerup_type,
             },
         )
 
@@ -191,8 +125,8 @@ class ReplayManager:
                 updated_info[key] = self.new_info[key]
 
         obj = {
-            "events": list(map(asdict, self.events)) if include_events else [],
-            "object_info": updated_info,
+            "deleted_objects": list(map(asdict, self.events)) if include_events else [],
+            "updated_objects": updated_info,
         }
         self._file.write(
             json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
@@ -208,8 +142,8 @@ class ReplayManager:
             if self.comms_info.get(key, None) != self.new_info[key]:
                 comms_updated_info[key] = self.new_info[key]
         comms_obj = {
-            "events": list(map(asdict, self.events)),
-            "object_info": comms_updated_info,
+            "deleted_objects": list(map(asdict, self.events)),
+            "updated_objects": comms_updated_info,
         }
 
         # Clear events and update all objects' info
