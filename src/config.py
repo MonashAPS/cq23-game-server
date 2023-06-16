@@ -79,7 +79,7 @@ defaults = {
     },
     "REPLAY": {
         "PATH": "replay/replay",
-        "LIVE_PATH": "replay/live-replay",
+        "LIVE_PATH": "live-replay/replay",
     },
     "COMMUNICATION": {"TIMEOUT": 0.1},
     "POWERUP": {
