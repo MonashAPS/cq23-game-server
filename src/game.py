@@ -16,7 +16,7 @@ from gameObjects.tank import Tank
 from gameObjects.wall import Wall
 from map import Map
 from player import Player
-from replay import Event, ReplayManager
+from replay import ReplayManager
 
 
 class Game:
@@ -148,28 +148,17 @@ class Game:
         for shape in arbiter.shapes:
             if isinstance(shape._gameobject, Tank):
                 shape._gameobject.apply_powerup(powerup)
-                self.replay_manager.add_event(
-                    Event.powerup_collected(
-                        tank_id=shape._gameobject.id,
-                        powerup_id=powerup.id,
-                    )
-                )
+                self.replay_manager.add_event(powerup.id)
 
     def register_replay_manager_event(self, shape: pymunk.Shape, event: str):
         if event == "DESTRUCTION":
             # record destruction in replay file
             if shape.collision_type == config.COLLISION_TYPE.TANK:
-                self.replay_manager.add_event(
-                    Event.tank_destroyed(shape._gameobject.id)
-                )
+                self.replay_manager.add_event(shape._gameobject.id)
             elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                self.replay_manager.add_event(
-                    Event.wall_destroyed(shape._gameobject.id)
-                )
+                self.replay_manager.add_event(shape._gameobject.id)
             elif shape.collision_type == config.COLLISION_TYPE.BULLET:
-                self.replay_manager.add_event(
-                    Event.bullet_destroyed(shape._gameobject.id)
-                )
+                self.replay_manager.add_event(shape._gameobject.id)
 
     def closing_boundary_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data

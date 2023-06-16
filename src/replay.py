@@ -1,52 +1,8 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field, is_dataclass
-from enum import Enum
+from dataclasses import asdict, is_dataclass
 from typing import Any
-
-
-class EventType(str, Enum):
-    BULLET_DESTROYED = "BULLET_DESTROYED"
-    TANK_DESTROYED = "TANK_DESTROYED"
-    WALL_DESTROYED = "WALL_DESTROYED"
-    POWERUP_COLLECTED = "POWERUP_COLLECTED"
-
-
-@dataclass
-class Event:
-    """
-    Single use event data to be used in replays.
-    Data should be a json-serializable object
-    """
-
-    event_type: EventType
-    data: dict = field(default_factory=dict)
-
-    @classmethod
-    def tank_destroyed(cls, tank_id: str):
-        return Event(EventType.TANK_DESTROYED, {"id": tank_id})
-
-    @classmethod
-    def wall_destroyed(cls, wall_id: str):
-        return Event(EventType.WALL_DESTROYED, {"id": wall_id})
-
-    @classmethod
-    def bullet_destroyed(cls, bullet_id: str):
-        return Event(
-            EventType.BULLET_DESTROYED,
-            {"id": bullet_id},
-        )
-
-    @classmethod
-    def powerup_collected(cls, tank_id: str, powerup_id: str):
-        return Event(
-            EventType.POWERUP_COLLECTED,
-            {
-                "tank_id": tank_id,
-                "powerup_id": powerup_id,
-            },
-        )
 
 
 class ReplayJSONEncoder(json.JSONEncoder):
@@ -81,8 +37,8 @@ class ReplayManager:
         self.new_info = {}
         self.comms_info = {}
 
-    def add_event(self, e: Event) -> None:
-        self.events.append(e)
+    def add_event(self, id) -> None:
+        self.events.append(id)
 
     def set_info(self, key: str, data: dict[str, Any]) -> None:
         self.new_info[key] = data
@@ -125,7 +81,7 @@ class ReplayManager:
                 updated_info[key] = self.new_info[key]
 
         obj = {
-            "deleted_objects": list(map(asdict, self.events)) if include_events else [],
+            "deleted_objects": self.events if include_events else [],
             "updated_objects": updated_info,
         }
         self._file.write(
@@ -142,7 +98,7 @@ class ReplayManager:
             if self.comms_info.get(key, None) != self.new_info[key]:
                 comms_updated_info[key] = self.new_info[key]
         comms_obj = {
-            "deleted_objects": list(map(asdict, self.events)),
+            "deleted_objects": self.events,
             "updated_objects": comms_updated_info,
         }
 
