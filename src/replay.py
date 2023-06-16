@@ -126,5 +126,8 @@ class ReplayManager:
         self._live_file = open(file_names[1], "w")
 
     def close(self):
+        # print end of file before closing file
+        self.write_to_file("EOF")
+
         self._file.close()
         self._live_file.close()
