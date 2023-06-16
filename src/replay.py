@@ -23,7 +23,9 @@ class ReplayManager:
     Be sure to execute instance.close() once you are certain no more replays will be passed through.
     """
 
-    def __init__(self, output_path: str, is_multi_file: bool) -> None:
+    def __init__(
+        self, output_path: str, live_replay_path: str, is_multi_file: bool
+    ) -> None:
         self.is_multi_file = is_multi_file
 
         # We'll use a line counter to
@@ -31,7 +33,10 @@ class ReplayManager:
         self.file_number = 1
 
         self.output_path = output_path
+        self.live_replay_path = live_replay_path
+
         self.open_file()
+
         self.events = []
         self.current_info = {}
         self.new_info = {}
@@ -51,9 +56,7 @@ class ReplayManager:
         self.new_file_if_required()
         self.line_counter += 1
 
-        self._file.write(
-            json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
-        )
+        self.write_to_file(obj)
 
     def set_game_info(self, space):
         for x in space.shapes:
@@ -62,8 +65,11 @@ class ReplayManager:
                 x._gameobject.info(),
             )
 
-    def create_file_name(self):
-        return f"{self.output_path}-{self.file_number}.txt"
+    def create_file_names(self):
+        return (
+            f"{self.output_path}-{self.file_number}.txt",
+            f"{self.live_replay_path}-{self.file_number}.txt",
+        )
 
     def new_file_if_required(self):
         if self.is_multi_file and self.line_counter % 50 == 0:
@@ -84,9 +90,8 @@ class ReplayManager:
             "deleted_objects": self.events if include_events else [],
             "updated_objects": updated_info,
         }
-        self._file.write(
-            json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
-        )
+
+        self.write_to_file(obj)
 
         # Update stale locations
         self.current_info.update(updated_info)
@@ -109,8 +114,17 @@ class ReplayManager:
 
         return comms_obj
 
+    def write_to_file(self, obj):
+        for file in (self._file, self._live_file):
+            file.write(
+                json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
+            )
+
     def open_file(self):
-        self._file = open(self.create_file_name(), "w")
+        file_names = self.create_file_names()
+        self._file = open(file_names[0], "w")
+        self._live_file = open(file_names[1], "w")
 
     def close(self):
         self._file.close()
+        self._live_file.close()
