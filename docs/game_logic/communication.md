@@ -5,13 +5,13 @@ The game server gives you information about the game and, you will decide what y
 information you have received.
 
 All the communication happens through standard input and standard output. That means, when it's time for you to receive
-new information about the game, you take an input (`input()` in python or `std::cin` in c++ etc.) and parse the received
+new information about the game, you take an input (`input()` in python or `std::cin` in C++ etc.) and parse the received
 JSON message and, when it's time for you to tell the game server something to do, you print it as a JSON message
 (`print()` in python or `std::cout` in c++ etc.).
 
 ## Message Format
 
-All messages you receive from the game will be an object with two keys: `message` and `time`.
+All (except two) messages you receive from the game will be an object with two keys: `message` and `time`.
 
 The `message` will be the actual message the game has sent you. The `time` denotes how much time you have (in seconds) to
 process this message. Sometimes you will need to respond to the message, sometimes you don't. If you need to respond to
@@ -23,10 +23,86 @@ Here is an example of how the message format looks like:
 
 ```json
 {
-  "message": "Some message for the client",
+  "message": <some message for your bot>,
   "time": 0.1
 }
 ```
+
+The only exception to this format is the special signals which we will discuss down below in this page.
+
+## Message Data
+
+As described above, the object will have two keys: `time` and `message`. The purpose of `time` is clear: you have that
+many seconds to respond (if you need to respond) otherwise whatever you respond with will be discarded.
+
+The second key, namely `message`, contains the actual information of that message. The `message` will itself be an
+object with two keys: `updated_objects` and `deleted_objects`.
+
+### Updated Objects
+
+Throughout the game, some objects will be created (e.g. when a tank shoots a bullet, that bullet is created), some will
+be updated (e.g. when the bullet hits a tank, the tank loses hp) and some will be deleted (e.g. after the bullet hit
+the tank, the bullet will be destroyed). Every time an object is created or updated, that object will be present in
+`updated_objects` with all of its attributes. For example, if a tank has lost some hp, it will be in the `updated_objects`
+along with all its attributes (`type`, `hp`, `velocity`, etc.) not just hp.
+
+Inside `updated_objects`, the key will be the `id` of the created/updated object and the value will be the object with
+all its attributes. You can find more info about the attributes of each object in its relevant
+page (e.g. [tank](../game_objects/tank.md), [bullet](../game_objects/bullet.md), etc.).
+
+### Deleted Objects
+
+Similarly, `deleted_objects` is a list of `id`s of all objects that were destroyed in that turn (you will have the object
+`id`s from when they were passed to you in `updated_objects`).
+
+## Example
+
+You're given the following message in the first tick of the game:
+
+```json
+{
+  "message": {
+    "deleted_objects": [],
+    "updated_objects": {
+      "tank-1": {
+        "position": [
+          655.03,
+          815.03
+        ],
+        ...
+      },
+      ...
+    }
+  },
+  "time": ...
+}
+```
+
+`tank-1` decides to not move or do anything else after the first tick, in other words there are no _updates_ for tank-1.
+So when you receive the object information in the second tick of the game, there will be no information about tank-1.
+However, it seems like a bullet has been shot.
+
+```json
+{
+  "message": {
+    "deleted_objects": [],
+    "updated_objects": {
+      "bullet-23": {
+        "position": [
+          353.12,
+          112.53
+        ],
+        ...
+      },
+      ...
+    }
+  },
+  "time": ...
+}
+```
+
+The purpose of this way of communicating is that you don't have to process redundant messages like the position of the
+stationary objects every tick. So we only send you what has changed in the game since the last tick.
 
 ## Special Signals
 
@@ -46,17 +122,20 @@ and the second signal is `"END"`.
 
 When you receive the end signal, you should close your program.
 
-## World Init
+## Communication Stages
+
+### World Init Stage
 
 Before the main communication cycle starts between the game and your players, a few messages will be sent from the game
-to you in, one-way. These messages are some initial information about the game and the map that you will need to
+to you, one-way. These messages are some initial information about the game and the map that you will need to
 implement your strategies.
 
 These include, your tank id (so you would know which tank of the two you are controlling), the location of the walls,
-the location of the boundaries around the map, etc. Refer to [Types](types.md) to see a full list of objects that could
-be in these messages.
+the location of the boundaries around the map, etc.
 
-### Your Tank ID
+Inside these stage, you will get information about your tank id and the objects inside the map.
+
+#### Your Tank ID
 
 The very first message you receive will be your tank id. This is important so you can identify which tank belongs to
 you in the game. If you've read the [tanks page](../game_objects/tank.md), you would know that tanks (like all other
@@ -70,20 +149,19 @@ This is the first message you will receive:
   },
   "time": 0.1
 }
-
 ```
 
-### Other objects
+As you see, this message does not have the same format of `updated_objects` and `deleted_objects` explained before.
 
-The rest of the messages here (before the main communication cycle starts) are information about other objects.
+#### Rest of the Map Objects
+
+The rest of the messages in this stage (before the main communication cycle starts) are information about other objects.
 This is the type of message you would receive here:
 
 ```json
 {
   "message": {
-    "deleted_objects": [
-      ...
-    ],
+    "deleted_objects": [],
     "updated_objects": {
       "bullet-23": {
         "position": [
@@ -99,8 +177,10 @@ This is the type of message you would receive here:
 }
 ```
 
+`deleted_objects` will always be an empty list at this stage because nothing is happening in the game yet.
+
 As explained above, after each message you receive, you will be given an amount of time for your code to process
-that information. This applies to pre and post initial messages. In the example above, you've been given 0.1 seconds to
+that information. This applies to both of the communication stages. In the example above, you've been given 0.1 seconds to
 process this information but, you do not need to respond with anything at this stage.
 
 After the initialisation is done, you will receive the end init signal (explained above). This message is to signal
@@ -113,7 +193,7 @@ next tick.
 ... future messages ...
 ```
 
-## Main Game Loop
+### Main Game Loop Stage
 
 This is where the main game loop starts. This is also where your code and the game will start to go back and forth and
 you will make decisions about what you want to do.
@@ -128,25 +208,7 @@ The format of these messages is exactly the same as the messages you received in
 {
   "message": {
     "deleted_objects": [
-      {
-        "event_type": "BULLET_SPAWN",
-        "data": {
-          "id": "bullet-3",
-          "tank_id": "tank-1",
-          "position": [
-            661.92,
-            833.83
-          ],
-          "velocity": [
-            -425.74,
-            -145.75
-          ],
-          "angle": 217
-        }
-      },
-      {
-            ... data about another event ...
-      }
+      "bullet-25", "bullet-26", "powerup-2", ... other removed objects ...
     ],
     "updated_objects": {
       "tank-1": {
@@ -172,74 +234,6 @@ The format of these messages is exactly the same as the messages you received in
 
 Once in the main game loop, make sure you respond with your actions in the given timeout time.
 
-## Message Data
-
-As said above, the messages have two keys. A `message` which contains the actual data and a `time`.
-In this section, we learn about what sort of data will be inside the `message` object.
-
-The `message` object has two main parts: the updated_objects and the [deleted_objects](deleted_objects.md).
-
-[deleted_objects](deleted_objects.md) will be a list of json objects letting you know which game objects have been removed
-from the game.
-
-updated_objects will be an object where the keys are the object ids (e.g. `tank-1`, `bullet-24`) and the value will
-be an object containing all the information. To see what's inside the information object you can refer to the
-corresponding type (e.g. [tank](../game_objects/tank.md), [bullet](../game_objects/bullet.md), etc.).
-
-Note that the object information you receive will only be the UPDATES. Consider the following example.
-
-### Example
-
-You're given the following message in the first tick of the game:
-
-```json
-{
-  "message": {
-    "deleted_objects": [
-      ...
-    ],
-    "updated_objects": {
-      "tank-1": {
-        "position": [
-          655.03,
-          815.03
-        ],
-        ...
-      },
-      ...
-    }
-  },
-  "time": ...
-}
-```
-
-`tank-1` decides to not move or do anything else after the first tick, in other words there are no UPDATES for tank-1.
-So when you receive the object information in the second tick of the game, there will be no information about tank-1.
-
-```json
-{
-  "message": {
-    "deleted_objects": [
-      ...
-    ],
-    "updated_objects": {
-      "bullet-23": {
-        "position": [
-          353.12,
-          112.53
-        ],
-        ...
-      },
-      ...
-    }
-  },
-  "time": ...
-}
-```
-
-The purpose of this way of communicating is that you don't have to process redundant messages like the position of the
-stationary objects every tick. So we only send you what has changed in the game since the last tick.
-
 ## Sending actions
 
 Once you have received a message from the game, you will have some time (given to you in the message, usually 0.1 seconds)
@@ -253,7 +247,7 @@ For more information on actions and their format, refer to [actions](actions.md)
 To summarise, the communication in the game happens in the following order:
 
 ```json
-incoming> receive your client id
+incoming> receive your tank id
 
 // world init
 incoming> world init msg1
@@ -266,3 +260,6 @@ incoming> "END_INIT"
 incoming> game info
 outgoing< your chosen action
 ```
+
+If you are using one of the submission templates provided, the main framework of communication would be already handled
+for you and you just need to implement your logic.

@@ -62,6 +62,7 @@ class Communicator:
 
     def terminate_init_world_sequence(self):
         print('"END_INIT"', flush=True)
+        sleep(0.1)
         logging.info('"END_INIT"')
 
     def post_message(

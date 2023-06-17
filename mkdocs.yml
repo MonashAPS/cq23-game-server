@@ -13,7 +13,6 @@ nav:
       - Communication: game_logic/communication.md
       - Actions: game_logic/actions.md
       - Collisions: game_logic/collisions.md
-      - Deleted_Objects: game_logic/deleted_objects.md
       - Map: game_logic/map.md
       - Types: game_logic/types.md
     - Your Bots and Submissions:
