@@ -105,8 +105,8 @@ class ReplayManager:
         serialized_obj = json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":"))
         self.buffer.append(serialized_obj + "\n")
 
-        # Flush buffer if it's gotten too big (more than 30 lines of each 400 characters)
-        if self.is_multi_file and sum([len(x) for x in self.buffer]) >= 30 * 400:
+        # Flush buffer if it's gotten too big (more than 50 lines of each 500 characters)
+        if self.is_multi_file and sum([len(x) for x in self.buffer]) >= 50 * 500:
             self.empty_buffer()
 
     def empty_buffer(self):
