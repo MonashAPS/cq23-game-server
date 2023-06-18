@@ -14,6 +14,7 @@ from gameObjects.bullet import Bullet
 from gameObjects.powerup import Powerup, PowerupType
 from gameObjects.tank import Tank
 from gameObjects.wall import Wall
+from log import log_with_time
 from map import Map
 from player import Player
 from replay import ReplayManager
@@ -60,6 +61,7 @@ class Game:
         self.send_map_info_to_clients()
 
     def send_map_info_to_clients(self):
+        log_with_time("Sending map info to clients")
         self.replay_manager.set_game_info(self.space)
         comms_line = self.replay_manager.get_comms_line()
         self.comms.post_init_world_message(comms_line)

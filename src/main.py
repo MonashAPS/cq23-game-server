@@ -18,6 +18,8 @@ def run(replay: ReplayManager, map_name, use_pygame=False):
     m = Map(map_name=map_name)
     running = True
     space = pymunk.Space()
+
+    log_with_time("Creating the game object")
     game = Game(space, m, replay)
 
     log_with_time("Printing map content in replay file")
