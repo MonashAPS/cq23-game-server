@@ -1,21 +1,23 @@
 # Starting Your Code
 
 You may use any programming language for your bots. The only requirement is being able to print in standard output and
-read from standard input. However, if you choose to use Python, we have created a base template for you that you can use
-to start your code faster.
+read from standard input. However, we have created templates for Python, Java and C++ that you can use. They include the
+boilerplate code for reading messages and sending actions.
 
-## Python
+## Python, Java, C++
 
-In order to start a player off the Python template, open your terminal and go to a directory you want to create your bot
+In order to start a player off an existing template, open your terminal and go to a directory you want to create your bot
 in and run this command:
 
 ```shell
-cq23 new python <a name for your bot>
+cq23 new <lang> <a name for your bot>
 ```
 
-This will create a folder containing a starting code for your Python code. Open this folder in your code editor.
+This will create a folder containing a starting code for your selected language. Open this folder in your code editor.
 
 Refer to the `README.md` file in the created folder for more information about the template.
+
+Accepted values for `<lang>` in the command above are `python` - `java` - `cpp`.
 
 ## All other languages
 
