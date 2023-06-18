@@ -8,19 +8,22 @@ import pymunk
 
 from config import config
 from game import Game
+from log import log_with_time
 from map import Map
 from replay import ReplayManager
 
 
 def run(replay: ReplayManager, map_name, use_pygame=False):
-
+    log_with_time("Creating the map and pymunk space")
     m = Map(map_name=map_name)
     running = True
     space = pymunk.Space()
     game = Game(space, m, replay)
 
+    log_with_time("Printing map content in replay file")
     with open(map_name) as mapFile:
         replay.post_custom_replay_line({"map": mapFile.read().splitlines()})
+    log_with_time("Printing client info in replay file")
     replay.post_custom_replay_line({"client_info": game.comms.client_info})
 
     if use_pygame:
@@ -107,8 +110,10 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--map", default="nuketown.map")
     args = parser.parse_args()
 
+    log_with_time("Creating replay manager")
     replay = ReplayManager(config.REPLAY.PATH, config.REPLAY.LIVE_PATH, True)
 
+    log_with_time("Running the game")
     try:
         run(
             replay,
