@@ -4,7 +4,7 @@ import json
 from dataclasses import asdict, is_dataclass
 from typing import Any
 
-from src.log import log_with_time
+from log import log_with_time
 
 
 class ReplayJSONEncoder(json.JSONEncoder):
