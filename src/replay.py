@@ -35,6 +35,8 @@ class ReplayManager:
         self.output_path = output_path
         self.live_replay_path = live_replay_path
 
+        # Buffer is the list of all lines that are waiting to be written in the replay file
+        self.buffer = []
         self.open_file()
 
         self.events = []
@@ -115,19 +117,29 @@ class ReplayManager:
         return comms_obj
 
     def write_to_file(self, obj):
-        for file in (self._file, self._live_file):
-            file.write(
-                json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":")) + "\n"
-            )
+        serialized_obj = json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":"))
+        self.buffer.append(serialized_obj + "\n")
+        # for file in (self._file, self._live_file):
+        #     file.write(
+        #         serialized_obj + "\n"
+        #     )
 
     def open_file(self):
-        file_names = self.create_file_names()
-        self._file = open(file_names[0], "w")
-        self._live_file = open(file_names[1], "w")
+        # file_names = self.create_file_names()
+        # self._file = open(file_names[0], "w")
+        # self._live_file = open(file_names[1], "w")
+        pass
 
     def close(self):
         # print end of file before closing file
         self.write_to_file("EOF")
 
-        self._file.close()
-        self._live_file.close()
+        # self._file.close()
+        # self._live_file.close()
+
+        file_names = self.create_file_names()
+        for file_name in file_names:
+            with open(file_name, "w") as f:
+                f.writelines(self.buffer)
+
+        self.buffer = []
