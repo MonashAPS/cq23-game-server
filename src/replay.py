@@ -28,8 +28,6 @@ class ReplayManager:
     ) -> None:
         self.is_multi_file = is_multi_file
 
-        # We'll use a line counter to
-        self.line_counter = 1
         self.file_number = 1
 
         self.output_path = output_path
@@ -37,7 +35,6 @@ class ReplayManager:
 
         # Buffer is the list of all lines that are waiting to be written in the replay file
         self.buffer = []
-        self.open_file()
 
         self.events = []
         self.current_info = {}
@@ -55,10 +52,7 @@ class ReplayManager:
         Post a custom JSON message to replay.
         Used for initial messaging / finale
         """
-        self.new_file_if_required()
-        self.line_counter += 1
-
-        self.write_to_file(obj)
+        self.write_to_buffer(obj)
 
     def set_game_info(self, space):
         for x in space.shapes:
@@ -73,16 +67,7 @@ class ReplayManager:
             f"{self.live_replay_path}-{self.file_number}.txt",
         )
 
-    def new_file_if_required(self):
-        if self.is_multi_file and self.line_counter % 50 == 0:
-            self.close()
-            self.file_number += 1
-            self.open_file()
-
     def post_replay_line(self, include_events=False) -> dict:
-        self.new_file_if_required()
-        self.line_counter += 1
-
         updated_info = {}
         for key in self.new_info:
             if self.current_info.get(key, None) != self.new_info[key]:
@@ -93,7 +78,7 @@ class ReplayManager:
             "updated_objects": updated_info,
         }
 
-        self.write_to_file(obj)
+        self.write_to_buffer(obj)
 
         # Update stale locations
         self.current_info.update(updated_info)
@@ -116,26 +101,17 @@ class ReplayManager:
 
         return comms_obj
 
-    def write_to_file(self, obj):
+    def write_to_buffer(self, obj):
         serialized_obj = json.dumps(obj, cls=ReplayJSONEncoder, separators=(",", ":"))
         self.buffer.append(serialized_obj + "\n")
-        # for file in (self._file, self._live_file):
-        #     file.write(
-        #         serialized_obj + "\n"
-        #     )
 
-    def open_file(self):
-        # file_names = self.create_file_names()
-        # self._file = open(file_names[0], "w")
-        # self._live_file = open(file_names[1], "w")
-        pass
+        # Flush buffer if it's gotten too big (more than 30 lines of each 400 characters)
+        if self.is_multi_file and sum([len(x) for x in self.buffer]) >= 30 * 400:
+            self.empty_buffer()
 
-    def close(self):
-        # print end of file before closing file
-        self.write_to_file("EOF")
-
-        # self._file.close()
-        # self._live_file.close()
+    def empty_buffer(self):
+        # Add EOF to buffer before flushing it out
+        self.buffer.append('"EOF"')
 
         file_names = self.create_file_names()
         for file_name in file_names:
@@ -143,3 +119,4 @@ class ReplayManager:
                 f.writelines(self.buffer)
 
         self.buffer = []
+        self.file_number += 1

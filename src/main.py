@@ -116,7 +116,7 @@ if __name__ == "__main__":
             use_pygame=str(os.environ.get("USE_PYGAME", 1)) == "1",
         )
     except Exception as e:
-        replay.close()
+        replay.empty_buffer()
         raise e
     finally:
-        replay.close()
+        replay.empty_buffer()
