@@ -4,8 +4,6 @@ import json
 from dataclasses import asdict, is_dataclass
 from typing import Any
 
-from log import log_with_time
-
 
 class ReplayJSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -54,7 +52,6 @@ class ReplayManager:
         Post a custom JSON message to replay.
         Used for initial messaging / finale
         """
-        log_with_time("-> post_custom_replay_line")
         self.write_to_buffer(obj)
 
     def set_game_info(self, space):
@@ -71,7 +68,6 @@ class ReplayManager:
         )
 
     def post_replay_line(self, include_events=False) -> dict:
-        log_with_time("-> post_replay_line")
         updated_info = {}
         for key in self.new_info:
             if self.current_info.get(key, None) != self.new_info[key]:
@@ -114,7 +110,6 @@ class ReplayManager:
             self.empty_buffer()
 
     def empty_buffer(self):
-        log_with_time("-> empty_buffer")
         # Add EOF to buffer before flushing it out
         self.buffer.append('"EOF"\n')
 
@@ -125,4 +120,3 @@ class ReplayManager:
 
         self.buffer = []
         self.file_number += 1
-        log_with_time("<- empty_buffer")

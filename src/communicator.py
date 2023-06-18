@@ -42,7 +42,7 @@ class Communicator:
         current_message = {"deleted_objects": [], "updated_objects": {}}
 
         for key, value in object_info.items():
-            if len(current_message["updated_objects"]) == 10:
+            if len(current_message["updated_objects"]) == 100:
                 self.post_message_with_delay(current_message)
                 current_message = {"deleted_objects": [], "updated_objects": {}}
             current_message["updated_objects"][key] = value
