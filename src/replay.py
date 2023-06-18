@@ -111,7 +111,7 @@ class ReplayManager:
 
     def empty_buffer(self):
         # Add EOF to buffer before flushing it out
-        self.buffer.append('"EOF"')
+        self.buffer.append('"EOF"\n')
 
         file_names = self.create_file_names()
         for file_name in file_names:
