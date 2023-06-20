@@ -1,10 +1,10 @@
 # Starting Your Code
 
 You may use any programming language for your bots. The only requirement is being able to print in standard output and
-read from standard input. However, we have created templates for Python, Java and C++ that you can use. They include the
+read from standard input. However, we have created templates for Python, Java, C++ and Go that you can use. They include the
 boilerplate code for reading messages and sending actions.
 
-## Python, Java, C++
+## Python, Java, C++, Go
 
 In order to start a player off an existing template, open your terminal and go to a directory you want to create your bot
 in and run this command:
@@ -17,7 +17,7 @@ This will create a folder containing a starting code for your selected language.
 
 Refer to the `README.md` file in the created folder for more information about the template.
 
-Accepted values for `<lang>` in the command above are `python` - `java` - `cpp`.
+Accepted values for `<lang>` in the command above are `python` - `java` - `cpp` - `go`.
 
 ## All other languages
 
