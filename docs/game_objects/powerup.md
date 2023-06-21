@@ -8,9 +8,9 @@ Note that you can only collect powerups, you cannot shoot them.
 
 There are three different types of powerups.
 
-* **Health Boost**: increases the hp of your tank by `2` points.
-* **Speed Boost**: doubles the speed of your tank.
-* **Damage Boost**: doubles the damage of your bullets.
+* **Health**: increases the hp of your tank by `2` points.
+* **Speed**: doubles the speed of your tank.
+* **Damage**: doubles the damage of your bullets.
 
 ## Data
 

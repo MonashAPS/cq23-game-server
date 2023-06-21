@@ -11,7 +11,8 @@ The data that you will be given about each tank is as follows:
     "type": 1,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],
-    "hp": 10
+    "hp": 10,
+    "powerups": ["DAMAGE", "SPEED"]
 }
 ```
 
@@ -27,3 +28,5 @@ to [Map](../game_logic/map.md).
 * `hp`: This is the health points of this tank. This would be useful for knowing the health of the enemy tanks.
 
 * `tank-id`: The tank id shown above would be your client-id with a "tank" suffix. So if your client-id is "tanksters" then your tank id will be `tanksters-tank`.
+
+* `powerups`: The powerups that are activated for this tank. For more information on powerups refer to [powerups](powerup.md)

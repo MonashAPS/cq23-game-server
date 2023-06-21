@@ -40,6 +40,8 @@ class Tank(GameObject):
         # prevent tanks from rotating. moment has to be set after the body is added to the space
         self.body.moment = float("inf")
 
+        self.powerups = []
+
         self.id = f"tank-{IDCounter.get_id('tank')}"
 
     def move_to_pos(self, coord: tuple[int, int]):
@@ -99,12 +101,15 @@ class Tank(GameObject):
             "position": round_vec2d(self.body.position),
             "velocity": round_vec2d(self.body.velocity),
             "hp": "inf" if self.hp == float("inf") else self.hp,
+            "powerups": self.powerups,
         }
 
     def apply_powerup(self, powerup: Powerup):
         if powerup.powerup_type == PowerupType.HEALTH:
             self.hp += config.POWERUP.HP_BOOST
         elif powerup.powerup_type == PowerupType.SPEED:
+            self.powerups = list(set(self.powerups + [powerup.powerup_type]))
             self.velocity_mult = config.POWERUP.SPEED_BOOST
         elif powerup.powerup_type == PowerupType.DAMAGE:
+            self.powerups = list(set(self.powerups + [powerup.powerup_type]))
             self.bullet_damage = config.POWERUP.BULLET_BOOST
