@@ -249,10 +249,12 @@ class Game:
         for _ in range(15):  # 15 retries to find position to plant powerup
             collision_detected = False
             poweup_coord = (random.randint(*xrange), random.randint(*yrange))
+            powerup_type = random.choice(list(PowerupType))
+
             powerup = Powerup(
                 space=self.space,
                 coord=poweup_coord,
-                powerup_type=random.choice(list(PowerupType)),
+                powerup_type=powerup_type,
             )
             for object in self.game_objects:
                 if (isinstance(object, Wall) or isinstance(object, Tank)) and len(
@@ -263,10 +265,6 @@ class Game:
                     del powerup
                     break
             if not collision_detected:
-                powerup_type = random.choice(list(PowerupType))
-                powerup = Powerup(
-                    space=self.space, coord=poweup_coord, powerup_type=powerup_type
-                )
                 self.game_objects.append(powerup)
                 return powerup
 
