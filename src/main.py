@@ -66,18 +66,14 @@ def run(replay: ReplayManager, map_name, use_pygame=False):
                 break
 
             replay.set_game_info(space)
-            replay.post_replay_line(
-                include_events=i
-                == config.SIMULATION.PHYSICS_ITERATIONS_PER_COMMUNICATION - 1
-            )
+            replay.sync_object_updates_in_replay()
 
             if use_pygame:
                 pygame.display.flip()
                 clock.tick(config.SIMULATION.PYGAME_FPS)
 
         if running:
-            replay.set_game_info(space)
-            comms_line = replay.get_comms_line()
+            comms_line = replay.sync_object_updates_in_comms()
             game.comms.post_message(message=comms_line)
             game.handle_client_response()
         else:
@@ -91,8 +87,6 @@ def run(replay: ReplayManager, map_name, use_pygame=False):
 
 
 def game_started():
-    import os.path
-
     return os.path.isfile("/codequest/GAME_STARTED")
 
 
