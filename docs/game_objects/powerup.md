@@ -1,8 +1,8 @@
 # Powerup
 
-Powerups can be collected by moving to their position with your tank.
+Powerups are spawned randomly on the map and can be collected by moving to their position with your tank.
 
-Note that you can only collect powerups, you cannot shoot them.
+Note that you can only collect powerups, you cannot destroy them by shooting at them.
 
 ## Types
 
