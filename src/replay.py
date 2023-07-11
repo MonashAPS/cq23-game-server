@@ -41,15 +41,12 @@ class ReplayManager:
         self.new_info = {}
         self.comms_info = {}
 
-        self.replay_current_object_states = (
-            {}
-        )  # The last state of all objects in the game - used for diffing
-        self.replay_pending_object_updates = (
-            {}
-        )  # List of objects that are updated and are waiting to be written
-        self.replay_pending_object_deletes = (
-            []
-        )  # List of object ids that were deleted and are waiting to be written
+        # The last state of all objects in the game - used for diffing
+        self.replay_current_object_states = {}
+        # List of objects that are updated and are waiting to be written
+        self.replay_pending_object_updates = {}
+        # List of object ids that were deleted and are waiting to be written
+        self.replay_pending_object_deletes = []
 
         # This logic needs to happen twice - one for writing replay lines, one for writing client messages.
         # The objects below are used for client messages.
