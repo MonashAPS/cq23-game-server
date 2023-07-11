@@ -59,6 +59,7 @@ class Communicator:
         print(0.1, flush=True)  # GCS expects timeout time for all messages
         sleep(0.1)
         logging.info(json_message)
+        logging.info(0.1)
 
     def terminate_init_world_sequence(self):
         print('"END_INIT"', flush=True)
@@ -81,3 +82,4 @@ class Communicator:
 
     def terminate_game(self):
         print('"END"', flush=True)
+        logging.info('"END"')

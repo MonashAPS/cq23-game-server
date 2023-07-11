@@ -8,7 +8,6 @@ from config import config
 from gameObjects.bullet import Bullet
 from gameObjects.game_object import GameObject, IDCounter
 from gameObjects.powerup import Powerup, PowerupType
-from replay import ReplayManager
 from util import round_vec2d
 
 
@@ -68,10 +67,11 @@ class Tank(GameObject):
             direction[1] * config.TANK.VELOCITY * self.velocity_mult,
         )
 
-    def shoot(self, angle: float, replay_manager: ReplayManager):
+    def shoot(self, angle: float):
         angle_radians = radians(angle)
         bullet = Bullet(
             space=self.space,
+            tank_id=self.id,
             coord=tuple(
                 map(
                     lambda tank, safe_space, offset: tank + offset + safe_space,

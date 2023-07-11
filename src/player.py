@@ -39,11 +39,7 @@ class Player:
             if action == "move":
                 self._move(actions[action])
             if action == "shoot":
-                created_game_objects.append(
-                    self._shoot_bullet(
-                        angle=actions[action], replay_manager=replay_manager
-                    )
-                )
+                created_game_objects.append(self._shoot_bullet(angle=actions[action]))
         return created_game_objects
 
     def tick(self):
@@ -127,5 +123,5 @@ class Player:
         """
         self.gameobject.set_velocity(direction)
 
-    def _shoot_bullet(self, angle: float, replay_manager: ReplayManager):
-        return self.gameobject.shoot(angle=angle, replay_manager=replay_manager)
+    def _shoot_bullet(self, angle: float):
+        return self.gameobject.shoot(angle=angle)

@@ -11,6 +11,7 @@ class Bullet(GameObject):
     def __init__(
         self,
         space: pymunk.Space,
+        tank_id: str,
         coord: tuple[int, int],
         velocity: tuple[float, float],
         damage: int = config.BULLET.DAMAGE,
@@ -32,10 +33,12 @@ class Bullet(GameObject):
         self.damage = damage
 
         self.id = f"bullet-{IDCounter.get_id('bullet')}"
+        self.tank_id = tank_id
 
     def info(self):
         return {
             "type": self.shape.collision_type,  # this is to let the clients know what type of object this is
+            "tank_id": self.tank_id,
             "position": round_vec2d(self.body.position),
             "velocity": round_vec2d(self.body.velocity),
             "damage": self.damage,
