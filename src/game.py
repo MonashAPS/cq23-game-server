@@ -63,7 +63,7 @@ class Game:
     def send_map_info_to_clients(self):
         log_with_time("Sending map info to clients")
         self.replay_manager.set_game_info(self.space)
-        comms_line = self.replay_manager.get_comms_line()
+        comms_line = self.replay_manager.sync_object_updates_in_comms()
         self.comms.post_init_world_message(comms_line)
         self.comms.terminate_init_world_sequence()
 
@@ -150,17 +150,17 @@ class Game:
         for shape in arbiter.shapes:
             if isinstance(shape._gameobject, Tank):
                 shape._gameobject.apply_powerup(powerup)
-                self.replay_manager.add_event(powerup.id)
+                self.replay_manager.record_deleted_object(powerup.id)
 
     def register_replay_manager_event(self, shape: pymunk.Shape, event: str):
         if event == "DESTRUCTION":
             # record destruction in replay file
             if shape.collision_type == config.COLLISION_TYPE.TANK:
-                self.replay_manager.add_event(shape._gameobject.id)
+                self.replay_manager.record_deleted_object(shape._gameobject.id)
             elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                self.replay_manager.add_event(shape._gameobject.id)
+                self.replay_manager.record_deleted_object(shape._gameobject.id)
             elif shape.collision_type == config.COLLISION_TYPE.BULLET:
-                self.replay_manager.add_event(shape._gameobject.id)
+                self.replay_manager.record_deleted_object(shape._gameobject.id)
 
     def closing_boundary_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
