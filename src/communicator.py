@@ -20,10 +20,12 @@ class Communicator:
             json.dumps(
                 {
                     self.client_info[0]["id"]: {
-                        "your-tank-id": f"tank-{self.client_info[0]['id']}"
+                        "your-tank-id": f"tank-{self.client_info[0]['id']}",
+                        "enemy-tank-id": f"tank-{self.client_info[1]['id']}",
                     },
                     self.client_info[1]["id"]: {
-                        "your-tank-id": f"tank-{self.client_info[1]['id']}"
+                        "your-tank-id": f"tank-{self.client_info[1]['id']}",
+                        "enemy-tank-id": f"tank-{self.client_info[0]['id']}",
                     },
                 },
                 separators=(",", ":"),

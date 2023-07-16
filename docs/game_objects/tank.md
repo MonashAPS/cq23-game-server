@@ -27,6 +27,6 @@ to [Map](../game_logic/map.md).
 
 * `hp`: This is the health points of this tank. This would be useful for knowing the health of the enemy tanks.
 
-* `tank-id`: The tank id shown above would be your client-id with a "tank" suffix. So if your client-id is "tanksters" then your tank id will be `tanksters-tank`.
+* `tank-id`: The tank id shown above would be your team id with a "tank" prefix. So if your team id is 7 then your tank id will be `tank-7`.
 
 * `powerups`: The powerups that are activated for this tank. For more information on powerups refer to [powerups](powerup.md)

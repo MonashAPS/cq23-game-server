@@ -137,7 +137,7 @@ Inside these stage, you will get information about your tank id and the objects 
 
 #### Your Tank ID
 
-The very first message you receive will be your tank id. This is important so you can identify which tank belongs to
+The very first message you receive will be your tank id and your opponent's tank id. This is important so you can identify which tank belongs to
 you in the game. If you've read the [tanks page](../game_objects/tank.md), you would know that tanks (like all other
 objects in the game) have an id which the game refers to throughout all communications.
 
@@ -145,7 +145,8 @@ This is the first message you will receive:
 ```json
 {
   "message": {
-    "your-tank-id": "tank-12"
+    "your-tank-id": "tank-12",
+    "enemy-tank-id": "tank-37"
   },
   "time": 0.1
 }
