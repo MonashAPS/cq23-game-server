@@ -107,6 +107,13 @@ class ReplayManager:
 
         return changed_objects
 
+    def _remove_pending_deletes(pending_object_deletes, object_states):
+        for pending_object_delete_key in pending_object_deletes:
+            try:
+                del object_states[pending_object_delete_key]
+            except KeyError:
+                pass
+
     def sync_object_updates_in_replay(self):
         pending_object_updates = self._find_object_diffs(
             self.replay_current_object_states, self.replay_pending_object_updates
@@ -122,6 +129,10 @@ class ReplayManager:
         # Update stale locations
         self.replay_current_object_states.update(pending_object_updates)
         self.replay_pending_object_updates = {}
+
+        self._remove_pending_deletes(
+            self.replay_pending_object_deletes, self.replay_current_object_states
+        )
         self.replay_pending_object_deletes = []
 
     def sync_object_updates_in_comms(self):
@@ -137,6 +148,10 @@ class ReplayManager:
         # Clear events and update all objects' info
         self.comms_current_object_states.update(pending_object_updates)
         self.comms_pending_object_updates = {}
+
+        self._remove_pending_deletes(
+            self.comms_pending_object_deletes, self.comms_current_object_states
+        )
         self.comms_pending_object_deletes = []
 
         return message
