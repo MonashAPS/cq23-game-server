@@ -107,7 +107,7 @@ class ReplayManager:
 
         return changed_objects
 
-    def _remove_pending_deletes(pending_object_deletes, object_states):
+    def _remove_pending_deletes(self, pending_object_deletes, object_states):
         for pending_object_delete_key in pending_object_deletes:
             try:
                 del object_states[pending_object_delete_key]
