@@ -18,3 +18,7 @@ other objects. You can see a summary of these below.
 | Destructible Wall | collide | damage  |  None   |       None        |   None   |  None   |
 | Boundary          | damage  | collide |  None   |       None        |   None   |  None   |
 | Powerup           | collect |  None   |  None   |       None        |   None   |  None   |
+
+### Notes
+
+- Bullet - bullet collision will result in both bullets being destroyed. That's why their collision type is `damage`.
