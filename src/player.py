@@ -7,7 +7,6 @@ from collections import deque
 import exceptions
 from gameObjects.tank import Tank
 from map import Map
-from replay import ReplayManager
 
 
 class Player:
@@ -25,9 +24,7 @@ class Player:
 
         self.action = {"path": deque(), "move": False}
 
-    def register_actions(
-        self, actions: t.Optional[dict], replay_manager: ReplayManager
-    ) -> t.List:
+    def register_actions(self, actions: t.Optional[dict]) -> t.List:
         """register action for the player"""
         created_game_objects = []
         # dismiss the actions if path and move have been set at the same time
@@ -44,7 +41,8 @@ class Player:
 
     def tick(self):
         """This will be called at every tick."""
-        self._traverse_path()
+        if not self.action["move"]:
+            self._traverse_path()
 
     def _move(self, angle: float):
         # remove path if manual move is used
@@ -64,28 +62,32 @@ class Player:
                 )
             )
 
+    def _set_distance_to_target(self):
+        self.distance_to_target = sum(
+            map(
+                lambda a, b: abs(a - b),
+                self.gameobject.body.position,
+                self.action["path"][0],
+            )
+        )
+
     def _traverse_path(self):
         """Move the player through a previously calculated path (self.action["path"]) until the path is complete"""
-        if self.action["move"]:
-            return
         if not self.action["path"]:
             self._set_direction(
                 (0, 0)
             )  # stop moving the player once the target has been reached
             return
-        if (
-            sum(
-                map(
-                    lambda x, y: abs(x - y),
-                    self.gameobject.body.position,
-                    self.action["path"][0],
-                )
-            )
-            <= 0.3
-        ):  # pymunk coordinates are floating point nums
+        last_distance_to_target = self.distance_to_target
+        self._set_distance_to_target()
+
+        if last_distance_to_target < self.distance_to_target:
+            if self.action["path"]:
+                self.gameobject.move_to_pos(self.action["path"][0])
+        elif self.distance_to_target <= 1:
             self.action["path"].popleft()
-            return
-        self.gameobject.move_to_pos(self.action["path"][0])
+            if self.action["path"]:
+                self.gameobject.move_to_pos(self.action["path"][0])
 
     def _set_path(self, coord: tuple[int, int]):
         """calculate and set the path attribute if the target is coord
@@ -108,6 +110,9 @@ class Player:
                     ),
                 )
             )
+            if self.action["path"]:
+                self.gameobject.move_to_pos(self.action["path"][0])
+                self._set_distance_to_target()
         except exceptions.CoordinateError:
             # TODO: client input coordinates were out of bounds.
             # The server shouldn't care about coordinates being out of bounds because the game has boundaries.

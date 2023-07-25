@@ -40,6 +40,7 @@ defaults = {
         "BOUNDARY": 5,
         "CLOSING_BOUNDARY": 6,
         "POWERUP": 7,
+        "PATH": 8,
     },
     "GRID_SCALING": 20,
     "BULLET": {
@@ -59,6 +60,7 @@ defaults = {
         "ELASTICITY": 1,
         "DENSITY": 1,
         "RADIUS": 0.1,
+        "DIM_MULT": (0.9, 0.9),
     },
     "BOUNDARY": {
         "HP": math.inf,

@@ -7,7 +7,7 @@ from yaml import safe_load
 
 from config import config
 from exceptions import CoordinateError, MapLoadError
-from gameObjects import Bullet, Tank, Wall
+from gameObjects import Tank, Wall
 from gameObjects.game_object import GameObject
 
 
@@ -16,20 +16,15 @@ class Map:
         ".": None,
         "X": lambda self, y, x, space: Wall(
             space,
-            self.to_global_coords(y - 0.5, x - 0.5),
-            self.to_global_coords(y + 0.5, x + 0.5),
+            self.to_global_coords(y, x),
             False,
         ),
         "D": lambda self, y, x, space: Wall(
             space,
-            self.to_global_coords(y - 0.5, x - 0.5),
-            self.to_global_coords(y + 0.5, x + 0.5),
+            self.to_global_coords(y, x),
             True,
         ),
-        "S": lambda self, y, x, space: Tank(space, self.to_global_coords(y, x), (0, 0)),
-        "B": lambda self, y, x, space: Bullet(
-            space, self.to_global_coords(y, x), (0, 0)
-        ),
+        "S": lambda self, y, x, space: Tank(space, self.to_global_coords(y, x)),
     }
     TRAVERSABLE = ".SP"
     SPECIAL_CHARS = "P"
@@ -42,6 +37,7 @@ class Map:
         """
         self.map_name = map_name
 
+        self.closing_boundary_progress = 0
         self._load_map()
 
     def to_global_coords(self, y, x):
@@ -66,7 +62,6 @@ class Map:
         # Map format: width/height, ascii grid, yaml
         self.objects: dict[tuple[int, int], GameObject] = {}
         self.fn_objects: dict[tuple[int, int], Callable] = {}
-        self.power_up_spawns: list[tuple[int, int]] = []
         self.traversability: list[list[bool]] = []
         with open(self.map_name) as f:
             contents = list(f.readlines())
@@ -100,9 +95,16 @@ class Map:
         if character in self.CHARACTER_MAP:
             if self.CHARACTER_MAP[character] is not None:
                 self.fn_objects[(y, x)] = self.CHARACTER_MAP[character]
-        else:
-            if character == "P":  # SPECIAL Powerup
-                self.power_up_spawns.append((y, x))
+
+    def update_traversability_boundary(self):
+        p = self.closing_boundary_progress
+        for i in range(self.map_height):
+            self.traversability[i][p] = False
+            self.traversability[i][self.map_width - p - 1] = False
+        for i in range(self.map_width):
+            self.traversability[p][i] = False
+            self.traversability[self.map_height - p - 1][i] = False
+        self.closing_boundary_progress += 1
 
     def create_game_objects(self, space) -> Generator[GameObject, None, None]:
         for (y, x), mapper in self.fn_objects.items():
@@ -170,8 +172,7 @@ class Map:
         """Call this function when a wall is broken to update pathfinding."""
         from pathfinding.core.node import Node
 
-        av = (coords[0][0] + coords[1][0]) / 2, (coords[0][1] + coords[1][1]) / 2
-        (cy, cx) = self.from_global_coords(*av)
+        (cy, cx) = self.from_global_coords(*coords)
         self.pf_grid.nodes[cy][cx] = Node(cx, cy, True)
         self.traversability[cy][cx] = True
         # Re-check if this point or those surrounding is special
@@ -192,6 +193,7 @@ class Map:
         if not (self._is_valid_coord(*c1) and self._is_valid_coord(*c2)):
             raise CoordinateError(f"Coordinates out of map's bounds: {c1}, {c2}")
 
+        self._precomp()
         start = self.pf_grid.node(c1[1], c1[0])
         end = self.pf_grid.node(c2[1], c2[0])
         finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)

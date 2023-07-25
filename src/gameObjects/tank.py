@@ -12,10 +12,9 @@ from util import round_vec2d
 
 
 class Tank(GameObject):
-    def __init__(
-        self, space: pymunk.Space, coord: tuple[int, int], velocity: tuple[float, float]
-    ):
-        super().__init__(space, coord, velocity)
+    def __init__(self, space: pymunk.Space, coord: tuple[int, int]):
+
+        super().__init__(space=space, coord=coord)
 
         self.dims = (
             config.TANK.DIM_MULT[0] * config.GRID_SCALING,
@@ -23,7 +22,9 @@ class Tank(GameObject):
         )
         self.hp = config.TANK.HP  # health points
 
-        self.shape = pymunk.Poly.create_box(body=self.body, size=self.dims, radius=0)
+        self.shape = pymunk.Poly.create_box(
+            body=self.body, size=self.dims, radius=config.TANK.RADIUS
+        )
         self.shape.density = config.TANK.DENSITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.shape._gameobject = self
@@ -54,6 +55,14 @@ class Tank(GameObject):
         tx, ty = coord  # target coordinates
         dx = copysign(1, tx - px)  # x direction
         dy = copysign(1, ty - py)  # y direction
+
+        if -1 <= tx - px <= 1:
+            dx *= 0
+            dy *= sqrt(2)
+        if -1 <= ty - py <= 1:
+            dy *= 0
+            dx *= sqrt(2)
+
         self.set_velocity((dx, dy))
 
     def set_velocity(self, direction: tuple[float, float]):
@@ -62,10 +71,12 @@ class Tank(GameObject):
         Args:
             direction (tuple[float, float]): The direction the tank should move towards (x,y). (1,1) is up and right
         """
-        self.body.velocity = (
+        new_vel = (
             direction[0] * config.TANK.VELOCITY * self.velocity_mult,
             direction[1] * config.TANK.VELOCITY * self.velocity_mult,
         )
+        if self.body.velocity != new_vel:
+            self.body.velocity = new_vel
 
     def shoot(self, angle: float):
         angle_radians = radians(angle)

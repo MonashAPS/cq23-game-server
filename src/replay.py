@@ -94,10 +94,11 @@ class ReplayManager:
 
     def set_game_info(self, space):
         for x in space.shapes:
-            self.record_object_state(
-                x._gameobject.id,
-                x._gameobject.info(),
-            )
+            if hasattr(x, "_gameobject"):
+                self.record_object_state(
+                    x._gameobject.id,
+                    x._gameobject.info(),
+                )
 
     def _find_object_diffs(self, current_state, new_updates):
         changed_objects = {}

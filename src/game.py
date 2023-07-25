@@ -33,6 +33,9 @@ class Game:
             client_info["id"]: Player(tank, map, client_info)
             for tank, client_info in zip(tanks, self.comms.client_info)
         }
+        self.path_indicators = {
+            client_info["id"]: [] for client_info in self.comms.client_info
+        }
 
         # create map boundary
         self.boundary = Boundary(
@@ -119,15 +122,20 @@ class Game:
 
     def remove_collision_handlers(self):
         collision_groups: list[tuple[int, int]] = [
-            (config.COLLISION_TYPE.BULLET, config.COLLISION_TYPE.POWERUP)
+            (config.COLLISION_TYPE.BULLET, config.COLLISION_TYPE.POWERUP),
+            (config.COLLISION_TYPE.TANK, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.BULLET, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.WALL, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.DESTRUCTIBLE_WALL, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.BOUNDARY, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.CLOSING_BOUNDARY, config.COLLISION_TYPE.PATH),
+            (config.COLLISION_TYPE.POWERUP, config.COLLISION_TYPE.PATH),
         ]
         for col_type_a, col_type_b in collision_groups:
             poweup_collision_handler = self.space.add_collision_handler(
                 col_type_a, col_type_b
             )
-            poweup_collision_handler.post_solve = None
-            poweup_collision_handler.pre_solve = None
-            poweup_collision_handler.separate = None
+            poweup_collision_handler.begin = lambda a, b, c: False
 
     def powerup_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
@@ -152,15 +160,14 @@ class Game:
                 shape._gameobject.apply_powerup(powerup)
                 self.replay_manager.record_deleted_object(powerup.id)
 
-    def register_replay_manager_event(self, shape: pymunk.Shape, event: str):
-        if event == "DESTRUCTION":
-            # record destruction in replay file
-            if shape.collision_type == config.COLLISION_TYPE.TANK:
-                self.replay_manager.record_deleted_object(shape._gameobject.id)
-            elif shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                self.replay_manager.record_deleted_object(shape._gameobject.id)
-            elif shape.collision_type == config.COLLISION_TYPE.BULLET:
-                self.replay_manager.record_deleted_object(shape._gameobject.id)
+    def register_deleted_object(self, shape: pymunk.Shape):
+        # record destruction in replay file
+        if shape.collision_type in [
+            config.COLLISION_TYPE.BULLET,
+            config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
+            config.COLLISION_TYPE.TANK,
+        ]:
+            self.replay_manager.record_deleted_object(shape._gameobject.id)
 
     def closing_boundary_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
@@ -181,7 +188,7 @@ class Game:
                     shape._gameobject
                 )  # remove reference to game object
 
-                self.register_replay_manager_event(shape, "DESTRUCTION")
+                self.register_deleted_object(shape)
 
     def bullet_collision_handler(
         self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
@@ -202,7 +209,7 @@ class Game:
         for shape in arbiter.shapes:
             if shape._gameobject.apply_damage(damage).is_destroyed():
                 if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
-                    self.map.register_wall_broken(shape._wall_coords)
+                    self.map.register_wall_broken(shape.body.position)
                 space.remove(shape, shape.body)
                 try:
                     self.game_objects.remove(
@@ -213,16 +220,30 @@ class Game:
                         f"Could not find {shape._gameobject.id} in self.game_object"
                     )
 
-                self.register_replay_manager_event(shape, "DESTRUCTION")
+                self.register_deleted_object(shape)
 
     def handle_client_response(self):
         message = self.comms.get_message()
         for client_id in message:
             self.game_objects.extend(  # keep the reference to any object created
-                self.players[client_id].register_actions(
-                    actions=message[client_id], replay_manager=self.replay_manager
-                )
+                self.players[client_id].register_actions(actions=message[client_id])
             )
+            # show the path on the map:
+            if (
+                message[client_id] is not None
+                and "path" in message[client_id]
+                and "move" not in message[client_id]
+            ):
+                for b, s in self.path_indicators[client_id]:
+                    self.space.remove(b, s)
+                self.path_indicators[client_id] = []
+                for p in self.players[client_id].action["path"]:
+                    body = pymunk.Body(body_type=pymunk.Body.STATIC)
+                    body.position = p
+                    shape = pymunk.Circle(body=body, radius=5)
+                    shape.collision_type = config.COLLISION_TYPE.PATH
+                    self.path_indicators[client_id].append((body, shape))
+                    self.space.add(body, shape)
 
     def tick(self):
         """called at every tick"""
@@ -230,6 +251,8 @@ class Game:
         self._play_turn()
         if self.tick_count % config.TICKS_PER_POWERUP == 0:
             self.spawn_powerup()
+        if self.tick_count % (600 * config.CLOSING_BOUNDARY.VELOCITY) == 0:
+            self.map.update_traversability_boundary()
         if self._is_terminal():
             self.comms.terminate_game()
             return True
