@@ -35,11 +35,21 @@ The angles start from `0 degress` being a straight line to the right, `90 degres
 being a straight line to the left and `270 degrees` a straight line down from where the tank is. You may use any angle
 between 0 and 360.
 
+Your bullets will bounce off walls and the closing boundary **two** times before being destroyed on their third collision.
+You can use this to your advantage and shoot the enemy from behind walls or implement other strategies. Keep in mind that
+bullets will be destroyed on their first collision if they are colliding with anything other than a wall or the closing boundary.
+
+**You can only shoot once every three ticks so it is important to shoot strategically.**
+
 ## Path
 
 The `path` action takes a coordinate point on the map and the game server will figure out a route for your tank to get
 to that coordinate point. This action is convenient for those who want to travel to other points in the map without
 having to figure out the path themselves.
+
+It's important to note that you need to check by yourself that the destination coordinates are in fact reachable.
+If the destination coordinates are not reachable, for example it is inside a wall, then the game server will ignore
+your input and your tank will not move.
 
 You only have to specify your destination coordinate point once. For example, you should **NOT** do the following:
 
@@ -63,7 +73,7 @@ go to `[250,300]`. This is a valid set of events.
 
 Much like the `shoot` action, the `move` action takes an angle in degrees. This action allows you to
 move in any direction. It kind of mimics the behaviour of a joystick for those who want more freedom
-with their tank's movements.
+with their tank's movements. You could implement your own pathfinding algorithm using this action.
 
 You can post `-1` as your angle to get your tank to stop moving (refer to the example below).
 
