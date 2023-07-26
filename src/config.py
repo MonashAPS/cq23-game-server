@@ -52,6 +52,7 @@ defaults = {
         "DENSITY": 1,
         "DAMAGE": 1,
         "VELOCITY": 450,
+        "SHOOT_COOLDOWN": 3,
     },
     "WALL": {
         "HP": math.inf,

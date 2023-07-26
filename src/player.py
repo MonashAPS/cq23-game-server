@@ -5,6 +5,7 @@ import typing as t
 from collections import deque
 
 import exceptions
+from config import config
 from gameObjects.tank import Tank
 from map import Map
 
@@ -21,11 +22,16 @@ class Player:
 
         self.client_id = client_info["id"]
         self.client_name = client_info["name"]
+        self.shoot_cooldown = 0
 
         self.action = {"path": deque(), "move": False}
 
     def register_actions(self, actions: t.Optional[dict]) -> t.List:
-        """register action for the player"""
+        """
+        register action for the player.
+        called at every communication tick.
+        """
+        self.shoot_cooldown = max(0, self.shoot_cooldown - 1)
         created_game_objects = []
         # dismiss the actions if path and move have been set at the same time
         if actions is None or ("path" in actions and "move" in actions):
@@ -35,7 +41,8 @@ class Player:
                 self._set_path(actions[action])
             if action == "move":
                 self._move(actions[action])
-            if action == "shoot":
+            if action == "shoot" and self.shoot_cooldown == 0:
+                self.shoot_cooldown = config.BULLET.SHOOT_COOLDOWN
                 created_game_objects.append(self._shoot_bullet(angle=actions[action]))
         return created_game_objects
 
