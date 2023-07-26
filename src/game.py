@@ -81,27 +81,27 @@ class Game:
             (
                 config.COLLISION_TYPE.CLOSING_BOUNDARY,
                 config.COLLISION_TYPE.BULLET,
-                None,
+                lambda a, b, c: self.bullet_collision_handler(a, b, c, bouncy=True),
             ),
             (
                 config.COLLISION_TYPE.BULLET,
                 config.COLLISION_TYPE.TANK,
-                self.bullet_collision_handler,
+                lambda a, b, c: self.bullet_collision_handler(a, b, c, bouncy=False),
             ),
             (
                 config.COLLISION_TYPE.BULLET,
                 config.COLLISION_TYPE.BULLET,
-                self.bullet_collision_handler,
+                lambda a, b, c: self.bullet_collision_handler(a, b, c, bouncy=False),
             ),
             (
                 config.COLLISION_TYPE.BULLET,
                 config.COLLISION_TYPE.DESTRUCTIBLE_WALL,
-                self.bullet_collision_handler,
+                lambda a, b, c: self.bullet_collision_handler(a, b, c, bouncy=False),
             ),
             (
                 config.COLLISION_TYPE.BULLET,
                 config.COLLISION_TYPE.WALL,
-                self.bullet_collision_handler,
+                lambda a, b, c: self.bullet_collision_handler(a, b, c, bouncy=True),
             ),
             (
                 config.COLLISION_TYPE.CLOSING_BOUNDARY,
@@ -191,7 +191,7 @@ class Game:
                 self.register_deleted_object(shape)
 
     def bullet_collision_handler(
-        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
+        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data, bouncy
     ):
         """collision handler for collisions that would cause HP loss to an object caused by a bullet
 
@@ -207,7 +207,9 @@ class Game:
                 damage = shape._gameobject.damage
 
         for shape in arbiter.shapes:
-            if shape._gameobject.apply_damage(damage).is_destroyed():
+            if shape._gameobject.apply_damage(damage).is_destroyed() or (
+                not bouncy and isinstance(shape._gameobject, Bullet)
+            ):
                 if shape.collision_type == config.COLLISION_TYPE.DESTRUCTIBLE_WALL:
                     self.map.register_wall_broken(shape.body.position)
                 space.remove(shape, shape.body)

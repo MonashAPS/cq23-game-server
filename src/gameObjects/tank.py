@@ -26,6 +26,7 @@ class Tank(GameObject):
             body=self.body, size=self.dims, radius=config.TANK.RADIUS
         )
         self.shape.density = config.TANK.DENSITY
+        self.shape.elasticity = config.TANK.ELASTICITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.shape._gameobject = self
 
@@ -85,12 +86,13 @@ class Tank(GameObject):
             tank_id=self.id,
             coord=tuple(
                 map(
-                    lambda tank, safe_space, offset: tank + offset + safe_space,
+                    lambda tank, offset: tank + offset,
                     self.body.position,
-                    (0, 0),
                     (
-                        cos(angle_radians) * (self.get_radius() + config.BULLET.RADIUS),
-                        sin(angle_radians) * (self.get_radius() + config.BULLET.RADIUS),
+                        cos(angle_radians)
+                        * (self.get_radius() + config.BULLET.RADIUS + 1),
+                        sin(angle_radians)
+                        * (self.get_radius() + config.BULLET.RADIUS + 1),
                     ),
                 )
             ),

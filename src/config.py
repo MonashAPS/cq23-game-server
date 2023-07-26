@@ -30,6 +30,7 @@ defaults = {
         "DENSITY": 100,
         "VELOCITY": 100,
         "RADIUS": 0.1,
+        "ELASTICITY": 1,
     },
     "MAP": {"NUKETOWN": "nuketown.map", "DIR": "maps/"},
     "COLLISION_TYPE": {
@@ -46,7 +47,7 @@ defaults = {
     "BULLET": {
         "RADIUS": 5,
         "COLOR": (255, 165, 0, 255),
-        "HP": 1,
+        "HP": 3,
         "ELASTICITY": 1,
         "DENSITY": 1,
         "DAMAGE": 1,

@@ -40,6 +40,7 @@ class ReplayManager:
         self.current_info = {}
         self.new_info = {}
         self.comms_info = {}
+        self.replay_path_indicators = []
 
         # The last state of all objects in the game - used for diffing
         self.replay_current_object_states = {}
@@ -93,12 +94,15 @@ class ReplayManager:
         self.write_to_buffer(obj)
 
     def set_game_info(self, space):
+        self.replay_path_indicators = []
         for x in space.shapes:
             if hasattr(x, "_gameobject"):
                 self.record_object_state(
                     x._gameobject.id,
                     x._gameobject.info(),
                 )
+            else:
+                self.replay_path_indicators.append(x.body.position)
 
     def _find_object_diffs(self, current_state, new_updates):
         changed_objects = {}
@@ -123,6 +127,7 @@ class ReplayManager:
         message = {
             "deleted_objects": self.replay_pending_object_deletes,
             "updated_objects": pending_object_updates,
+            "path_indicators": self.replay_path_indicators,
         }
 
         self.write_to_buffer(message)
