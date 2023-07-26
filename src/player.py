@@ -117,6 +117,7 @@ class Player:
                     ),
                 )
             )
+            self.action["path"].popleft()
             if self.action["path"]:
                 self.gameobject.move_to_pos(self.action["path"][0])
                 self._set_distance_to_target()

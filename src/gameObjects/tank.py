@@ -26,7 +26,6 @@ class Tank(GameObject):
             body=self.body, size=self.dims, radius=config.TANK.RADIUS
         )
         self.shape.density = config.TANK.DENSITY
-        self.shape.elasticity = config.TANK.ELASTICITY
         self.shape.collision_type = config.COLLISION_TYPE.TANK
         self.shape._gameobject = self
 
