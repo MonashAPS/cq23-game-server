@@ -19,6 +19,8 @@ other objects. You can see a summary of these below.
 | Boundary          | damage  | collide |  None   |       None        |   None   |  None   |
 | Powerup           | collect |  None   |  None   |       None        |   None   |  None   |
 
+ASW82B
+
 ### Notes
 
 - Bullet - bullet collision will result in both bullets being destroyed. That's why their collision type is `damage`.
