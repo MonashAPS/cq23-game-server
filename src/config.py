@@ -25,7 +25,7 @@ def get_config():
 defaults = {
     "TANK": {
         "DIM_MULT": (1, 1),
-        "HP": 10,
+        "HP": 5,
         "COLOR": (0, 0, 255, 255),
         "DENSITY": 100,
         "VELOCITY": 100,
@@ -52,7 +52,7 @@ defaults = {
         "DENSITY": 1,
         "DAMAGE": 1,
         "VELOCITY": 450,
-        "SHOOT_COOLDOWN": 3,
+        "SHOOT_COOLDOWN": 2,
     },
     "WALL": {
         "HP": math.inf,

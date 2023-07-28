@@ -11,7 +11,7 @@ The data that you will be given about each tank is as follows:
     "type": 1,
     "position": [356.12, 534.39],
     "velocity": [-100.0, -100.0],
-    "hp": 10,
+    "hp": 5,
     "powerups": ["DAMAGE", "SPEED"]
 }
 ```

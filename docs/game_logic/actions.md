@@ -39,7 +39,7 @@ Your bullets will bounce off walls and the closing boundary **two** times before
 You can use this to your advantage and shoot the enemy from behind walls or implement other strategies. Keep in mind that
 bullets will be destroyed on their first collision if they are colliding with anything other than a wall or the closing boundary.
 
-**You can only shoot once every three ticks so it is important to shoot strategically.**
+**You can only shoot every second tick so it is important to shoot strategically.**
 
 ## Path
 
