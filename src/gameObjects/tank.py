@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import copysign, cos, radians, sin, sqrt
+from math import atan2, cos, radians, sin, sqrt
 
 import pymunk
 
@@ -53,17 +53,14 @@ class Tank(GameObject):
         """
         px, py = self.body.position  # current position
         tx, ty = coord  # target coordinates
-        dx = copysign(1, tx - px)  # x direction
-        dy = copysign(1, ty - py)  # y direction
 
-        if -1 <= tx - px <= 1:
-            dx *= 0
-            dy *= sqrt(2)
-        if -1 <= ty - py <= 1:
-            dy *= 0
-            dx *= sqrt(2)
-
-        self.set_velocity((dx, dy))
+        angle_radians = atan2(ty - py, tx - px)
+        self.set_velocity(
+            (
+                sqrt(2) * cos(angle_radians),
+                sqrt(2) * sin(angle_radians),
+            )
+        )
 
     def set_velocity(self, direction: tuple[float, float]):
         """Set the velocity of the tank.
