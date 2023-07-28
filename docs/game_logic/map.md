@@ -29,3 +29,7 @@ Different objects have different sizes on the map. You may need to use this info
 ### cluster.map
 
 ![Screenshot](../img/cluster.png)
+
+### empty.map
+
+![Screenshot](../img/empty.png)
