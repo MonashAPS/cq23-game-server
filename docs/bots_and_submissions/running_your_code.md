@@ -28,7 +28,8 @@ or another code on your computer or even an older version of your code.
 ### Running against a sample bot
 
 There are some sample bots created for you to test your code against. These are:
-- `name_of_sample_bot`: what the sample bot does
+
+- `sample-bot-1`: Goes to the centre of the map and shoots towards the opponent
 
 In order to run your code against one of these, you can run the command the same way as described before, but with this argument:
 

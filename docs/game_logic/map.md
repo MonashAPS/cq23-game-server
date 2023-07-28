@@ -11,3 +11,21 @@ Different objects have different sizes on the map. You may need to use this info
 - [**Tanks**](../game_objects/tank.md) are 20x20 squares. The x,y position given for a tank shows the coordinates of its centre.
 - [**Bullets**](../game_objects/bullet.md) are circles with a radius of 5. The x,y position given for a bullet shows the coordinates of its centre.
 - [**Powerups**](../game_objects/powerup.md) are circles with a radius of 15. The x,y position given for a powerup shows the coordinates of its centre.
+
+## Available Maps
+
+### gulag.map
+
+![Screenshot](../img/gulag.png)
+
+### theface.map
+
+![Screenshot](../img/theface.png)
+
+### caged.map
+
+![Screenshot](../img/caged.png)
+
+### cluster.map
+
+![Screenshot](../img/cluster.png)
