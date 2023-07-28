@@ -1,4 +1,4 @@
-54 31
+54 36
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.........................XX.........................X
 X.S.......................XX.........................X
@@ -6,8 +6,10 @@ X....DDDDD...XXXXXXXXXX...XX...XXXXXXXXXX...DDDDD....X
 X....DDDDD...XXXXXXXXXX...XX...XXXXXXXXXX...DDDDD....X
 X....DDDDD...XXXXXXXXXX...XX...XXXXXXXXXX...DDDDD....X
 X....................................................X
+X....................................................X
 X....DDDDD...XX..XXXXXXXXXXXXXXXXXXXX..XX...DDDDD....X
 X....DDDDD...XX...........DD...........XX...DDDDD....X
+X............XX...........DD...........XX............X
 X............XX...........DD...........XX............X
 XXXXXXXXXX...XXDDDDDDDD...DD...DDDDDDDDXX...XXXXXXXXXX
 .........X...XX........................XX...X.........
@@ -15,14 +17,17 @@ XXXXXXXXXX...XX........................XX...XXXXXXXXXX
 X............XX.....XXXXXX..XXXXXX.....XX............X
 X...................X............X...................X
 X....................................................X
+X....................................................X
 X...................X............X...................X
 X............XX.....XXXXXX..XXXXXX.....XX............X
 XXXXXXXXXX...XX........................XX...XXXXXXXXXX
 .........X...XX........................XX...X.........
 XXXXXXXXXX...XXDDDDDDDD...DD...DDDDDDDDXX...XXXXXXXXXX
 X............XX...........DD...........XX............X
+X............XX...........DD...........XX............X
 X....DDDDD...XX...........DD...........XX...DDDDD....X
 X....DDDDD...XX..XXXXXXXXXXXXXXXXXXXX..XX...DDDDD....X
+X....................................................X
 X....................................................X
 X....DDDDD...XXXXXXXXXX...XX...XXXXXXXXXX...DDDDD....X
 X....DDDDD...XXXXXXXXXX...XX...XXXXXXXXXX...DDDDD....X
