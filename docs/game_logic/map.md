@@ -22,6 +22,10 @@ Different objects have different sizes on the map. You may need to use this info
 
 ![Screenshot](../img/theface.png)
 
+### pacman.map
+
+![Screenshot](../img/pacman.png)
+
 ### caged.map
 
 ![Screenshot](../img/caged.png)
