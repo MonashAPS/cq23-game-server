@@ -236,9 +236,7 @@ class Game:
                 and "path" in message[client_id]
                 and "move" not in message[client_id]
             ):
-                for b, s in self.path_indicators[client_id]:
-                    self.space.remove(b, s)
-                self.path_indicators[client_id] = []
+                self.remove_path_indicators(client_id)
                 for p in self.players[client_id].action["path"]:
                     body = pymunk.Body(body_type=pymunk.Body.STATIC)
                     body.position = p
@@ -246,6 +244,17 @@ class Game:
                     shape.collision_type = config.COLLISION_TYPE.PATH
                     self.path_indicators[client_id].append((body, shape))
                     self.space.add(body, shape)
+            elif (
+                message[client_id] is not None
+                and "path" not in message[client_id]
+                and "move" in message[client_id]
+            ):
+                self.remove_path_indicators(client_id)
+
+    def remove_path_indicators(self, client_id):
+        for b, s in self.path_indicators[client_id]:
+            self.space.remove(b, s)
+        self.path_indicators[client_id] = []
 
     def tick(self):
         """called at every tick"""
