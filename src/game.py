@@ -59,6 +59,7 @@ class Game:
         self.tick_count = 0
 
         self.add_collision_handlers()
+        self.add_separate_handlers()
         self.remove_collision_handlers()
 
         self.send_map_info_to_clients()
@@ -69,6 +70,38 @@ class Game:
         comms_line = self.replay_manager.sync_object_updates_in_comms()
         self.comms.post_init_world_message(comms_line)
         self.comms.terminate_init_world_sequence()
+
+    def add_separate_handlers(self):
+        collision_groups: list[tuple[int, int, Callable | None]] = [
+            (
+                config.COLLISION_TYPE.BULLET,
+                config.COLLISION_TYPE.CLOSING_BOUNDARY,
+                self.bullet_boundary_separate_handler,
+            )
+        ]
+
+        for coltype_a, coltype_b, handler in collision_groups:
+            collision_handler = self.space.add_collision_handler(coltype_a, coltype_b)
+            if handler:
+                collision_handler.separate = handler
+
+    def bullet_boundary_separate_handler(
+        self, arbiter: pymunk.Arbiter, space: pymunk.Space, data
+    ):
+        for shape in arbiter.shapes:
+            if isinstance(shape._gameobject, Boundary):
+                boundary_shape = shape
+            if isinstance(shape._gameobject, Bullet):
+                bullet_shape = shape
+
+        if bullet_shape is not None and boundary_shape is not None:
+            bullet_shape.body.velocity = list(
+                map(
+                    lambda a, b: a - 2 * b,
+                    bullet_shape.body.velocity,
+                    boundary_shape.body.velocity,
+                )
+            )
 
     def add_collision_handlers(self):
         """register all collision handlers in the pymunk space"""
