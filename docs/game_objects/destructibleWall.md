@@ -1,6 +1,6 @@
 # Destructible Wall
 
-A destructible wall is exactly like a normal wall: a square block with a constant height and width of 20. The only
+A destructible wall is exactly like a normal wall: a square block with a constant height and width of 18. The only
 difference is that you can destroy destructible walls by shooting at them.
 
 ## Data

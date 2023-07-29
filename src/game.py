@@ -262,7 +262,11 @@ class Game:
         self._play_turn()
         if self.tick_count % config.TICKS_PER_POWERUP == 0:
             self.spawn_powerup()
-        if self.tick_count % (600 * config.CLOSING_BOUNDARY.VELOCITY) == 0:
+        if (
+            self.tick_count
+            % (6000 * (config.GRID_SCALING / config.CLOSING_BOUNDARY.VELOCITY))
+            == 0
+        ):
             self.map.update_traversability_boundary()
         if self._is_terminal():
             self.comms.terminate_game()

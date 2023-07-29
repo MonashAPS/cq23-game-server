@@ -1,6 +1,6 @@
 # Wall
 
-A wall is always a square block with a constant height and width of 20.
+A wall is always a square block with a constant height and width of 18.
 
 ## Data
 
