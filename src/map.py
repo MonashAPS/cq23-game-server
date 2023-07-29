@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 from collections.abc import Callable, Generator
 
 from yaml import safe_load
@@ -50,8 +49,8 @@ class Map:
     def from_global_coords(self, x, y):
         "From pymunk coordinates to grid coordinates"
         return (
-            math.floor(-y / config.GRID_SCALING - 0.5 + self.map_height),
-            math.floor(x / config.GRID_SCALING - 0.5),
+            int(self.map_height - y // config.GRID_SCALING - 1),
+            int(x // config.GRID_SCALING),
         )
 
     def _load_map(self):
